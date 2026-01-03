@@ -1,0 +1,413 @@
+import { useState, useCallback, useEffect } from "react";
+import { useAccount, useWalletClient, usePublicClient } from "wagmi";
+
+export interface Message {
+  role: "user" | "assistant";
+  content: string;
+  timestamp: number;
+}
+
+export interface ChatSession {
+  sessionId: string;
+  lastMessage: string;
+  timestamp: number;
+  messageCount: number;
+}
+
+export function useChat(
+  agentId: number | null,
+  agentName?: string,
+  initialSessionId?: string,
+  tokenURI?: string,
+  personality?: any,
+  onFinish?: () => void
+) {
+  const { address } = useAccount();
+  const { data: walletClient } = useWalletClient();
+  const publicClient = usePublicClient();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(
+    initialSessionId || null
+  );
+  const [input, setInput] = useState("");
+  const [isSending, setIsSending] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
+  // Fetch sessions when agent changes
+  useEffect(() => {
+    async function fetchSessions() {
+      if (!agentId || !address) return;
+
+      try {
+        const sessionsResponse = await fetch(
+          `/api/chat/sessions?agentId=${agentId}&userAddress=${address}`
+        );
+
+        if (sessionsResponse.ok) {
+          const sessionsData = await sessionsResponse.json();
+          setSessions(sessionsData.sessions || []);
+        }
+      } catch (error) {
+        console.error("Error fetching sessions:", error);
+      }
+    }
+
+    fetchSessions();
+  }, [agentId, address]);
+
+  // Load session messages when initialSessionId changes
+  useEffect(() => {
+    async function loadInitialSession() {
+      if (!agentId || !address || !initialSessionId) return;
+
+      setCurrentSessionId(initialSessionId);
+      await loadSessionMessages(initialSessionId);
+    }
+
+    loadInitialSession();
+  }, [agentId, address, initialSessionId]);
+
+  const loadSessionMessages = async (sessionId: string) => {
+    if (!agentId || !address) return;
+
+    setIsLoadingHistory(true);
+    try {
+      const response = await fetch(
+        `/api/chat/history?agentId=${agentId}&userAddress=${address}&sessionId=${sessionId}&limit=100`
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setMessages(data.messages || []);
+      }
+    } catch (error) {
+      console.error("Error loading session messages:", error);
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  const selectSession = useCallback(
+    async (sessionId: string) => {
+      setCurrentSessionId(sessionId);
+      await loadSessionMessages(sessionId);
+    },
+    [agentId, address]
+  );
+
+  const createNewSession = useCallback((newSessionId?: string) => {
+    const sessionId = newSessionId || `session_${Date.now()}`;
+    setCurrentSessionId(sessionId);
+    setMessages([]);
+    return sessionId;
+  }, []);
+
+  const [paymentRequirement, setPaymentRequirement] = useState<any>(null);
+  const [isPaying, setIsPaying] = useState(false);
+
+
+  const confirmPayment = useCallback(async () => {
+    if (!paymentRequirement || !walletClient || !publicClient || !address || !agentId) return;
+
+    setIsPaying(true);
+    try {
+      let hash: `0x${string}`;
+      const { type, recipient, amount, contractAddress, abi, functionName, args, value } = paymentRequirement;
+
+      if (type === "native-transfer") {
+         hash = await walletClient.sendTransaction({
+           to: recipient,
+           value: BigInt(parseFloat(amount) * 1e18),
+           chain: undefined
+         });
+      } else if (type === "smart-contract-call") {
+         hash = await walletClient.writeContract({
+            address: contractAddress,
+            abi: abi,
+            functionName: functionName,
+            args: args as any,
+            value: BigInt(parseFloat(value) * 1e18),
+            chain: undefined
+         });
+      } else {
+         throw new Error("Unsupported payment method");
+      }
+
+      const receipt = await publicClient.waitForTransactionReceipt({ hash });
+      
+      if (receipt.status !== "success") {
+         throw new Error("Transaction failed on-chain");
+      }
+
+     
+    } catch (error) {
+      console.error("Payment confirmation failed:", error);
+    } finally {
+      setIsPaying(false);
+      setPaymentRequirement(null);
+    }
+  }, [paymentRequirement, walletClient, publicClient, address, agentId]);
+
+  const [pendingMessage, setPendingMessage] = useState<string | null>(null);
+
+  const confirmPaymentAndRetry = useCallback(async () => {
+      if (!paymentRequirement || !walletClient || !publicClient || !address || !agentId || !pendingMessage) return;
+
+      setIsPaying(true);
+      try {
+        let hash: `0x${string}`;
+        const { type, recipient, amount, contractAddress, abi, functionName, args, value } = paymentRequirement;
+
+        if (type === "native-transfer") {
+           hash = await walletClient.sendTransaction({
+             to: recipient,
+             value: BigInt(parseFloat(amount) * 1e18),
+             chain: undefined
+           });
+        } else if (type === "smart-contract-call") {
+           hash = await walletClient.writeContract({
+              address: contractAddress,
+              abi: abi,
+              functionName: functionName,
+              args: args as any,
+              value: BigInt(parseFloat(value) * 1e18),
+              chain: undefined
+           });
+        } else {
+           throw new Error("Unsupported payment method");
+        }
+
+        const receipt = await publicClient.waitForTransactionReceipt({ hash });
+        if (receipt.status !== "success") throw new Error("Transaction failed");
+
+        const response = await fetch("/api/chat", {
+           method: "POST",
+           headers: { 
+             "Content-Type": "application/json",
+             "X-Transaction-Hash": hash
+           },
+           body: JSON.stringify({
+             userAddress: address,
+             agentId,
+             tokenURI,
+             message: pendingMessage,
+             useMemory: true,
+             sessionId: currentSessionId,
+             personality,
+           }),
+        });
+
+        if (!response.ok) throw new Error("Failed to send message after payment");
+
+        const reader = response.body?.getReader();
+        const decoder = new TextDecoder();
+        if (!reader) throw new Error("No response body");
+
+        
+        const assistantMessage: Message = {
+          role: "assistant",
+          content: "",
+          timestamp: Date.now(),
+        };
+        setMessages((prev) => [...prev, assistantMessage]);
+
+        let fullText = "";
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          const chunk = decoder.decode(value, { stream: true });
+          fullText += chunk;
+          setMessages((prev) => {
+            const newMessages = [...prev];
+            newMessages[newMessages.length - 1] = {
+              ...newMessages[newMessages.length - 1],
+              content: fullText,
+            };
+            return newMessages;
+          });
+        }
+
+      } catch (error) {
+        console.error("Payment/Retry failed:", error);
+        setMessages((prev) => [...prev, {
+            role: "assistant",
+            content: "Payment successful but message failed. Please try sending again.",
+            timestamp: Date.now()
+        }]);
+      } finally {
+        setIsPaying(false);
+        setPaymentRequirement(null);
+        setPendingMessage(null);
+      }
+  }, [paymentRequirement, walletClient, publicClient, address, agentId, pendingMessage, tokenURI, currentSessionId, personality]);
+
+
+  const sendMessage = useCallback(async () => {
+    if (
+      !input.trim() ||
+      !agentId ||
+      isSending ||
+      !address ||
+      !tokenURI ||
+      !currentSessionId
+    )
+      return;
+
+    const userMessage: Message = {
+      role: "user",
+      content: input.trim(),
+      timestamp: Date.now(),
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setIsSending(true);
+
+    try {
+      // 1. Attempt initial request
+      let response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          agentId,
+          tokenURI,
+          message: userMessage.content,
+          useMemory: true,
+          sessionId: currentSessionId,
+          personality,
+        }),
+      });
+
+      // 2. Handle 402 Payment Required
+      if (response.status === 402) {
+        const data = await response.json();
+        if (data.paymentRequired) {
+            setPaymentRequirement(data.paymentRequired);
+            setPendingMessage(userMessage.content);
+            setIsSending(false); 
+            return;
+        }
+      }
+
+      if (!response.ok) {
+        throw new Error("Failed to send message");
+      }
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (!reader) {
+        throw new Error("No response body");
+      }
+
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: "",
+        timestamp: Date.now(),
+      };
+
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      let fullText = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = {
+            ...newMessages[newMessages.length - 1],
+            content: fullText,
+          };
+          return newMessages;
+        });
+      }
+
+      if (address) {
+        const sessionsResponse = await fetch(
+          `/api/chat/sessions?agentId=${agentId}&userAddress=${address}`
+        );
+        if (sessionsResponse.ok) {
+          const sessionsData = await sessionsResponse.json();
+          setSessions(sessionsData.sessions || []);
+        }
+      }
+    } catch (error: any) {
+      console.error("Error sending message:", error);
+
+      const errorMessage: Message = {
+        role: "assistant",
+        content:
+          error.message || "Sorry, I encountered an error. Please try again.",
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsSending(false);
+      if (onFinish) onFinish();
+    }
+  }, [input, agentId, address, tokenURI, currentSessionId, isSending, walletClient]);
+
+  const deleteSession = useCallback(
+    async (sessionId: string) => {
+      if (!agentId || !address) return;
+
+      try {
+        const response = await fetch("/api/memory/clear", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            agentId,
+            userAddress: address,
+            sessionId,
+          }),
+        });
+
+        if (response.ok) {
+          const sessionsResponse = await fetch(
+            `/api/chat/sessions?agentId=${agentId}&userAddress=${address}`
+          );
+          if (sessionsResponse.ok) {
+            const sessionsData = await sessionsResponse.json();
+            setSessions(sessionsData.sessions || []);
+
+            if (sessionId === currentSessionId) {
+              createNewSession();
+            }
+          }
+        }
+      } catch (error) {
+        console.error("Error deleting session:", error);
+      }
+    },
+    [agentId, address, currentSessionId, createNewSession]
+  );
+
+  const clearMessages = useCallback(() => {
+    setMessages([]);
+  }, []);
+
+  return {
+    messages,
+    sessions,
+    currentSessionId,
+    input,
+    setInput,
+    isSending,
+    isLoadingHistory,
+    sendMessage,
+    selectSession,
+    createNewSession,
+    deleteSession,
+    clearMessages,
+    paymentRequirement,
+    isPaying,
+    confirmPayment: confirmPaymentAndRetry,
+    clearPaymentRequirement: () => setPaymentRequirement(null),
+  };
+}
