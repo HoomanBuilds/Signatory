@@ -1,0 +1,371 @@
+[
+  {
+    "type": "constructor",
+    "stateMutability": "undefined",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "_agentNFT" }]
+  },
+  {
+    "type": "error",
+    "name": "OwnableInvalidOwner",
+    "inputs": [{ "type": "address", "name": "owner" }]
+  },
+  {
+    "type": "error",
+    "name": "OwnableUnauthorizedAccount",
+    "inputs": [{ "type": "address", "name": "account" }]
+  },
+  { "type": "error", "name": "ReentrancyGuardReentrantCall", "inputs": [] },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "AgentNFTUpdated",
+    "inputs": [{ "type": "address", "name": "newAgentNFT", "indexed": false }]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "AgentWalletUpdated",
+    "inputs": [
+      { "type": "uint256", "name": "tokenId", "indexed": true },
+      { "type": "address", "name": "wallet", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "EarningsClaimed",
+    "inputs": [
+      { "type": "uint256", "name": "tokenId", "indexed": true },
+      { "type": "address", "name": "owner", "indexed": true },
+      { "type": "uint256", "name": "amount", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "OwnershipTransferred",
+    "inputs": [
+      { "type": "address", "name": "previousOwner", "indexed": true },
+      { "type": "address", "name": "newOwner", "indexed": true }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "PlatformEarningsWithdrawn",
+    "inputs": [{ "type": "uint256", "name": "amount", "indexed": false }]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "RevenueReceived",
+    "inputs": [
+      { "type": "uint256", "name": "tokenId", "indexed": true },
+      { "type": "uint256", "name": "amount", "indexed": false },
+      { "type": "address", "name": "payer", "indexed": true },
+      { "type": "uint8", "name": "source", "indexed": false },
+      { "type": "uint256", "name": "timestamp", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "RevenueSplitUpdated",
+    "inputs": [
+      { "type": "uint256", "name": "agentShare", "indexed": false },
+      { "type": "uint256", "name": "platformShare", "indexed": false }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "FEE_DENOMINATOR",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "MAX_HISTORY_SIZE",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "agentEarnings",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "" }],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "agentNFT",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "address", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "agentOwnerShare",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "agentWallets",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "" }],
+    "outputs": [{ "type": "address", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "batchClaimEarnings",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "uint256[]", "name": "tokenIds" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "claimEarnings",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "tokenId" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "claimableEarnings",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "" },
+      { "type": "address", "name": "" }
+    ],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getAgentRevenueHistory",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "tokenId" },
+      { "type": "uint256", "name": "limit" }
+    ],
+    "outputs": [
+      {
+        "type": "tuple[]",
+        "name": "",
+        "components": [
+          { "type": "uint256", "name": "tokenId" },
+          { "type": "uint256", "name": "amount" },
+          { "type": "address", "name": "payer" },
+          { "type": "uint8", "name": "source" },
+          { "type": "uint256", "name": "timestamp" }
+        ]
+      }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getAgentStats",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "tokenId" }],
+    "outputs": [
+      { "type": "uint256", "name": "totalEarnings" },
+      { "type": "uint256", "name": "withdrawn" },
+      { "type": "uint256", "name": "pending" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getClaimableEarnings",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "tokenId" },
+      { "type": "address", "name": "owner" }
+    ],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getPlatformStats",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [
+      { "type": "uint256", "name": "totalEarnings" },
+      { "type": "uint256", "name": "withdrawn" },
+      { "type": "uint256", "name": "available" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getRevenueHistoryCount",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getTotalClaimableEarnings",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "address", "name": "user" },
+      { "type": "uint256[]", "name": "tokenIds" }
+    ],
+    "outputs": [{ "type": "uint256", "name": "total" }]
+  },
+  {
+    "type": "function",
+    "name": "owner",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "address", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "platformEarnings",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "platformShare",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "platformWithdrawn",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "recordRevenue",
+    "constant": false,
+    "stateMutability": "payable",
+    "payable": true,
+    "inputs": [
+      { "type": "uint256", "name": "tokenId" },
+      { "type": "uint8", "name": "source" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "renounceOwnership",
+    "constant": false,
+    "payable": false,
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "revenueHistory",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "" }],
+    "outputs": [
+      { "type": "uint256", "name": "tokenId" },
+      { "type": "uint256", "name": "amount" },
+      { "type": "address", "name": "payer" },
+      { "type": "uint8", "name": "source" },
+      { "type": "uint256", "name": "timestamp" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "setAgentNFT",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "_agentNFT" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "setAgentWallet",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "tokenId" },
+      { "type": "address", "name": "wallet" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "transferOwnership",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "newOwner" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "updateRevenueSplit",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "newAgentShare" },
+      { "type": "uint256", "name": "newPlatformShare" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "withdrawPlatformEarnings",
+    "constant": false,
+    "payable": false,
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "withdrawnEarnings",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "" }],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  }
+]
