@@ -1,0 +1,1023 @@
+{
+  "address": "0x69c8dEDA8BBB5eafDDb1B056c447c39D74A198de",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_agentNFT",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "inputs": [],
+      "name": "ReentrancyGuardReentrantCall",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "newAgentNFT",
+          "type": "address"
+        }
+      ],
+      "name": "AgentNFTUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "AgentWalletUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "EarningsClaimed",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "PlatformEarningsWithdrawn",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "payer",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "enum RevenueShare.RevenueSource",
+          "name": "source",
+          "type": "uint8"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "RevenueReceived",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "agentShare",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "platformShare",
+          "type": "uint256"
+        }
+      ],
+      "name": "RevenueSplitUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "FEE_DENOMINATOR",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "MAX_HISTORY_SIZE",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "agentEarnings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "agentNFT",
+      "outputs": [
+        {
+          "internalType": "contract IERC721",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "agentOwnerShare",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "agentWallets",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "tokenIds",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "batchClaimEarnings",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "claimEarnings",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "claimableEarnings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "limit",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAgentRevenueHistory",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "uint256",
+              "name": "tokenId",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "internalType": "address",
+              "name": "payer",
+              "type": "address"
+            },
+            {
+              "internalType": "enum RevenueShare.RevenueSource",
+              "name": "source",
+              "type": "uint8"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct RevenueShare.RevenueRecord[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAgentStats",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalEarnings",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "withdrawn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pending",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "getClaimableEarnings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPlatformStats",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalEarnings",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "withdrawn",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "available",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getRevenueHistoryCount",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "tokenIds",
+          "type": "uint256[]"
+        }
+      ],
+      "name": "getTotalClaimableEarnings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "total",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "platformEarnings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "platformShare",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "platformWithdrawn",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "enum RevenueShare.RevenueSource",
+          "name": "source",
+          "type": "uint8"
+        }
+      ],
+      "name": "recordRevenue",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "revenueHistory",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "payer",
+          "type": "address"
+        },
+        {
+          "internalType": "enum RevenueShare.RevenueSource",
+          "name": "source",
+          "type": "uint8"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_agentNFT",
+          "type": "address"
+        }
+      ],
+      "name": "setAgentNFT",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "setAgentWallet",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "newAgentShare",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "newPlatformShare",
+          "type": "uint256"
+        }
+      ],
+      "name": "updateRevenueSplit",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "withdrawPlatformEarnings",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "withdrawnEarnings",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x10d96714daceceba51e0c5e2f01cceb8563e8eefbf29706901f77a3bb7eb4d03",
+  "receipt": {
+    "to": null,
+    "from": "0x17A076d6cCaf37Bc9386EAB653A5EfAd8B07430C",
+    "contractAddress": "0x69c8dEDA8BBB5eafDDb1B056c447c39D74A198de",
+    "transactionIndex": 0,
+    "gasUsed": "1567509",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000001000000200000000000000000000000000000020000000000000000000800000000000000000000000000000000400000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000000000000000000000000000001000000000000000000000020000000000000000000000000000000000000000000000000000000000000000800",
+    "blockHash": "0x2be88f15a59c97b8479d352561f16a4877f626e31b0e85f5130895908b7a1ad4",
+    "transactionHash": "0x10d96714daceceba51e0c5e2f01cceb8563e8eefbf29706901f77a3bb7eb4d03",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 65713652,
+        "transactionHash": "0x10d96714daceceba51e0c5e2f01cceb8563e8eefbf29706901f77a3bb7eb4d03",
+        "address": "0x69c8dEDA8BBB5eafDDb1B056c447c39D74A198de",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x00000000000000000000000017a076d6ccaf37bc9386eab653a5efad8b07430c"
+        ],
+        "data": "0x",
+        "logIndex": 0,
+        "blockHash": "0x2be88f15a59c97b8479d352561f16a4877f626e31b0e85f5130895908b7a1ad4"
+      }
+    ],
+    "blockNumber": 65713652,
+    "cumulativeGasUsed": "1567509",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xD5bdd124De482d3e0244F6122E403983A4E25D62"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "8f6036832917aa3a16ba6816e65757db",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_agentNFT\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnableInvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"OwnableUnauthorizedAccount\",\"type\":\"error\"},{\"inputs\":[],\"name\":\"ReentrancyGuardReentrantCall\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAgentNFT\",\"type\":\"address\"}],\"name\":\"AgentNFTUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"}],\"name\":\"AgentWalletUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"EarningsClaimed\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"PlatformEarningsWithdrawn\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"payer\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"enum RevenueShare.RevenueSource\",\"name\":\"source\",\"type\":\"uint8\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"RevenueReceived\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"agentShare\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"platformShare\",\"type\":\"uint256\"}],\"name\":\"RevenueSplitUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"FEE_DENOMINATOR\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"MAX_HISTORY_SIZE\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"agentEarnings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"agentNFT\",\"outputs\":[{\"internalType\":\"contract IERC721\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"agentOwnerShare\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"agentWallets\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"}],\"name\":\"batchClaimEarnings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"claimEarnings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"claimableEarnings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"limit\",\"type\":\"uint256\"}],\"name\":\"getAgentRevenueHistory\",\"outputs\":[{\"components\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"payer\",\"type\":\"address\"},{\"internalType\":\"enum RevenueShare.RevenueSource\",\"name\":\"source\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"internalType\":\"struct RevenueShare.RevenueRecord[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"}],\"name\":\"getAgentStats\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalEarnings\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawn\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"pending\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"getClaimableEarnings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getPlatformStats\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"totalEarnings\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"withdrawn\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"available\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getRevenueHistoryCount\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"uint256[]\",\"name\":\"tokenIds\",\"type\":\"uint256[]\"}],\"name\":\"getTotalClaimableEarnings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"total\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"platformEarnings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"platformShare\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"platformWithdrawn\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"enum RevenueShare.RevenueSource\",\"name\":\"source\",\"type\":\"uint8\"}],\"name\":\"recordRevenue\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"revenueHistory\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"payer\",\"type\":\"address\"},{\"internalType\":\"enum RevenueShare.RevenueSource\",\"name\":\"source\",\"type\":\"uint8\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_agentNFT\",\"type\":\"address\"}],\"name\":\"setAgentNFT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"tokenId\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"}],\"name\":\"setAgentWallet\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"newAgentShare\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"newPlatformShare\",\"type\":\"uint256\"}],\"name\":\"updateRevenueSplit\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdrawPlatformEarnings\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"withdrawnEarnings\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Manages revenue distribution for AI Agent-generated content\",\"errors\":{\"OwnableInvalidOwner(address)\":[{\"details\":\"The owner is not a valid owner account. (eg. `address(0)`)\"}],\"OwnableUnauthorizedAccount(address)\":[{\"details\":\"The caller account is not authorized to perform an operation.\"}],\"ReentrancyGuardReentrantCall()\":[{\"details\":\"Unauthorized reentrant call.\"}]},\"kind\":\"dev\",\"methods\":{\"batchClaimEarnings(uint256[])\":{\"details\":\"Batch claim earnings for multiple agents\"},\"claimEarnings(uint256)\":{\"details\":\"Claim earnings for a specific agent\"},\"getAgentRevenueHistory(uint256,uint256)\":{\"details\":\"Get revenue history for an agent\"},\"getAgentStats(uint256)\":{\"details\":\"Get agent earnings statistics\"},\"getClaimableEarnings(uint256,address)\":{\"details\":\"Get claimable earnings for a specific agent and owner\"},\"getPlatformStats()\":{\"details\":\"Get platform earnings statistics\"},\"getRevenueHistoryCount()\":{\"details\":\"Get total revenue history count\"},\"getTotalClaimableEarnings(address,uint256[])\":{\"details\":\"Get claimable earnings for specific agents owned by user\",\"params\":{\"tokenIds\":\"Array of token IDs to check\",\"user\":\"The address to check\"},\"returns\":{\"total\":\"Total claimable amount across provided tokens\"}},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"recordRevenue(uint256,uint8)\":{\"details\":\"Record revenue for an agent\"},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"setAgentNFT(address)\":{\"details\":\"Update the AgentNFT contract address (only owner)\"},\"setAgentWallet(uint256,address)\":{\"details\":\"Set the wallet address for an agent (where revenue will be sent)\"},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"updateRevenueSplit(uint256,uint256)\":{\"details\":\"Update revenue split (only owner)\"},\"withdrawPlatformEarnings()\":{\"details\":\"Withdraw platform earnings (only owner)\"}},\"title\":\"RevenueShare\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/RevenueShare.sol\":\"RevenueShare\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.20;\\n\\nimport {Context} from \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * The initial owner is set to the address provided by the deployer. This can\\n * later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    /**\\n     * @dev The caller account is not authorized to perform an operation.\\n     */\\n    error OwnableUnauthorizedAccount(address account);\\n\\n    /**\\n     * @dev The owner is not a valid owner account. (eg. `address(0)`)\\n     */\\n    error OwnableInvalidOwner(address owner);\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the address provided by the deployer as the initial owner.\\n     */\\n    constructor(address initialOwner) {\\n        if (initialOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(initialOwner);\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        if (owner() != _msgSender()) {\\n            revert OwnableUnauthorizedAccount(_msgSender());\\n        }\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        if (newOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\"},\"@openzeppelin/contracts/token/ERC721/IERC721.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.4.0) (token/ERC721/IERC721.sol)\\n\\npragma solidity >=0.6.2;\\n\\nimport {IERC165} from \\\"../../utils/introspection/IERC165.sol\\\";\\n\\n/**\\n * @dev Required interface of an ERC-721 compliant contract.\\n */\\ninterface IERC721 is IERC165 {\\n    /**\\n     * @dev Emitted when `tokenId` token is transferred from `from` to `to`.\\n     */\\n    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);\\n\\n    /**\\n     * @dev Emitted when `owner` enables `approved` to manage the `tokenId` token.\\n     */\\n    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);\\n\\n    /**\\n     * @dev Emitted when `owner` enables or disables (`approved`) `operator` to manage all of its assets.\\n     */\\n    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);\\n\\n    /**\\n     * @dev Returns the number of tokens in ``owner``'s account.\\n     */\\n    function balanceOf(address owner) external view returns (uint256 balance);\\n\\n    /**\\n     * @dev Returns the owner of the `tokenId` token.\\n     *\\n     * Requirements:\\n     *\\n     * - `tokenId` must exist.\\n     */\\n    function ownerOf(uint256 tokenId) external view returns (address owner);\\n\\n    /**\\n     * @dev Safely transfers `tokenId` token from `from` to `to`.\\n     *\\n     * Requirements:\\n     *\\n     * - `from` cannot be the zero address.\\n     * - `to` cannot be the zero address.\\n     * - `tokenId` token must exist and be owned by `from`.\\n     * - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}.\\n     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon\\n     *   a safe transfer.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function safeTransferFrom(address from, address to, uint256 tokenId, bytes calldata data) external;\\n\\n    /**\\n     * @dev Safely transfers `tokenId` token from `from` to `to`, checking first that contract recipients\\n     * are aware of the ERC-721 protocol to prevent tokens from being forever locked.\\n     *\\n     * Requirements:\\n     *\\n     * - `from` cannot be the zero address.\\n     * - `to` cannot be the zero address.\\n     * - `tokenId` token must exist and be owned by `from`.\\n     * - If the caller is not `from`, it must have been allowed to move this token by either {approve} or\\n     *   {setApprovalForAll}.\\n     * - If `to` refers to a smart contract, it must implement {IERC721Receiver-onERC721Received}, which is called upon\\n     *   a safe transfer.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function safeTransferFrom(address from, address to, uint256 tokenId) external;\\n\\n    /**\\n     * @dev Transfers `tokenId` token from `from` to `to`.\\n     *\\n     * WARNING: Note that the caller is responsible to confirm that the recipient is capable of receiving ERC-721\\n     * or else they may be permanently lost. Usage of {safeTransferFrom} prevents loss, though the caller must\\n     * understand this adds an external call which potentially creates a reentrancy vulnerability.\\n     *\\n     * Requirements:\\n     *\\n     * - `from` cannot be the zero address.\\n     * - `to` cannot be the zero address.\\n     * - `tokenId` token must be owned by `from`.\\n     * - If the caller is not `from`, it must be approved to move this token by either {approve} or {setApprovalForAll}.\\n     *\\n     * Emits a {Transfer} event.\\n     */\\n    function transferFrom(address from, address to, uint256 tokenId) external;\\n\\n    /**\\n     * @dev Gives permission to `to` to transfer `tokenId` token to another account.\\n     * The approval is cleared when the token is transferred.\\n     *\\n     * Only a single account can be approved at a time, so approving the zero address clears previous approvals.\\n     *\\n     * Requirements:\\n     *\\n     * - The caller must own the token or be an approved operator.\\n     * - `tokenId` must exist.\\n     *\\n     * Emits an {Approval} event.\\n     */\\n    function approve(address to, uint256 tokenId) external;\\n\\n    /**\\n     * @dev Approve or remove `operator` as an operator for the caller.\\n     * Operators can call {transferFrom} or {safeTransferFrom} for any token owned by the caller.\\n     *\\n     * Requirements:\\n     *\\n     * - The `operator` cannot be the address zero.\\n     *\\n     * Emits an {ApprovalForAll} event.\\n     */\\n    function setApprovalForAll(address operator, bool approved) external;\\n\\n    /**\\n     * @dev Returns the account approved for `tokenId` token.\\n     *\\n     * Requirements:\\n     *\\n     * - `tokenId` must exist.\\n     */\\n    function getApproved(uint256 tokenId) external view returns (address operator);\\n\\n    /**\\n     * @dev Returns if the `operator` is allowed to manage all of the assets of `owner`.\\n     *\\n     * See {setApprovalForAll}\\n     */\\n    function isApprovedForAll(address owner, address operator) external view returns (bool);\\n}\\n\",\"keccak256\":\"0xf78f05f3b8c9f75570e85300d7b4600d7f6f6a198449273f31d44c1641adb46f\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    function _contextSuffixLength() internal view virtual returns (uint256) {\\n        return 0;\\n    }\\n}\\n\",\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/ReentrancyGuard.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.1.0) (utils/ReentrancyGuard.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Contract module that helps prevent reentrant calls to a function.\\n *\\n * Inheriting from `ReentrancyGuard` will make the {nonReentrant} modifier\\n * available, which can be applied to functions to make sure there are no nested\\n * (reentrant) calls to them.\\n *\\n * Note that because there is a single `nonReentrant` guard, functions marked as\\n * `nonReentrant` may not call one another. This can be worked around by making\\n * those functions `private`, and then adding `external` `nonReentrant` entry\\n * points to them.\\n *\\n * TIP: If EIP-1153 (transient storage) is available on the chain you're deploying at,\\n * consider using {ReentrancyGuardTransient} instead.\\n *\\n * TIP: If you would like to learn more about reentrancy and alternative ways\\n * to protect against it, check out our blog post\\n * https://blog.openzeppelin.com/reentrancy-after-istanbul/[Reentrancy After Istanbul].\\n */\\nabstract contract ReentrancyGuard {\\n    // Booleans are more expensive than uint256 or any type that takes up a full\\n    // word because each write operation emits an extra SLOAD to first read the\\n    // slot's contents, replace the bits taken up by the boolean, and then write\\n    // back. This is the compiler's defense against contract upgrades and\\n    // pointer aliasing, and it cannot be disabled.\\n\\n    // The values being non-zero value makes deployment a bit more expensive,\\n    // but in exchange the refund on every call to nonReentrant will be lower in\\n    // amount. Since refunds are capped to a percentage of the total\\n    // transaction's gas, it is best to keep them low in cases like this one, to\\n    // increase the likelihood of the full refund coming into effect.\\n    uint256 private constant NOT_ENTERED = 1;\\n    uint256 private constant ENTERED = 2;\\n\\n    uint256 private _status;\\n\\n    /**\\n     * @dev Unauthorized reentrant call.\\n     */\\n    error ReentrancyGuardReentrantCall();\\n\\n    constructor() {\\n        _status = NOT_ENTERED;\\n    }\\n\\n    /**\\n     * @dev Prevents a contract from calling itself, directly or indirectly.\\n     * Calling a `nonReentrant` function from another `nonReentrant`\\n     * function is not supported. It is possible to prevent this from happening\\n     * by making the `nonReentrant` function external, and making it call a\\n     * `private` function that does the actual work.\\n     */\\n    modifier nonReentrant() {\\n        _nonReentrantBefore();\\n        _;\\n        _nonReentrantAfter();\\n    }\\n\\n    function _nonReentrantBefore() private {\\n        // On the first call to nonReentrant, _status will be NOT_ENTERED\\n        if (_status == ENTERED) {\\n            revert ReentrancyGuardReentrantCall();\\n        }\\n\\n        // Any calls to nonReentrant after this point will fail\\n        _status = ENTERED;\\n    }\\n\\n    function _nonReentrantAfter() private {\\n        // By storing the original value once again, a refund is triggered (see\\n        // https://eips.ethereum.org/EIPS/eip-2200)\\n        _status = NOT_ENTERED;\\n    }\\n\\n    /**\\n     * @dev Returns true if the reentrancy guard is currently set to \\\"entered\\\", which indicates there is a\\n     * `nonReentrant` function in the call stack.\\n     */\\n    function _reentrancyGuardEntered() internal view returns (bool) {\\n        return _status == ENTERED;\\n    }\\n}\\n\",\"keccak256\":\"0x11a5a79827df29e915a12740caf62fe21ebe27c08c9ae3e09abe9ee3ba3866d3\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/introspection/IERC165.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.4.0) (utils/introspection/IERC165.sol)\\n\\npragma solidity >=0.4.16;\\n\\n/**\\n * @dev Interface of the ERC-165 standard, as defined in the\\n * https://eips.ethereum.org/EIPS/eip-165[ERC].\\n *\\n * Implementers can declare support of contract interfaces, which can then be\\n * queried by others ({ERC165Checker}).\\n *\\n * For an implementation, see {ERC165}.\\n */\\ninterface IERC165 {\\n    /**\\n     * @dev Returns true if this contract implements the interface defined by\\n     * `interfaceId`. See the corresponding\\n     * https://eips.ethereum.org/EIPS/eip-165#how-interfaces-are-identified[ERC section]\\n     * to learn more about how these ids are created.\\n     *\\n     * This function call must use less than 30 000 gas.\\n     */\\n    function supportsInterface(bytes4 interfaceId) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x8891738ffe910f0cf2da09566928589bf5d63f4524dd734fd9cedbac3274dd5c\",\"license\":\"MIT\"},\"contracts/RevenueShare.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.20;\\n\\nimport \\\"@openzeppelin/contracts/token/ERC721/IERC721.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/ReentrancyGuard.sol\\\";\\nimport \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\n\\n/**\\n * @title RevenueShare\\n * @dev Manages revenue distribution for AI Agent-generated content\\n */\\ncontract RevenueShare is ReentrancyGuard, Ownable {\\n    // Revenue split percentages (in basis points)\\n    uint256 public agentOwnerShare = 8000; // 80%\\n    uint256 public platformShare = 2000; // 20%\\n    uint256 public constant FEE_DENOMINATOR = 10000;\\n\\n    IERC721 public agentNFT;\\n\\n    // Token ID => Total earnings\\n    mapping(uint256 => uint256) public agentEarnings;\\n\\n    // Token ID => Owner => Claimable amount\\n    mapping(uint256 => mapping(address => uint256)) public claimableEarnings;\\n\\n    // Token ID => Withdrawn amount\\n    mapping(uint256 => uint256) public withdrawnEarnings;\\n\\n    // Token ID => Agent Wallet Address\\n    mapping(uint256 => address) public agentWallets;\\n\\n    // Platform accumulated earnings\\n    uint256 public platformEarnings;\\n    uint256 public platformWithdrawn;\\n\\n    enum RevenueSource {\\n        ContentSale, // Agent-created content sold as NFT\\n        Marketplace, // Secondary marketplace sales\\n        Custom // Other revenue streams\\n    }\\n\\n    struct RevenueRecord {\\n        uint256 tokenId;\\n        uint256 amount;\\n        address payer;\\n        RevenueSource source;\\n        uint256 timestamp;\\n    }\\n\\n    RevenueRecord[] public revenueHistory;\\n    uint256 public constant MAX_HISTORY_SIZE = 10000; \\n\\n    // Events\\n    event RevenueReceived(\\n        uint256 indexed tokenId,\\n        uint256 amount,\\n        address indexed payer,\\n        RevenueSource source,\\n        uint256 timestamp\\n    );\\n\\n    event EarningsClaimed(uint256 indexed tokenId, address indexed owner, uint256 amount);\\n\\n    event PlatformEarningsWithdrawn(uint256 amount);\\n    event RevenueSplitUpdated(uint256 agentShare, uint256 platformShare);\\n\\n    event AgentWalletUpdated(uint256 indexed tokenId, address wallet);\\n    event AgentNFTUpdated(address newAgentNFT);\\n\\n    constructor(address _agentNFT) Ownable(msg.sender) {\\n        require(_agentNFT != address(0), \\\"Invalid NFT address\\\");\\n        agentNFT = IERC721(_agentNFT);\\n    }\\n\\n    /**\\n     * @dev Update the AgentNFT contract address (only owner)\\n     */\\n    function setAgentNFT(address _agentNFT) external onlyOwner {\\n        require(_agentNFT != address(0), \\\"Invalid NFT address\\\");\\n        agentNFT = IERC721(_agentNFT);\\n        emit AgentNFTUpdated(_agentNFT);\\n    }\\n\\n    /**\\n     * @dev Set the wallet address for an agent (where revenue will be sent)\\n     */\\n    function setAgentWallet(uint256 tokenId, address wallet) external onlyOwner {\\n        require(wallet != address(0), \\\"Invalid wallet address\\\");\\n        agentWallets[tokenId] = wallet;\\n        emit AgentWalletUpdated(tokenId, wallet);\\n    }\\n\\n    /**\\n     * @dev Record revenue for an agent\\n     */\\n    function recordRevenue(uint256 tokenId, RevenueSource source) external payable nonReentrant {\\n        require(msg.value > 0, \\\"No payment sent\\\");\\n        require(_exists(tokenId), \\\"Agent does not exist\\\");\\n\\n        // Calculate splits\\n        uint256 ownerAmount = (msg.value * agentOwnerShare) / FEE_DENOMINATOR;\\n        uint256 platformAmount = msg.value - ownerAmount;\\n\\n        // Determine recipient: Agent Wallet (if set) or NFT Owner\\n        address recipient = agentWallets[tokenId];\\n        if (recipient == address(0)) {\\n            recipient = agentNFT.ownerOf(tokenId);\\n        }\\n\\n        // Effects\\n        agentEarnings[tokenId] += ownerAmount;\\n        platformEarnings += platformAmount;\\n\\n        // Interactions: Auto-send to Agent/Owner\\n        (bool success, ) = payable(recipient).call{value: ownerAmount}(\\\"\\\");\\n        require(success, \\\"Transfer to agent failed\\\");\\n\\n        // Record in history (with size limit to prevent unbounded growth)\\n        if (revenueHistory.length < MAX_HISTORY_SIZE) {\\n            revenueHistory.push(\\n                RevenueRecord({\\n                    tokenId: tokenId,\\n                    amount: msg.value,\\n                    payer: msg.sender,\\n                    source: source,\\n                    timestamp: block.timestamp\\n                })\\n            );\\n        }\\n\\n        emit RevenueReceived(tokenId, msg.value, msg.sender, source, block.timestamp);\\n    }\\n\\n    /**\\n     * @dev Claim earnings for a specific agent\\n     */\\n    function claimEarnings(uint256 tokenId) external nonReentrant {\\n        uint256 claimable = claimableEarnings[tokenId][msg.sender];\\n        require(claimable > 0, \\\"No earnings to claim\\\");\\n\\n        claimableEarnings[tokenId][msg.sender] = 0;\\n        withdrawnEarnings[tokenId] += claimable;\\n\\n        (bool success, ) = payable(msg.sender).call{value: claimable}(\\\"\\\");\\n        require(success, \\\"Transfer failed\\\");\\n\\n        emit EarningsClaimed(tokenId, msg.sender, claimable);\\n    }\\n\\n    /**\\n     * @dev Batch claim earnings for multiple agents\\n     */\\n    function batchClaimEarnings(uint256[] calldata tokenIds) external nonReentrant {\\n        uint256 totalClaimable = 0;\\n\\n        for (uint256 i = 0; i < tokenIds.length; i++) {\\n            uint256 claimable = claimableEarnings[tokenIds[i]][msg.sender];\\n\\n            if (claimable > 0) {\\n                claimableEarnings[tokenIds[i]][msg.sender] = 0;\\n                withdrawnEarnings[tokenIds[i]] += claimable;\\n                totalClaimable += claimable;\\n\\n                emit EarningsClaimed(tokenIds[i], msg.sender, claimable);\\n            }\\n        }\\n\\n        require(totalClaimable > 0, \\\"No earnings to claim\\\");\\n\\n        (bool success, ) = payable(msg.sender).call{value: totalClaimable}(\\\"\\\");\\n        require(success, \\\"Transfer failed\\\");\\n    }\\n\\n    /**\\n     * @dev Get claimable earnings for specific agents owned by user\\n     * @param user The address to check\\n     * @param tokenIds Array of token IDs to check\\n     * @return total Total claimable amount across provided tokens\\n     */\\n    function getTotalClaimableEarnings(\\n        address user,\\n        uint256[] calldata tokenIds\\n    ) external view returns (uint256 total) {\\n        for (uint256 i = 0; i < tokenIds.length; i++) {\\n            total += claimableEarnings[tokenIds[i]][user];\\n        }\\n        return total;\\n    }\\n\\n    /**\\n     * @dev Get claimable earnings for a specific agent and owner\\n     */\\n    function getClaimableEarnings(uint256 tokenId, address owner) external view returns (uint256) {\\n        return claimableEarnings[tokenId][owner];\\n    }\\n\\n    /**\\n     * @dev Get agent earnings statistics\\n     */\\n    function getAgentStats(\\n        uint256 tokenId\\n    ) external view returns (uint256 totalEarnings, uint256 withdrawn, uint256 pending) {\\n        address currentOwner = agentNFT.ownerOf(tokenId);\\n\\n        return (\\n            agentEarnings[tokenId],\\n            withdrawnEarnings[tokenId],\\n            claimableEarnings[tokenId][currentOwner]\\n        );\\n    }\\n\\n    /**\\n     * @dev Get revenue history for an agent\\n     */\\n    function getAgentRevenueHistory(\\n        uint256 tokenId,\\n        uint256 limit\\n    ) external view returns (RevenueRecord[] memory) {\\n        uint256 count = 0;\\n\\n        for (uint256 i = 0; i < revenueHistory.length; i++) {\\n            if (revenueHistory[i].tokenId == tokenId) {\\n                count++;\\n                if (count >= limit) break;\\n            }\\n        }\\n\\n        // Build result array\\n        RevenueRecord[] memory records = new RevenueRecord[](count);\\n        uint256 index = 0;\\n\\n        for (uint256 i = revenueHistory.length; i > 0 && index < count; i--) {\\n            if (revenueHistory[i - 1].tokenId == tokenId) {\\n                records[index] = revenueHistory[i - 1];\\n                index++;\\n            }\\n        }\\n\\n        return records;\\n    }\\n\\n    /**\\n     * @dev Withdraw platform earnings (only owner)\\n     */\\n    function withdrawPlatformEarnings() external onlyOwner nonReentrant {\\n        uint256 available = platformEarnings - platformWithdrawn;\\n        require(available > 0, \\\"No earnings to withdraw\\\");\\n\\n        platformWithdrawn += available;\\n\\n        (bool success, ) = payable(owner()).call{value: available}(\\\"\\\");\\n        require(success, \\\"Transfer failed\\\");\\n\\n        emit PlatformEarningsWithdrawn(available);\\n    }\\n\\n    /**\\n     * @dev Update revenue split (only owner)\\n     */\\n    function updateRevenueSplit(\\n        uint256 newAgentShare,\\n        uint256 newPlatformShare\\n    ) external onlyOwner {\\n        require(newAgentShare + newPlatformShare == FEE_DENOMINATOR, \\\"Shares must sum to 100%\\\");\\n        require(newAgentShare >= 5000, \\\"Agent share must be at least 50%\\\");\\n\\n        agentOwnerShare = newAgentShare;\\n        platformShare = newPlatformShare;\\n\\n        emit RevenueSplitUpdated(newAgentShare, newPlatformShare);\\n    }\\n\\n    /**\\n     * @dev Get platform earnings statistics\\n     */\\n    function getPlatformStats()\\n        external\\n        view\\n        returns (uint256 totalEarnings, uint256 withdrawn, uint256 available)\\n    {\\n        return (platformEarnings, platformWithdrawn, platformEarnings - platformWithdrawn);\\n    }\\n\\n    /**\\n     * @dev Check if agent exists\\n     */\\n    function _exists(uint256 tokenId) private view returns (bool) {\\n        try agentNFT.ownerOf(tokenId) returns (address) {\\n            return true;\\n        } catch {\\n            return false;\\n        }\\n    }\\n\\n    /**\\n     * @dev Get total revenue history count\\n     */\\n    function getRevenueHistoryCount() external view returns (uint256) {\\n        return revenueHistory.length;\\n    }\\n}\\n\",\"keccak256\":\"0x8cc1ceff4222e906646260c4b5a0def0506c013a7573b9331f06ceafa5a14cf5\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x6080604052611f406002556107d06003553480156200001d57600080fd5b5060405162001acc38038062001acc833981016040819052620000409162000149565b600160005533806200006d57604051631e4fbdf760e01b8152600060048201526024015b60405180910390fd5b6200007881620000f7565b506001600160a01b038116620000d15760405162461bcd60e51b815260206004820152601360248201527f496e76616c6964204e4654206164647265737300000000000000000000000000604482015260640162000064565b600480546001600160a01b0319166001600160a01b03929092169190911790556200017b565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b6000602082840312156200015c57600080fd5b81516001600160a01b03811681146200017457600080fd5b9392505050565b611941806200018b6000396000f3fe6080604052600436106101b75760003560e01c8063715018a6116100ec578063c10662511161008a578063d73792a911610064578063d73792a91461048f578063e3acac2f146104e7578063ebf1f8591461052a578063f2fde38b1461056057600080fd5b8063c10662511461048f578063cda08dd5146104a5578063d5362824146104d257600080fd5b80638da5cb5b116100c65780638da5cb5b1461043057806398d15e131461044e5780639d182f0b14610464578063be820aa21461047957600080fd5b8063715018a6146103db578063767f48d4146103f057806380ac475d1461041057600080fd5b80634d0772e5116101595780635c6d2362116101335780635c6d2362146103435780635ea4d63f1461037b578063636d2f641461039b57806368091633146103bb57600080fd5b80634d0772e5146102e95780634d0792d81461031a5780635703a5991461033057600080fd5b80632869b107116101955780632869b107146102375780633173b27e1461026457806333d8950d146102915780633fd773e9146102b157600080fd5b8063136d8883146101bc57806320993004146101f157806324b1babf14610215575b600080fd5b3480156101c857600080fd5b506101d1610580565b604080519384526020840192909252908201526060015b60405180910390f35b3480156101fd57600080fd5b5061020760025481565b6040519081526020016101e8565b34801561022157600080fd5b5061023561023036600461152f565b6105a6565b005b34801561024357600080fd5b5061020761025236600461152f565b60076020526000908152604090205481565b34801561027057600080fd5b5061028461027f366004611548565b6106fa565b6040516101e891906115a2565b34801561029d57600080fd5b506102356102ac366004611638565b610914565b3480156102bd57600080fd5b506004546102d1906001600160a01b031681565b6040516001600160a01b0390911681526020016101e8565b3480156102f557600080fd5b5061030961030436600461152f565b6109bc565b6040516101e895949392919061165c565b34801561032657600080fd5b50610207600a5481565b61023561033e366004611696565b610a0c565b34801561034f57600080fd5b5061020761035e3660046116ca565b600660209081526000928352604080842090915290825290205481565b34801561038757600080fd5b5061020761039636600461173b565b610d6f565b3480156103a757600080fd5b506102356103b63660046116ca565b610df1565b3480156103c757600080fd5b506101d16103d636600461152f565b610eac565b3480156103e757600080fd5b50610235610f63565b3480156103fc57600080fd5b5061023561040b366004611548565b610f77565b34801561041c57600080fd5b5061023561042b366004611790565b611072565b34801561043c57600080fd5b506001546001600160a01b03166102d1565b34801561045a57600080fd5b5061020760035481565b34801561047057600080fd5b50610235611291565b34801561048557600080fd5b5061020760095481565b34801561049b57600080fd5b5061020761271081565b3480156104b157600080fd5b506102076104c036600461152f565b60056020526000908152604090205481565b3480156104de57600080fd5b50600b54610207565b3480156104f357600080fd5b506102076105023660046116ca565b60009182526006602090815260408084206001600160a01b0393909316845291905290205490565b34801561053657600080fd5b506102d161054536600461152f565b6008602052600090815260409020546001600160a01b031681565b34801561056c57600080fd5b5061023561057b366004611638565b6113ce565b6000806000600954600a54600a5460095461059b91906117e8565b925092509250909192565b6105ae611409565b6000818152600660209081526040808320338452909152902054806106115760405162461bcd60e51b81526020600482015260146024820152734e6f206561726e696e677320746f20636c61696d60601b60448201526064015b60405180910390fd5b600082815260066020908152604080832033845282528083208390558483526007909152812080548392906106479084906117fb565b9091555050604051600090339083908381818185875af1925050503d806000811461068e576040519150601f19603f3d011682016040523d82523d6000602084013e610693565b606091505b50509050806106b45760405162461bcd60e51b81526004016106089061180e565b604051828152339084907f36c3f03e14933cba4136cd8ef93804410ae778cac0ba0cf5cd7e6c2d9f1149609060200160405180910390a350506106f76001600055565b50565b60606000805b600b5481101561075d5784600b828154811061071e5761071e611837565b9060005260206000209060040201600001540361074b578161073f8161184d565b9250508382101561075d575b806107558161184d565b915050610700565b5060008167ffffffffffffffff81111561077957610779611866565b6040519080825280602002602001820160405280156107d257816020015b6040805160a0810182526000808252602080830182905292820181905260608201819052608082015282526000199092019101816107975790505b50600b549091506000905b6000811180156107ec57508382105b156109075786600b6107ff6001846117e8565b8154811061080f5761080f611837565b906000526020600020906004020160000154036108f557600b6108336001836117e8565b8154811061084357610843611837565b60009182526020918290206040805160a0810182526004909302909101805483526001810154938301939093526002808401546001600160a01b03811692840192909252919291606084019160ff600160a01b90910416908111156108aa576108aa61156a565b60028111156108bb576108bb61156a565b81526020016003820154815250508383815181106108db576108db611837565b602002602001018190525081806108f19061184d565b9250505b806108ff8161187c565b9150506107dd565b5090925050505b92915050565b61091c611433565b6001600160a01b0381166109685760405162461bcd60e51b8152602060048201526013602482015272496e76616c6964204e4654206164647265737360681b6044820152606401610608565b600480546001600160a01b0319166001600160a01b0383169081179091556040519081527f8e93c1fcbff5fd000613b01b07a53a21a778a4342e61ef697323874af3ad8dc29060200160405180910390a150565b600b81815481106109cc57600080fd5b60009182526020909120600490910201805460018201546002830154600390930154919350916001600160a01b03811691600160a01b90910460ff169085565b610a14611409565b60003411610a565760405162461bcd60e51b815260206004820152600f60248201526e139bc81c185e5b595b9d081cd95b9d608a1b6044820152606401610608565b610a5f82611460565b610aa25760405162461bcd60e51b81526020600482015260146024820152731059d95b9d08191bd95cc81b9bdd08195e1a5cdd60621b6044820152606401610608565b600061271060025434610ab59190611893565b610abf91906118aa565b90506000610acd82346117e8565b6000858152600860205260409020549091506001600160a01b031680610b5b57600480546040516331a9108f60e11b81529182018790526001600160a01b031690636352211e90602401602060405180830381865afa158015610b34573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610b5891906118cc565b90505b60008581526005602052604081208054859290610b799084906117fb565b925050819055508160096000828254610b9291906117fb565b90915550506040516000906001600160a01b0383169085908381818185875af1925050503d8060008114610be2576040519150601f19603f3d011682016040523d82523d6000602084013e610be7565b606091505b5050905080610c385760405162461bcd60e51b815260206004820152601860248201527f5472616e7366657220746f206167656e74206661696c656400000000000000006044820152606401610608565b600b546127101115610d1757600b6040518060a00160405280888152602001348152602001336001600160a01b03168152602001876002811115610c7e57610c7e61156a565b815242602091820152825460018181018555600094855293829020835160049092020190815590820151928101929092556040810151600280840180546001600160a01b039093166001600160a01b031984168117825560608501519495949391926001600160a81b03199092161790600160a01b908490811115610d0557610d0561156a565b02179055506080820151816003015550505b336001600160a01b0316867fbc3bfdf22420a1f305ee6d1ab39a833bd3bb19e85cfaf4dc09648932c7920579348842604051610d55939291906118e9565b60405180910390a350505050610d6b6001600055565b5050565b6000805b82811015610de95760066000858584818110610d9157610d91611837565b9050602002013581526020019081526020016000206000866001600160a01b03166001600160a01b031681526020019081526020016000205482610dd591906117fb565b915080610de18161184d565b915050610d73565b509392505050565b610df9611433565b6001600160a01b038116610e485760405162461bcd60e51b8152602060048201526016602482015275496e76616c69642077616c6c6574206164647265737360501b6044820152606401610608565b60008281526008602090815260409182902080546001600160a01b0319166001600160a01b038516908117909155915191825283917fe0ff476e22f4d69e3d480837eed3c09426d182a1e7c32190fdf01fa0da8b116d910160405180910390a25050565b600480546040516331a9108f60e11b81529182018390526000918291829182916001600160a01b031690636352211e90602401602060405180830381865afa158015610efc573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610f2091906118cc565b600095865260056020908152604080882054600783528189205460068452828a206001600160a01b03959095168a52939092529096205495969095945092505050565b610f6b611433565b610f7560006114dd565b565b610f7f611433565b612710610f8c82846117fb565b14610fd95760405162461bcd60e51b815260206004820152601760248201527f536861726573206d7573742073756d20746f20313030250000000000000000006044820152606401610608565b61138882101561102b5760405162461bcd60e51b815260206004820181905260248201527f4167656e74207368617265206d757374206265206174206c65617374203530256044820152606401610608565b6002829055600381905560408051838152602081018390527f6c8ba0b577cc4989572b185b5b1bc6584a837a7333975075b038b27c87ee30a4910160405180910390a15050565b61107a611409565b6000805b828110156111d55760006006600086868581811061109e5761109e611837565b602090810292909201358352508181019290925260409081016000908120338252909252902054905080156111c2576000600660008787868181106110e5576110e5611837565b9050602002013581526020019081526020016000206000336001600160a01b03166001600160a01b0316815260200190815260200160002081905550806007600087878681811061113857611138611837565b905060200201358152602001908152602001600020600082825461115c91906117fb565b9091555061116c905081846117fb565b92503385858481811061118157611181611837565b905060200201357f36c3f03e14933cba4136cd8ef93804410ae778cac0ba0cf5cd7e6c2d9f114960836040516111b991815260200190565b60405180910390a35b50806111cd8161184d565b91505061107e565b506000811161121d5760405162461bcd60e51b81526020600482015260146024820152734e6f206561726e696e677320746f20636c61696d60601b6044820152606401610608565b604051600090339083908381818185875af1925050503d806000811461125f576040519150601f19603f3d011682016040523d82523d6000602084013e611264565b606091505b50509050806112855760405162461bcd60e51b81526004016106089061180e565b5050610d6b6001600055565b611299611433565b6112a1611409565b6000600a546009546112b391906117e8565b9050600081116113055760405162461bcd60e51b815260206004820152601760248201527f4e6f206561726e696e677320746f2077697468647261770000000000000000006044820152606401610608565b80600a600082825461131791906117fb565b90915550506001546040516000916001600160a01b03169083908381818185875af1925050503d8060008114611369576040519150601f19603f3d011682016040523d82523d6000602084013e61136e565b606091505b505090508061138f5760405162461bcd60e51b81526004016106089061180e565b6040518281527f57623143967421676037dd7a2d970edab9d15ec8ae5916ed95105af5b1e80c249060200160405180910390a15050610f756001600055565b6113d6611433565b6001600160a01b03811661140057604051631e4fbdf760e01b815260006004820152602401610608565b6106f7816114dd565b60026000540361142c57604051633ee5aeb560e01b815260040160405180910390fd5b6002600055565b6001546001600160a01b03163314610f755760405163118cdaa760e01b8152336004820152602401610608565b600480546040516331a9108f60e11b81529182018390526000916001600160a01b0390911690636352211e90602401602060405180830381865afa9250505080156114c8575060408051601f3d908101601f191682019092526114c5918101906118cc565b60015b6114d457506000919050565b50600192915050565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b60006020828403121561154157600080fd5b5035919050565b6000806040838503121561155b57600080fd5b50508035926020909101359150565b634e487b7160e01b600052602160045260246000fd5b6003811061159e57634e487b7160e01b600052602160045260246000fd5b9052565b602080825282518282018190526000919060409081850190868401855b82811015611616578151805185528681015187860152858101516001600160a01b0316868601526060808201516115f882880182611580565b50506080908101519085015260a090930192908501906001016115bf565b5091979650505050505050565b6001600160a01b03811681146106f757600080fd5b60006020828403121561164a57600080fd5b813561165581611623565b9392505050565b858152602081018590526001600160a01b038416604082015260a081016116866060830185611580565b8260808301529695505050505050565b600080604083850312156116a957600080fd5b823591506020830135600381106116bf57600080fd5b809150509250929050565b600080604083850312156116dd57600080fd5b8235915060208301356116bf81611623565b60008083601f84011261170157600080fd5b50813567ffffffffffffffff81111561171957600080fd5b6020830191508360208260051b850101111561173457600080fd5b9250929050565b60008060006040848603121561175057600080fd5b833561175b81611623565b9250602084013567ffffffffffffffff81111561177757600080fd5b611783868287016116ef565b9497909650939450505050565b600080602083850312156117a357600080fd5b823567ffffffffffffffff8111156117ba57600080fd5b6117c6858286016116ef565b90969095509350505050565b634e487b7160e01b600052601160045260246000fd5b8181038181111561090e5761090e6117d2565b8082018082111561090e5761090e6117d2565b6020808252600f908201526e151c985b9cd9995c8819985a5b1959608a1b604082015260600190565b634e487b7160e01b600052603260045260246000fd5b60006001820161185f5761185f6117d2565b5060010190565b634e487b7160e01b600052604160045260246000fd5b60008161188b5761188b6117d2565b506000190190565b808202811582820484141761090e5761090e6117d2565b6000826118c757634e487b7160e01b600052601260045260246000fd5b500490565b6000602082840312156118de57600080fd5b815161165581611623565b838152606081016118fd6020830185611580565b82604083015294935050505056fea2646970667358221220d9e8ee9a2cd8d9228551c3dfba9492d51b05ee310a39f1991ff4ddfee71976ec64736f6c63430008140033",
+  "deployedBytecode": "0x6080604052600436106101b75760003560e01c8063715018a6116100ec578063c10662511161008a578063d73792a911610064578063d73792a91461048f578063e3acac2f146104e7578063ebf1f8591461052a578063f2fde38b1461056057600080fd5b8063c10662511461048f578063cda08dd5146104a5578063d5362824146104d257600080fd5b80638da5cb5b116100c65780638da5cb5b1461043057806398d15e131461044e5780639d182f0b14610464578063be820aa21461047957600080fd5b8063715018a6146103db578063767f48d4146103f057806380ac475d1461041057600080fd5b80634d0772e5116101595780635c6d2362116101335780635c6d2362146103435780635ea4d63f1461037b578063636d2f641461039b57806368091633146103bb57600080fd5b80634d0772e5146102e95780634d0792d81461031a5780635703a5991461033057600080fd5b80632869b107116101955780632869b107146102375780633173b27e1461026457806333d8950d146102915780633fd773e9146102b157600080fd5b8063136d8883146101bc57806320993004146101f157806324b1babf14610215575b600080fd5b3480156101c857600080fd5b506101d1610580565b604080519384526020840192909252908201526060015b60405180910390f35b3480156101fd57600080fd5b5061020760025481565b6040519081526020016101e8565b34801561022157600080fd5b5061023561023036600461152f565b6105a6565b005b34801561024357600080fd5b5061020761025236600461152f565b60076020526000908152604090205481565b34801561027057600080fd5b5061028461027f366004611548565b6106fa565b6040516101e891906115a2565b34801561029d57600080fd5b506102356102ac366004611638565b610914565b3480156102bd57600080fd5b506004546102d1906001600160a01b031681565b6040516001600160a01b0390911681526020016101e8565b3480156102f557600080fd5b5061030961030436600461152f565b6109bc565b6040516101e895949392919061165c565b34801561032657600080fd5b50610207600a5481565b61023561033e366004611696565b610a0c565b34801561034f57600080fd5b5061020761035e3660046116ca565b600660209081526000928352604080842090915290825290205481565b34801561038757600080fd5b5061020761039636600461173b565b610d6f565b3480156103a757600080fd5b506102356103b63660046116ca565b610df1565b3480156103c757600080fd5b506101d16103d636600461152f565b610eac565b3480156103e757600080fd5b50610235610f63565b3480156103fc57600080fd5b5061023561040b366004611548565b610f77565b34801561041c57600080fd5b5061023561042b366004611790565b611072565b34801561043c57600080fd5b506001546001600160a01b03166102d1565b34801561045a57600080fd5b5061020760035481565b34801561047057600080fd5b50610235611291565b34801561048557600080fd5b5061020760095481565b34801561049b57600080fd5b5061020761271081565b3480156104b157600080fd5b506102076104c036600461152f565b60056020526000908152604090205481565b3480156104de57600080fd5b50600b54610207565b3480156104f357600080fd5b506102076105023660046116ca565b60009182526006602090815260408084206001600160a01b0393909316845291905290205490565b34801561053657600080fd5b506102d161054536600461152f565b6008602052600090815260409020546001600160a01b031681565b34801561056c57600080fd5b5061023561057b366004611638565b6113ce565b6000806000600954600a54600a5460095461059b91906117e8565b925092509250909192565b6105ae611409565b6000818152600660209081526040808320338452909152902054806106115760405162461bcd60e51b81526020600482015260146024820152734e6f206561726e696e677320746f20636c61696d60601b60448201526064015b60405180910390fd5b600082815260066020908152604080832033845282528083208390558483526007909152812080548392906106479084906117fb565b9091555050604051600090339083908381818185875af1925050503d806000811461068e576040519150601f19603f3d011682016040523d82523d6000602084013e610693565b606091505b50509050806106b45760405162461bcd60e51b81526004016106089061180e565b604051828152339084907f36c3f03e14933cba4136cd8ef93804410ae778cac0ba0cf5cd7e6c2d9f1149609060200160405180910390a350506106f76001600055565b50565b60606000805b600b5481101561075d5784600b828154811061071e5761071e611837565b9060005260206000209060040201600001540361074b578161073f8161184d565b9250508382101561075d575b806107558161184d565b915050610700565b5060008167ffffffffffffffff81111561077957610779611866565b6040519080825280602002602001820160405280156107d257816020015b6040805160a0810182526000808252602080830182905292820181905260608201819052608082015282526000199092019101816107975790505b50600b549091506000905b6000811180156107ec57508382105b156109075786600b6107ff6001846117e8565b8154811061080f5761080f611837565b906000526020600020906004020160000154036108f557600b6108336001836117e8565b8154811061084357610843611837565b60009182526020918290206040805160a0810182526004909302909101805483526001810154938301939093526002808401546001600160a01b03811692840192909252919291606084019160ff600160a01b90910416908111156108aa576108aa61156a565b60028111156108bb576108bb61156a565b81526020016003820154815250508383815181106108db576108db611837565b602002602001018190525081806108f19061184d565b9250505b806108ff8161187c565b9150506107dd565b5090925050505b92915050565b61091c611433565b6001600160a01b0381166109685760405162461bcd60e51b8152602060048201526013602482015272496e76616c6964204e4654206164647265737360681b6044820152606401610608565b600480546001600160a01b0319166001600160a01b0383169081179091556040519081527f8e93c1fcbff5fd000613b01b07a53a21a778a4342e61ef697323874af3ad8dc29060200160405180910390a150565b600b81815481106109cc57600080fd5b60009182526020909120600490910201805460018201546002830154600390930154919350916001600160a01b03811691600160a01b90910460ff169085565b610a14611409565b60003411610a565760405162461bcd60e51b815260206004820152600f60248201526e139bc81c185e5b595b9d081cd95b9d608a1b6044820152606401610608565b610a5f82611460565b610aa25760405162461bcd60e51b81526020600482015260146024820152731059d95b9d08191bd95cc81b9bdd08195e1a5cdd60621b6044820152606401610608565b600061271060025434610ab59190611893565b610abf91906118aa565b90506000610acd82346117e8565b6000858152600860205260409020549091506001600160a01b031680610b5b57600480546040516331a9108f60e11b81529182018790526001600160a01b031690636352211e90602401602060405180830381865afa158015610b34573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610b5891906118cc565b90505b60008581526005602052604081208054859290610b799084906117fb565b925050819055508160096000828254610b9291906117fb565b90915550506040516000906001600160a01b0383169085908381818185875af1925050503d8060008114610be2576040519150601f19603f3d011682016040523d82523d6000602084013e610be7565b606091505b5050905080610c385760405162461bcd60e51b815260206004820152601860248201527f5472616e7366657220746f206167656e74206661696c656400000000000000006044820152606401610608565b600b546127101115610d1757600b6040518060a00160405280888152602001348152602001336001600160a01b03168152602001876002811115610c7e57610c7e61156a565b815242602091820152825460018181018555600094855293829020835160049092020190815590820151928101929092556040810151600280840180546001600160a01b039093166001600160a01b031984168117825560608501519495949391926001600160a81b03199092161790600160a01b908490811115610d0557610d0561156a565b02179055506080820151816003015550505b336001600160a01b0316867fbc3bfdf22420a1f305ee6d1ab39a833bd3bb19e85cfaf4dc09648932c7920579348842604051610d55939291906118e9565b60405180910390a350505050610d6b6001600055565b5050565b6000805b82811015610de95760066000858584818110610d9157610d91611837565b9050602002013581526020019081526020016000206000866001600160a01b03166001600160a01b031681526020019081526020016000205482610dd591906117fb565b915080610de18161184d565b915050610d73565b509392505050565b610df9611433565b6001600160a01b038116610e485760405162461bcd60e51b8152602060048201526016602482015275496e76616c69642077616c6c6574206164647265737360501b6044820152606401610608565b60008281526008602090815260409182902080546001600160a01b0319166001600160a01b038516908117909155915191825283917fe0ff476e22f4d69e3d480837eed3c09426d182a1e7c32190fdf01fa0da8b116d910160405180910390a25050565b600480546040516331a9108f60e11b81529182018390526000918291829182916001600160a01b031690636352211e90602401602060405180830381865afa158015610efc573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610f2091906118cc565b600095865260056020908152604080882054600783528189205460068452828a206001600160a01b03959095168a52939092529096205495969095945092505050565b610f6b611433565b610f7560006114dd565b565b610f7f611433565b612710610f8c82846117fb565b14610fd95760405162461bcd60e51b815260206004820152601760248201527f536861726573206d7573742073756d20746f20313030250000000000000000006044820152606401610608565b61138882101561102b5760405162461bcd60e51b815260206004820181905260248201527f4167656e74207368617265206d757374206265206174206c65617374203530256044820152606401610608565b6002829055600381905560408051838152602081018390527f6c8ba0b577cc4989572b185b5b1bc6584a837a7333975075b038b27c87ee30a4910160405180910390a15050565b61107a611409565b6000805b828110156111d55760006006600086868581811061109e5761109e611837565b602090810292909201358352508181019290925260409081016000908120338252909252902054905080156111c2576000600660008787868181106110e5576110e5611837565b9050602002013581526020019081526020016000206000336001600160a01b03166001600160a01b0316815260200190815260200160002081905550806007600087878681811061113857611138611837565b905060200201358152602001908152602001600020600082825461115c91906117fb565b9091555061116c905081846117fb565b92503385858481811061118157611181611837565b905060200201357f36c3f03e14933cba4136cd8ef93804410ae778cac0ba0cf5cd7e6c2d9f114960836040516111b991815260200190565b60405180910390a35b50806111cd8161184d565b91505061107e565b506000811161121d5760405162461bcd60e51b81526020600482015260146024820152734e6f206561726e696e677320746f20636c61696d60601b6044820152606401610608565b604051600090339083908381818185875af1925050503d806000811461125f576040519150601f19603f3d011682016040523d82523d6000602084013e611264565b606091505b50509050806112855760405162461bcd60e51b81526004016106089061180e565b5050610d6b6001600055565b611299611433565b6112a1611409565b6000600a546009546112b391906117e8565b9050600081116113055760405162461bcd60e51b815260206004820152601760248201527f4e6f206561726e696e677320746f2077697468647261770000000000000000006044820152606401610608565b80600a600082825461131791906117fb565b90915550506001546040516000916001600160a01b03169083908381818185875af1925050503d8060008114611369576040519150601f19603f3d011682016040523d82523d6000602084013e61136e565b606091505b505090508061138f5760405162461bcd60e51b81526004016106089061180e565b6040518281527f57623143967421676037dd7a2d970edab9d15ec8ae5916ed95105af5b1e80c249060200160405180910390a15050610f756001600055565b6113d6611433565b6001600160a01b03811661140057604051631e4fbdf760e01b815260006004820152602401610608565b6106f7816114dd565b60026000540361142c57604051633ee5aeb560e01b815260040160405180910390fd5b6002600055565b6001546001600160a01b03163314610f755760405163118cdaa760e01b8152336004820152602401610608565b600480546040516331a9108f60e11b81529182018390526000916001600160a01b0390911690636352211e90602401602060405180830381865afa9250505080156114c8575060408051601f3d908101601f191682019092526114c5918101906118cc565b60015b6114d457506000919050565b50600192915050565b600180546001600160a01b038381166001600160a01b0319831681179093556040519116919082907f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e090600090a35050565b60006020828403121561154157600080fd5b5035919050565b6000806040838503121561155b57600080fd5b50508035926020909101359150565b634e487b7160e01b600052602160045260246000fd5b6003811061159e57634e487b7160e01b600052602160045260246000fd5b9052565b602080825282518282018190526000919060409081850190868401855b82811015611616578151805185528681015187860152858101516001600160a01b0316868601526060808201516115f882880182611580565b50506080908101519085015260a090930192908501906001016115bf565b5091979650505050505050565b6001600160a01b03811681146106f757600080fd5b60006020828403121561164a57600080fd5b813561165581611623565b9392505050565b858152602081018590526001600160a01b038416604082015260a081016116866060830185611580565b8260808301529695505050505050565b600080604083850312156116a957600080fd5b823591506020830135600381106116bf57600080fd5b809150509250929050565b600080604083850312156116dd57600080fd5b8235915060208301356116bf81611623565b60008083601f84011261170157600080fd5b50813567ffffffffffffffff81111561171957600080fd5b6020830191508360208260051b850101111561173457600080fd5b9250929050565b60008060006040848603121561175057600080fd5b833561175b81611623565b9250602084013567ffffffffffffffff81111561177757600080fd5b611783868287016116ef565b9497909650939450505050565b600080602083850312156117a357600080fd5b823567ffffffffffffffff8111156117ba57600080fd5b6117c6858286016116ef565b90969095509350505050565b634e487b7160e01b600052601160045260246000fd5b8181038181111561090e5761090e6117d2565b8082018082111561090e5761090e6117d2565b6020808252600f908201526e151c985b9cd9995c8819985a5b1959608a1b604082015260600190565b634e487b7160e01b600052603260045260246000fd5b60006001820161185f5761185f6117d2565b5060010190565b634e487b7160e01b600052604160045260246000fd5b60008161188b5761188b6117d2565b506000190190565b808202811582820484141761090e5761090e6117d2565b6000826118c757634e487b7160e01b600052601260045260246000fd5b500490565b6000602082840312156118de57600080fd5b815161165581611623565b838152606081016118fd6020830185611580565b82604083015294935050505056fea2646970667358221220d9e8ee9a2cd8d9228551c3dfba9492d51b05ee310a39f1991ff4ddfee71976ec64736f6c63430008140033",
+  "devdoc": {
+    "details": "Manages revenue distribution for AI Agent-generated content",
+    "errors": {
+      "OwnableInvalidOwner(address)": [
+        {
+          "details": "The owner is not a valid owner account. (eg. `address(0)`)"
+        }
+      ],
+      "OwnableUnauthorizedAccount(address)": [
+        {
+          "details": "The caller account is not authorized to perform an operation."
+        }
+      ],
+      "ReentrancyGuardReentrantCall()": [
+        {
+          "details": "Unauthorized reentrant call."
+        }
+      ]
+    },
+    "kind": "dev",
+    "methods": {
+      "batchClaimEarnings(uint256[])": {
+        "details": "Batch claim earnings for multiple agents"
+      },
+      "claimEarnings(uint256)": {
+        "details": "Claim earnings for a specific agent"
+      },
+      "getAgentRevenueHistory(uint256,uint256)": {
+        "details": "Get revenue history for an agent"
+      },
+      "getAgentStats(uint256)": {
+        "details": "Get agent earnings statistics"
+      },
+      "getClaimableEarnings(uint256,address)": {
+        "details": "Get claimable earnings for a specific agent and owner"
+      },
+      "getPlatformStats()": {
+        "details": "Get platform earnings statistics"
+      },
+      "getRevenueHistoryCount()": {
+        "details": "Get total revenue history count"
+      },
+      "getTotalClaimableEarnings(address,uint256[])": {
+        "details": "Get claimable earnings for specific agents owned by user",
+        "params": {
+          "tokenIds": "Array of token IDs to check",
+          "user": "The address to check"
+        },
+        "returns": {
+          "total": "Total claimable amount across provided tokens"
+        }
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "recordRevenue(uint256,uint8)": {
+        "details": "Record revenue for an agent"
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "setAgentNFT(address)": {
+        "details": "Update the AgentNFT contract address (only owner)"
+      },
+      "setAgentWallet(uint256,address)": {
+        "details": "Set the wallet address for an agent (where revenue will be sent)"
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      },
+      "updateRevenueSplit(uint256,uint256)": {
+        "details": "Update revenue split (only owner)"
+      },
+      "withdrawPlatformEarnings()": {
+        "details": "Withdraw platform earnings (only owner)"
+      }
+    },
+    "title": "RevenueShare",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 2353,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "_status",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 8,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_address"
+      },
+      {
+        "astId": 10330,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "agentOwnerShare",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 10333,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "platformShare",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 10339,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "agentNFT",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_contract(IERC721)2009"
+      },
+      {
+        "astId": 10343,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "agentEarnings",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_mapping(t_uint256,t_uint256)"
+      },
+      {
+        "astId": 10349,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "claimableEarnings",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_mapping(t_uint256,t_mapping(t_address,t_uint256))"
+      },
+      {
+        "astId": 10353,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "withdrawnEarnings",
+        "offset": 0,
+        "slot": "7",
+        "type": "t_mapping(t_uint256,t_uint256)"
+      },
+      {
+        "astId": 10357,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "agentWallets",
+        "offset": 0,
+        "slot": "8",
+        "type": "t_mapping(t_uint256,t_address)"
+      },
+      {
+        "astId": 10359,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "platformEarnings",
+        "offset": 0,
+        "slot": "9",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 10361,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "platformWithdrawn",
+        "offset": 0,
+        "slot": "10",
+        "type": "t_uint256"
+      },
+      {
+        "astId": 10381,
+        "contract": "contracts/RevenueShare.sol:RevenueShare",
+        "label": "revenueHistory",
+        "offset": 0,
+        "slot": "11",
+        "type": "t_array(t_struct(RevenueRecord)10377_storage)dyn_storage"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_array(t_struct(RevenueRecord)10377_storage)dyn_storage": {
+        "base": "t_struct(RevenueRecord)10377_storage",
+        "encoding": "dynamic_array",
+        "label": "struct RevenueShare.RevenueRecord[]",
+        "numberOfBytes": "32"
+      },
+      "t_contract(IERC721)2009": {
+        "encoding": "inplace",
+        "label": "contract IERC721",
+        "numberOfBytes": "20"
+      },
+      "t_enum(RevenueSource)10365": {
+        "encoding": "inplace",
+        "label": "enum RevenueShare.RevenueSource",
+        "numberOfBytes": "1"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_uint256,t_address)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      },
+      "t_mapping(t_uint256,t_mapping(t_address,t_uint256))": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => mapping(address => uint256))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_address,t_uint256)"
+      },
+      "t_mapping(t_uint256,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_struct(RevenueRecord)10377_storage": {
+        "encoding": "inplace",
+        "label": "struct RevenueShare.RevenueRecord",
+        "members": [
+          {
+            "astId": 10367,
+            "contract": "contracts/RevenueShare.sol:RevenueShare",
+            "label": "tokenId",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 10369,
+            "contract": "contracts/RevenueShare.sol:RevenueShare",
+            "label": "amount",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_uint256"
+          },
+          {
+            "astId": 10371,
+            "contract": "contracts/RevenueShare.sol:RevenueShare",
+            "label": "payer",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_address"
+          },
+          {
+            "astId": 10374,
+            "contract": "contracts/RevenueShare.sol:RevenueShare",
+            "label": "source",
+            "offset": 20,
+            "slot": "2",
+            "type": "t_enum(RevenueSource)10365"
+          },
+          {
+            "astId": 10376,
+            "contract": "contracts/RevenueShare.sol:RevenueShare",
+            "label": "timestamp",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256"
+          }
+        ],
+        "numberOfBytes": "128"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
