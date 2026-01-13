@@ -26,6 +26,7 @@ async function updateContractAddresses(deployments) {
     const marketplace = await get("AgentMarketplace")
     const credits = await get("AgentCredits")
     const revenueShare = await get("RevenueShare")
+    const agentPKP = await get("AgentPKP")
 
     const contractAddresses = {
         [chainId]: {
@@ -33,6 +34,7 @@ async function updateContractAddresses(deployments) {
             AgentMarketplace: marketplace.address,
             AgentCredits: credits.address,
             RevenueShare: revenueShare.address,
+            AgentPKP: agentPKP.address,
         },
     }
 
@@ -59,7 +61,7 @@ async function updateContractAddresses(deployments) {
 }
 
 async function updateAbi() {
-    const contracts = ["AgentNFT", "AgentMarketplace", "AgentCredits", "RevenueShare"]
+    const contracts = ["AgentNFT", "AgentMarketplace", "AgentCredits", "RevenueShare", "AgentPKP"]
 
     // Create directory if it doesn't exist
     if (!fs.existsSync(FRONTEND_ABI_LOCATION)) {
