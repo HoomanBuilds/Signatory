@@ -1,0 +1,841 @@
+{
+  "address": "0xc524Cba255882026392730eE2581723a6ED80eEd",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_agentNFT",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "owner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableInvalidOwner",
+      "type": "error"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "OwnableUnauthorizedAccount",
+      "type": "error"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newAgentNFT",
+          "type": "address"
+        }
+      ],
+      "name": "AgentNFTUpdated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "chainId",
+          "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "chainAddress",
+          "type": "string"
+        }
+      ],
+      "name": "ChainAddressSet",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "previousOwner",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "evmAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "pkpPublicKey",
+          "type": "bytes"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "pkpTokenId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "PKPRegistered",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "oldWallet",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newWallet",
+          "type": "address"
+        }
+      ],
+      "name": "PKPUpdated",
+      "type": "event"
+    },
+    {
+      "inputs": [],
+      "name": "agentNFT",
+      "outputs": [
+        {
+          "internalType": "contract IAgentNFT",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "name": "chainAddresses",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "evmAddress",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "wallet",
+          "type": "address"
+        }
+      ],
+      "name": "getAgentByWallet",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAgentPKP",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getAgentWallet",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "chainId",
+          "type": "string"
+        }
+      ],
+      "name": "getChainAddress",
+      "outputs": [
+        {
+          "internalType": "string",
+          "name": "",
+          "type": "string"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string[]",
+          "name": "chainIds",
+          "type": "string[]"
+        }
+      ],
+      "name": "getChainAddresses",
+      "outputs": [
+        {
+          "internalType": "string[]",
+          "name": "addresses",
+          "type": "string[]"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "getPKPInfo",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "_pkpPublicKey",
+          "type": "bytes"
+        },
+        {
+          "internalType": "address",
+          "name": "_evmAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_pkpTokenId",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "agentOwner",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        }
+      ],
+      "name": "hasPKP",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "pkpPublicKey",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "name": "pkpTokenId",
+      "outputs": [
+        {
+          "internalType": "bytes32",
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_pkpPublicKey",
+          "type": "bytes"
+        },
+        {
+          "internalType": "address",
+          "name": "_evmAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_pkpTokenId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "registerPKP",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "renounceOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "_agentNFT",
+          "type": "address"
+        }
+      ],
+      "name": "setAgentNFT",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "string",
+          "name": "chainId",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_address",
+          "type": "string"
+        }
+      ],
+      "name": "setChainAddress",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalRegistered",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "agentTokenId",
+          "type": "uint256"
+        },
+        {
+          "internalType": "bytes",
+          "name": "_newPkpPublicKey",
+          "type": "bytes"
+        },
+        {
+          "internalType": "address",
+          "name": "_newEvmAddress",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "_newPkpTokenId",
+          "type": "bytes32"
+        }
+      ],
+      "name": "updatePKP",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "walletToAgent",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x088023f97b9a96a26ac24e354a49715fa044d35cfb0ef5882f3a9bc1d79f328f",
+  "receipt": {
+    "to": null,
+    "from": "0x17A076d6cCaf37Bc9386EAB653A5EfAd8B07430C",
+    "contractAddress": "0xc524Cba255882026392730eE2581723a6ED80eEd",
+    "transactionIndex": 0,
+    "gasUsed": "1379322",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000801000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000000000000000020000000000000000000800000000000000000000000000000000500000000400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000000000000000000000000000080000000000000000000000001000000000000000000000020000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xaade220dba5ff895650c66acc85bf7352f3af5bb1ef4166e06f1db50f0c8a495",
+    "transactionHash": "0x088023f97b9a96a26ac24e354a49715fa044d35cfb0ef5882f3a9bc1d79f328f",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 67458743,
+        "transactionHash": "0x088023f97b9a96a26ac24e354a49715fa044d35cfb0ef5882f3a9bc1d79f328f",
+        "address": "0xc524Cba255882026392730eE2581723a6ED80eEd",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x00000000000000000000000017a076d6ccaf37bc9386eab653a5efad8b07430c"
+        ],
+        "data": "0x",
+        "logIndex": 0,
+        "blockHash": "0xaade220dba5ff895650c66acc85bf7352f3af5bb1ef4166e06f1db50f0c8a495"
+      }
+    ],
+    "blockNumber": 67458743,
+    "cumulativeGasUsed": "1379322",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [
+    "0xD5bdd124De482d3e0244F6122E403983A4E25D62"
+  ],
+  "numDeployments": 1,
+  "solcInputHash": "012cf350db20bc17fad8ffb8898e526a",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.20+commit.a1b79de6\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_agentNFT\",\"type\":\"address\"}],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"owner\",\"type\":\"address\"}],\"name\":\"OwnableInvalidOwner\",\"type\":\"error\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"OwnableUnauthorizedAccount\",\"type\":\"error\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newAgentNFT\",\"type\":\"address\"}],\"name\":\"AgentNFTUpdated\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"chainId\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"string\",\"name\":\"chainAddress\",\"type\":\"string\"}],\"name\":\"ChainAddressSet\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"evmAddress\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"pkpPublicKey\",\"type\":\"bytes\"},{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"pkpTokenId\",\"type\":\"bytes32\"}],\"name\":\"PKPRegistered\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"oldWallet\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newWallet\",\"type\":\"address\"}],\"name\":\"PKPUpdated\",\"type\":\"event\"},{\"inputs\":[],\"name\":\"agentNFT\",\"outputs\":[{\"internalType\":\"contract IAgentNFT\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"name\":\"chainAddresses\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"evmAddress\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"wallet\",\"type\":\"address\"}],\"name\":\"getAgentByWallet\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"}],\"name\":\"getAgentPKP\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"}],\"name\":\"getAgentWallet\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"chainId\",\"type\":\"string\"}],\"name\":\"getChainAddress\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"},{\"internalType\":\"string[]\",\"name\":\"chainIds\",\"type\":\"string[]\"}],\"name\":\"getChainAddresses\",\"outputs\":[{\"internalType\":\"string[]\",\"name\":\"addresses\",\"type\":\"string[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"}],\"name\":\"getPKPInfo\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"_pkpPublicKey\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_evmAddress\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_pkpTokenId\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"agentOwner\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"}],\"name\":\"hasPKP\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"pkpPublicKey\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"pkpTokenId\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_pkpPublicKey\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_evmAddress\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_pkpTokenId\",\"type\":\"bytes32\"}],\"name\":\"registerPKP\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_agentNFT\",\"type\":\"address\"}],\"name\":\"setAgentNFT\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"},{\"internalType\":\"string\",\"name\":\"chainId\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_address\",\"type\":\"string\"}],\"name\":\"setChainAddress\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"totalRegistered\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"agentTokenId\",\"type\":\"uint256\"},{\"internalType\":\"bytes\",\"name\":\"_newPkpPublicKey\",\"type\":\"bytes\"},{\"internalType\":\"address\",\"name\":\"_newEvmAddress\",\"type\":\"address\"},{\"internalType\":\"bytes32\",\"name\":\"_newPkpTokenId\",\"type\":\"bytes32\"}],\"name\":\"updatePKP\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"name\":\"walletToAgent\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"details\":\"Registry linking AgentNFT tokens to Lit Protocol PKP wallets\",\"errors\":{\"OwnableInvalidOwner(address)\":[{\"details\":\"The owner is not a valid owner account. (eg. `address(0)`)\"}],\"OwnableUnauthorizedAccount(address)\":[{\"details\":\"The caller account is not authorized to perform an operation.\"}]},\"kind\":\"dev\",\"methods\":{\"getAgentByWallet(address)\":{\"details\":\"Get agent token ID from wallet address\"},\"getAgentPKP(uint256)\":{\"details\":\"Get PKP public key for an agent\"},\"getAgentWallet(uint256)\":{\"details\":\"Get EVM wallet address for an agent (same for all EVM chains)\"},\"getChainAddress(uint256,string)\":{\"details\":\"Get chain-specific address for an agent\",\"params\":{\"agentTokenId\":\"The AgentNFT token ID\",\"chainId\":\"The chain identifier\"}},\"getChainAddresses(uint256,string[])\":{\"details\":\"Get multiple chain addresses for an agent\",\"params\":{\"agentTokenId\":\"The AgentNFT token ID  \",\"chainIds\":\"Array of chain identifiers to query\"},\"returns\":{\"addresses\":\"Array of addresses for each chain\"}},\"getPKPInfo(uint256)\":{\"details\":\"Get full PKP info for an agent\"},\"hasPKP(uint256)\":{\"details\":\"Check if agent has a registered PKP\"},\"owner()\":{\"details\":\"Returns the address of the current owner.\"},\"registerPKP(uint256,bytes,address,bytes32)\":{\"details\":\"Register PKP for an agent (only backend/owner can call) Called after backend mints PKP on Lit Protocol\",\"params\":{\"_evmAddress\":\"The derived Ethereum address (same for all EVM chains)\",\"_pkpPublicKey\":\"The 65-byte uncompressed PKP public key\",\"_pkpTokenId\":\"The PKP token ID from Lit Protocol\",\"agentTokenId\":\"The AgentNFT token ID\"}},\"renounceOwnership()\":{\"details\":\"Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner.\"},\"setAgentNFT(address)\":{\"details\":\"Update AgentNFT contract reference (in case of upgrade)\"},\"setChainAddress(uint256,string,string)\":{\"details\":\"Set chain-specific address for an agent (Solana, Aptos, etc.)\",\"params\":{\"_address\":\"The address on that chain (as string due to different formats)\",\"agentTokenId\":\"The AgentNFT token ID\",\"chainId\":\"The chain identifier (e.g., \\\"solana\\\", \\\"aptos\\\")\"}},\"transferOwnership(address)\":{\"details\":\"Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner.\"},\"updatePKP(uint256,bytes,address,bytes32)\":{\"details\":\"Update PKP for an agent (for recovery/migration)\",\"params\":{\"_newEvmAddress\":\"The new derived wallet address\",\"_newPkpPublicKey\":\"The new PKP public key\",\"_newPkpTokenId\":\"The new PKP token ID\",\"agentTokenId\":\"The AgentNFT token ID\"}}},\"title\":\"AgentPKP\",\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/AgentPKP.sol\":\"AgentPKP\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":200},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/access/Ownable.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.0) (access/Ownable.sol)\\n\\npragma solidity ^0.8.20;\\n\\nimport {Context} from \\\"../utils/Context.sol\\\";\\n\\n/**\\n * @dev Contract module which provides a basic access control mechanism, where\\n * there is an account (an owner) that can be granted exclusive access to\\n * specific functions.\\n *\\n * The initial owner is set to the address provided by the deployer. This can\\n * later be changed with {transferOwnership}.\\n *\\n * This module is used through inheritance. It will make available the modifier\\n * `onlyOwner`, which can be applied to your functions to restrict their use to\\n * the owner.\\n */\\nabstract contract Ownable is Context {\\n    address private _owner;\\n\\n    /**\\n     * @dev The caller account is not authorized to perform an operation.\\n     */\\n    error OwnableUnauthorizedAccount(address account);\\n\\n    /**\\n     * @dev The owner is not a valid owner account. (eg. `address(0)`)\\n     */\\n    error OwnableInvalidOwner(address owner);\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    /**\\n     * @dev Initializes the contract setting the address provided by the deployer as the initial owner.\\n     */\\n    constructor(address initialOwner) {\\n        if (initialOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(initialOwner);\\n    }\\n\\n    /**\\n     * @dev Throws if called by any account other than the owner.\\n     */\\n    modifier onlyOwner() {\\n        _checkOwner();\\n        _;\\n    }\\n\\n    /**\\n     * @dev Returns the address of the current owner.\\n     */\\n    function owner() public view virtual returns (address) {\\n        return _owner;\\n    }\\n\\n    /**\\n     * @dev Throws if the sender is not the owner.\\n     */\\n    function _checkOwner() internal view virtual {\\n        if (owner() != _msgSender()) {\\n            revert OwnableUnauthorizedAccount(_msgSender());\\n        }\\n    }\\n\\n    /**\\n     * @dev Leaves the contract without owner. It will not be possible to call\\n     * `onlyOwner` functions. Can only be called by the current owner.\\n     *\\n     * NOTE: Renouncing ownership will leave the contract without an owner,\\n     * thereby disabling any functionality that is only available to the owner.\\n     */\\n    function renounceOwnership() public virtual onlyOwner {\\n        _transferOwnership(address(0));\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Can only be called by the current owner.\\n     */\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        if (newOwner == address(0)) {\\n            revert OwnableInvalidOwner(address(0));\\n        }\\n        _transferOwnership(newOwner);\\n    }\\n\\n    /**\\n     * @dev Transfers ownership of the contract to a new account (`newOwner`).\\n     * Internal function without access restriction.\\n     */\\n    function _transferOwnership(address newOwner) internal virtual {\\n        address oldOwner = _owner;\\n        _owner = newOwner;\\n        emit OwnershipTransferred(oldOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xff6d0bb2e285473e5311d9d3caacb525ae3538a80758c10649a4d61029b017bb\",\"license\":\"MIT\"},\"@openzeppelin/contracts/utils/Context.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n// OpenZeppelin Contracts (last updated v5.0.1) (utils/Context.sol)\\n\\npragma solidity ^0.8.20;\\n\\n/**\\n * @dev Provides information about the current execution context, including the\\n * sender of the transaction and its data. While these are generally available\\n * via msg.sender and msg.data, they should not be accessed in such a direct\\n * manner, since when dealing with meta-transactions the account sending and\\n * paying for execution may not be the actual sender (as far as an application\\n * is concerned).\\n *\\n * This contract is only required for intermediate, library-like contracts.\\n */\\nabstract contract Context {\\n    function _msgSender() internal view virtual returns (address) {\\n        return msg.sender;\\n    }\\n\\n    function _msgData() internal view virtual returns (bytes calldata) {\\n        return msg.data;\\n    }\\n\\n    function _contextSuffixLength() internal view virtual returns (uint256) {\\n        return 0;\\n    }\\n}\\n\",\"keccak256\":\"0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2\",\"license\":\"MIT\"},\"contracts/AgentPKP.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.20;\\n\\nimport \\\"@openzeppelin/contracts/access/Ownable.sol\\\";\\n\\n/**\\n * @title IAgentNFT\\n * @dev Interface for AgentNFT contract\\n */\\ninterface IAgentNFT {\\n    function exists(uint256 tokenId) external view returns (bool);\\n    function ownerOf(uint256 tokenId) external view returns (address);\\n}\\n\\n/**\\n * @title AgentPKP\\n * @dev Registry linking AgentNFT tokens to Lit Protocol PKP wallets\\n */\\ncontract AgentPKP is Ownable {\\n    IAgentNFT public agentNFT;\\n    \\n    mapping(uint256 => bytes) public pkpPublicKey;\\n    mapping(uint256 => address) public evmAddress;\\n    mapping(uint256 => mapping(string => string)) public chainAddresses;\\n    mapping(uint256 => bytes32) public pkpTokenId;\\n    mapping(address => uint256) public walletToAgent;\\n    uint256 public totalRegistered;\\n    \\n    // Events\\n    event PKPRegistered(\\n        uint256 indexed agentTokenId,\\n        address indexed evmAddress,\\n        bytes pkpPublicKey,\\n        bytes32 pkpTokenId\\n    );\\n    \\n    event ChainAddressSet(\\n        uint256 indexed agentTokenId,\\n        string chainId,\\n        string chainAddress\\n    );\\n    \\n    event PKPUpdated(\\n        uint256 indexed agentTokenId,\\n        address indexed oldWallet,\\n        address indexed newWallet\\n    );\\n    \\n    event AgentNFTUpdated(address indexed newAgentNFT);\\n    \\n    constructor(address _agentNFT) Ownable(msg.sender) {\\n        require(_agentNFT != address(0), \\\"Invalid AgentNFT address\\\");\\n        agentNFT = IAgentNFT(_agentNFT);\\n    }\\n    \\n    /**\\n     * @dev Register PKP for an agent (only backend/owner can call)\\n     * Called after backend mints PKP on Lit Protocol\\n     * @param agentTokenId The AgentNFT token ID\\n     * @param _pkpPublicKey The 65-byte uncompressed PKP public key\\n     * @param _evmAddress The derived Ethereum address (same for all EVM chains)\\n     * @param _pkpTokenId The PKP token ID from Lit Protocol\\n     */\\n    function registerPKP(\\n        uint256 agentTokenId,\\n        bytes calldata _pkpPublicKey,\\n        address _evmAddress,\\n        bytes32 _pkpTokenId\\n    ) external onlyOwner {\\n        require(agentNFT.exists(agentTokenId), \\\"Agent does not exist\\\");\\n        require(_evmAddress != address(0), \\\"Invalid wallet address\\\");\\n        require(_pkpPublicKey.length == 65, \\\"Invalid PKP public key length\\\");\\n        require(pkpPublicKey[agentTokenId].length == 0, \\\"PKP already registered\\\");\\n        require(walletToAgent[_evmAddress] == 0, \\\"Wallet already registered\\\");\\n        \\n        pkpPublicKey[agentTokenId] = _pkpPublicKey;\\n        evmAddress[agentTokenId] = _evmAddress;\\n        pkpTokenId[agentTokenId] = _pkpTokenId;\\n        walletToAgent[_evmAddress] = agentTokenId;\\n        totalRegistered++;\\n        \\n        emit PKPRegistered(agentTokenId, _evmAddress, _pkpPublicKey, _pkpTokenId);\\n    }\\n    \\n    /**\\n     * @dev Update PKP for an agent (for recovery/migration)\\n     * @param agentTokenId The AgentNFT token ID\\n     * @param _newPkpPublicKey The new PKP public key\\n     * @param _newEvmAddress The new derived wallet address\\n     * @param _newPkpTokenId The new PKP token ID\\n     */\\n    function updatePKP(\\n        uint256 agentTokenId,\\n        bytes calldata _newPkpPublicKey,\\n        address _newEvmAddress,\\n        bytes32 _newPkpTokenId\\n    ) external onlyOwner {\\n        require(pkpPublicKey[agentTokenId].length > 0, \\\"PKP not registered\\\");\\n        require(_newEvmAddress != address(0), \\\"Invalid wallet address\\\");\\n        require(_newPkpPublicKey.length == 65, \\\"Invalid PKP public key length\\\");\\n        \\n        address oldWallet = evmAddress[agentTokenId];\\n        \\n        // Clear old reverse lookup\\n        delete walletToAgent[oldWallet];\\n        \\n        // Set new values\\n        pkpPublicKey[agentTokenId] = _newPkpPublicKey;\\n        evmAddress[agentTokenId] = _newEvmAddress;\\n        pkpTokenId[agentTokenId] = _newPkpTokenId;\\n        walletToAgent[_newEvmAddress] = agentTokenId;\\n        \\n        emit PKPUpdated(agentTokenId, oldWallet, _newEvmAddress);\\n    }\\n    \\n    /**\\n     * @dev Set chain-specific address for an agent (Solana, Aptos, etc.)\\n     * @param agentTokenId The AgentNFT token ID\\n     * @param chainId The chain identifier (e.g., \\\"solana\\\", \\\"aptos\\\")\\n     * @param _address The address on that chain (as string due to different formats)\\n     */\\n    function setChainAddress(\\n        uint256 agentTokenId,\\n        string calldata chainId,\\n        string calldata _address\\n    ) external onlyOwner {\\n        require(pkpPublicKey[agentTokenId].length > 0, \\\"PKP not registered\\\");\\n        require(bytes(_address).length > 0, \\\"Invalid address\\\");\\n        \\n        chainAddresses[agentTokenId][chainId] = _address;\\n        emit ChainAddressSet(agentTokenId, chainId, _address);\\n    }\\n    \\n    /**\\n     * @dev Get chain-specific address for an agent\\n     * @param agentTokenId The AgentNFT token ID\\n     * @param chainId The chain identifier\\n     */\\n    function getChainAddress(\\n        uint256 agentTokenId,\\n        string calldata chainId\\n    ) external view returns (string memory) {\\n        return chainAddresses[agentTokenId][chainId];\\n    }\\n    \\n    /**\\n     * @dev Get EVM wallet address for an agent (same for all EVM chains)\\n     */\\n    function getAgentWallet(uint256 agentTokenId) external view returns (address) {\\n        return evmAddress[agentTokenId];\\n    }\\n    \\n    /**\\n     * @dev Get PKP public key for an agent\\n     */\\n    function getAgentPKP(uint256 agentTokenId) external view returns (bytes memory) {\\n        return pkpPublicKey[agentTokenId];\\n    }\\n    \\n    /**\\n     * @dev Check if agent has a registered PKP\\n     */\\n    function hasPKP(uint256 agentTokenId) external view returns (bool) {\\n        return pkpPublicKey[agentTokenId].length > 0;\\n    }\\n    \\n    /**\\n     * @dev Get agent token ID from wallet address\\n     */\\n    function getAgentByWallet(address wallet) external view returns (uint256) {\\n        return walletToAgent[wallet];\\n    }\\n    \\n    /**\\n     * @dev Get full PKP info for an agent\\n     */\\n    function getPKPInfo(uint256 agentTokenId) external view returns (\\n        bytes memory _pkpPublicKey,\\n        address _evmAddress,\\n        bytes32 _pkpTokenId,\\n        address agentOwner\\n    ) {\\n        _pkpPublicKey = pkpPublicKey[agentTokenId];\\n        _evmAddress = evmAddress[agentTokenId];\\n        _pkpTokenId = pkpTokenId[agentTokenId];\\n        \\n        if (agentNFT.exists(agentTokenId)) {\\n            agentOwner = agentNFT.ownerOf(agentTokenId);\\n        }\\n    }\\n    \\n    /**\\n     * @dev Get multiple chain addresses for an agent\\n     * @param agentTokenId The AgentNFT token ID  \\n     * @param chainIds Array of chain identifiers to query\\n     * @return addresses Array of addresses for each chain\\n     */\\n    function getChainAddresses(\\n        uint256 agentTokenId,\\n        string[] calldata chainIds\\n    ) external view returns (string[] memory addresses) {\\n        addresses = new string[](chainIds.length);\\n        for (uint256 i = 0; i < chainIds.length; i++) {\\n            addresses[i] = chainAddresses[agentTokenId][chainIds[i]];\\n        }\\n    }\\n    \\n    /**\\n     * @dev Update AgentNFT contract reference (in case of upgrade)\\n     */\\n    function setAgentNFT(address _agentNFT) external onlyOwner {\\n        require(_agentNFT != address(0), \\\"Invalid AgentNFT address\\\");\\n        agentNFT = IAgentNFT(_agentNFT);\\n        emit AgentNFTUpdated(_agentNFT);\\n    }\\n}\\n\",\"keccak256\":\"0x046566bc31ba8d8e9af1b103d2b181919514fa65212014f9faf9cb0846e49949\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x60806040523480156200001157600080fd5b506040516200188538038062001885833981016040819052620000349162000136565b33806200005c57604051631e4fbdf760e01b8152600060048201526024015b60405180910390fd5b6200006781620000e6565b506001600160a01b038116620000c05760405162461bcd60e51b815260206004820152601860248201527f496e76616c6964204167656e744e465420616464726573730000000000000000604482015260640162000053565b600180546001600160a01b0319166001600160a01b039290921691909117905562000168565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b6000602082840312156200014957600080fd5b81516001600160a01b03811681146200016157600080fd5b9392505050565b61170d80620001786000396000f3fe608060405234801561001057600080fd5b50600436106101365760003560e01c8063715018a6116100b8578063ab9282511161007c578063ab928251146102c4578063bb405f26146102ed578063c31f4af314610310578063e16abb1714610330578063f2fde38b14610350578063fb6867311461036357600080fd5b8063715018a614610258578063817bbaef1461026057806385f8dd8d146102735780638da5cb5b146102aa578063927416c0146102bb57600080fd5b80633fd773e9116100ff5780633fd773e9146101dc578063541b6f69146101ef5780635b4800761461020f57806369e05f1f146102225780636c8c19371461024557600080fd5b80623395091461013b5780631a210e2314610181578063319086351461019657806333d8950d146101b65780633a8bd857146101c9575b600080fd5b61016461014936600461102c565b6000908152600360205260409020546001600160a01b031690565b6040516001600160a01b0390911681526020015b60405180910390f35b61019461018f3660046110a3565b610376565b005b6101a96101a436600461102c565b610539565b6040516101789190611150565b6101946101c436600461116a565b6105db565b6101a96101d736600461102c565b610683565b600154610164906001600160a01b031681565b6102026101fd366004611187565b61071d565b6040516101789190611206565b6101a961021d36600461127e565b610888565b61023561023036600461102c565b6108bd565b6040516101789493929190611339565b6101a9610253366004611375565b610a6d565b610194610b32565b61019461026e3660046110a3565b610b46565b61029c61028136600461116a565b6001600160a01b031660009081526006602052604090205490565b604051908152602001610178565b6000546001600160a01b0316610164565b61029c60075481565b6101646102d236600461102c565b6003602052600090815260409020546001600160a01b031681565b6103006102fb36600461102c565b610e21565b6040519015158152602001610178565b61029c61031e36600461102c565b60056020526000908152604090205481565b61029c61033e36600461116a565b60066020526000908152604090205481565b61019461035e36600461116a565b610e47565b6101946103713660046113c1565b610e85565b61037e610faf565b600085815260026020526040812080546103979061143b565b9050116103e05760405162461bcd60e51b81526020600482015260126024820152711412d4081b9bdd081c9959da5cdd195c995960721b60448201526064015b60405180910390fd5b6001600160a01b03821661042f5760405162461bcd60e51b8152602060048201526016602482015275496e76616c69642077616c6c6574206164647265737360501b60448201526064016103d7565b6041831461047f5760405162461bcd60e51b815260206004820152601d60248201527f496e76616c696420504b50207075626c6963206b6579206c656e67746800000060448201526064016103d7565b6000858152600360209081526040808320546001600160a01b03168084526006835281842084905588845260029092529091206104bd8587836114c4565b50600086815260036020908152604080832080546001600160a01b0319166001600160a01b038881169182179092556005845282852087905580855260069093528184208a9055905191929084169189917fbb179b5f0621462a3ecf644eb5b28f373ff55140ac0110e7af52bb9490e8fc1a91a4505050505050565b60008181526002602052604090208054606091906105569061143b565b80601f01602080910402602001604051908101604052809291908181526020018280546105829061143b565b80156105cf5780601f106105a4576101008083540402835291602001916105cf565b820191906000526020600020905b8154815290600101906020018083116105b257829003601f168201915b50505050509050919050565b6105e3610faf565b6001600160a01b0381166106395760405162461bcd60e51b815260206004820152601860248201527f496e76616c6964204167656e744e46542061646472657373000000000000000060448201526064016103d7565b600180546001600160a01b0319166001600160a01b0383169081179091556040517f8e93c1fcbff5fd000613b01b07a53a21a778a4342e61ef697323874af3ad8dc290600090a250565b6002602052600090815260409020805461069c9061143b565b80601f01602080910402602001604051908101604052809291908181526020018280546106c89061143b565b80156107155780601f106106ea57610100808354040283529160200191610715565b820191906000526020600020905b8154815290600101906020018083116106f857829003601f168201915b505050505081565b60608167ffffffffffffffff81111561073857610738611268565b60405190808252806020026020018201604052801561076b57816020015b60608152602001906001900390816107565790505b50905060005b8281101561088057600085815260046020526040902084848381811061079957610799611585565b90506020028101906107ab919061159b565b6040516107b99291906115e2565b908152602001604051809103902080546107d29061143b565b80601f01602080910402602001604051908101604052809291908181526020018280546107fe9061143b565b801561084b5780601f106108205761010080835404028352916020019161084b565b820191906000526020600020905b81548152906001019060200180831161082e57829003601f168201915b505050505082828151811061086257610862611585565b60200260200101819052508080610878906115f2565b915050610771565b509392505050565b600460209081526000928352604090922081518083018401805192815290840192909301919091209152805461069c9061143b565b606060008060006002600086815260200190815260200160002080546108e29061143b565b80601f016020809104026020016040519081016040528092919081815260200182805461090e9061143b565b801561095b5780601f106109305761010080835404028352916020019161095b565b820191906000526020600020905b81548152906001019060200180831161093e57829003601f168201915b505050600088815260036020908152604080832054600590925291829020546001549251634f558e7960e01b8152600481018c90529599506001600160a01b03918216985096501692634f558e7992506024019050602060405180830381865afa1580156109cd573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109f19190611619565b15610a66576001546040516331a9108f60e11b8152600481018790526001600160a01b0390911690636352211e90602401602060405180830381865afa158015610a3f573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610a63919061163b565b90505b9193509193565b6060600460008581526020019081526020016000208383604051610a929291906115e2565b90815260200160405180910390208054610aab9061143b565b80601f0160208091040260200160405190810160405280929190818152602001828054610ad79061143b565b8015610b245780601f10610af957610100808354040283529160200191610b24565b820191906000526020600020905b815481529060010190602001808311610b0757829003601f168201915b505050505090509392505050565b610b3a610faf565b610b446000610fdc565b565b610b4e610faf565b600154604051634f558e7960e01b8152600481018790526001600160a01b0390911690634f558e7990602401602060405180830381865afa158015610b97573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610bbb9190611619565b610bfe5760405162461bcd60e51b81526020600482015260146024820152731059d95b9d08191bd95cc81b9bdd08195e1a5cdd60621b60448201526064016103d7565b6001600160a01b038216610c4d5760405162461bcd60e51b8152602060048201526016602482015275496e76616c69642077616c6c6574206164647265737360501b60448201526064016103d7565b60418314610c9d5760405162461bcd60e51b815260206004820152601d60248201527f496e76616c696420504b50207075626c6963206b6579206c656e67746800000060448201526064016103d7565b60008581526002602052604090208054610cb69061143b565b159050610cfe5760405162461bcd60e51b81526020600482015260166024820152751412d408185b1c9958591e481c9959da5cdd195c995960521b60448201526064016103d7565b6001600160a01b03821660009081526006602052604090205415610d645760405162461bcd60e51b815260206004820152601960248201527f57616c6c657420616c726561647920726567697374657265640000000000000060448201526064016103d7565b6000858152600260205260409020610d7d8486836114c4565b50600085815260036020908152604080832080546001600160a01b0319166001600160a01b038716908117909155600583528184208590558352600690915281208690556007805491610dcf836115f2565b9190505550816001600160a01b0316857f873a66609466528716dc68528665f92489c6271b582e2f6bcafa7dfd36948b59868685604051610e1293929190611681565b60405180910390a35050505050565b60008181526002602052604081208054829190610e3d9061143b565b9050119050919050565b610e4f610faf565b6001600160a01b038116610e7957604051631e4fbdf760e01b8152600060048201526024016103d7565b610e8281610fdc565b50565b610e8d610faf565b60008581526002602052604081208054610ea69061143b565b905011610eea5760405162461bcd60e51b81526020600482015260126024820152711412d4081b9bdd081c9959da5cdd195c995960721b60448201526064016103d7565b80610f295760405162461bcd60e51b815260206004820152600f60248201526e496e76616c6964206164647265737360881b60448201526064016103d7565b8181600460008881526020019081526020016000208686604051610f4e9291906115e2565b90815260200160405180910390209182610f699291906114c4565b50847f383be7b088da68e3b59775207e9403fa19794014a43136270ddbbe676939007085858585604051610fa094939291906116a5565b60405180910390a25050505050565b6000546001600160a01b03163314610b445760405163118cdaa760e01b81523360048201526024016103d7565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b60006020828403121561103e57600080fd5b5035919050565b60008083601f84011261105757600080fd5b50813567ffffffffffffffff81111561106f57600080fd5b60208301915083602082850101111561108757600080fd5b9250929050565b6001600160a01b0381168114610e8257600080fd5b6000806000806000608086880312156110bb57600080fd5b85359450602086013567ffffffffffffffff8111156110d957600080fd5b6110e588828901611045565b90955093505060408601356110f98161108e565b949793965091946060013592915050565b6000815180845260005b8181101561113057602081850181015186830182015201611114565b506000602082860101526020601f19601f83011685010191505092915050565b602081526000611163602083018461110a565b9392505050565b60006020828403121561117c57600080fd5b81356111638161108e565b60008060006040848603121561119c57600080fd5b83359250602084013567ffffffffffffffff808211156111bb57600080fd5b818601915086601f8301126111cf57600080fd5b8135818111156111de57600080fd5b8760208260051b85010111156111f357600080fd5b6020830194508093505050509250925092565b6000602080830181845280855180835260408601915060408160051b870101925083870160005b8281101561125b57603f1988860301845261124985835161110a565b9450928501929085019060010161122d565b5092979650505050505050565b634e487b7160e01b600052604160045260246000fd5b6000806040838503121561129157600080fd5b82359150602083013567ffffffffffffffff808211156112b057600080fd5b818501915085601f8301126112c457600080fd5b8135818111156112d6576112d6611268565b604051601f8201601f19908116603f011681019083821181831017156112fe576112fe611268565b8160405282815288602084870101111561131757600080fd5b8260208601602083013760006020848301015280955050505050509250929050565b60808152600061134c608083018761110a565b6001600160a01b0395861660208401526040830194909452509216606090920191909152919050565b60008060006040848603121561138a57600080fd5b83359250602084013567ffffffffffffffff8111156113a857600080fd5b6113b486828701611045565b9497909650939450505050565b6000806000806000606086880312156113d957600080fd5b85359450602086013567ffffffffffffffff808211156113f857600080fd5b61140489838a01611045565b9096509450604088013591508082111561141d57600080fd5b5061142a88828901611045565b969995985093965092949392505050565b600181811c9082168061144f57607f821691505b60208210810361146f57634e487b7160e01b600052602260045260246000fd5b50919050565b601f8211156114bf57600081815260208120601f850160051c8101602086101561149c5750805b601f850160051c820191505b818110156114bb578281556001016114a8565b5050505b505050565b67ffffffffffffffff8311156114dc576114dc611268565b6114f0836114ea835461143b565b83611475565b6000601f841160018114611524576000851561150c5750838201355b600019600387901b1c1916600186901b17835561157e565b600083815260209020601f19861690835b828110156115555786850135825560209485019460019092019101611535565b50868210156115725760001960f88860031b161c19848701351681555b505060018560011b0183555b5050505050565b634e487b7160e01b600052603260045260246000fd5b6000808335601e198436030181126115b257600080fd5b83018035915067ffffffffffffffff8211156115cd57600080fd5b60200191503681900382131561108757600080fd5b8183823760009101908152919050565b60006001820161161257634e487b7160e01b600052601160045260246000fd5b5060010190565b60006020828403121561162b57600080fd5b8151801515811461116357600080fd5b60006020828403121561164d57600080fd5b81516111638161108e565b81835281816020850137506000828201602090810191909152601f909101601f19169091010190565b604081526000611695604083018587611658565b9050826020830152949350505050565b6040815260006116b9604083018688611658565b82810360208401526116cc818587611658565b97965050505050505056fea26469706673582212202752c06932c5c2d3689d57dbac365562f2c6c2ac246a706c008abda155496b1564736f6c63430008140033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106101365760003560e01c8063715018a6116100b8578063ab9282511161007c578063ab928251146102c4578063bb405f26146102ed578063c31f4af314610310578063e16abb1714610330578063f2fde38b14610350578063fb6867311461036357600080fd5b8063715018a614610258578063817bbaef1461026057806385f8dd8d146102735780638da5cb5b146102aa578063927416c0146102bb57600080fd5b80633fd773e9116100ff5780633fd773e9146101dc578063541b6f69146101ef5780635b4800761461020f57806369e05f1f146102225780636c8c19371461024557600080fd5b80623395091461013b5780631a210e2314610181578063319086351461019657806333d8950d146101b65780633a8bd857146101c9575b600080fd5b61016461014936600461102c565b6000908152600360205260409020546001600160a01b031690565b6040516001600160a01b0390911681526020015b60405180910390f35b61019461018f3660046110a3565b610376565b005b6101a96101a436600461102c565b610539565b6040516101789190611150565b6101946101c436600461116a565b6105db565b6101a96101d736600461102c565b610683565b600154610164906001600160a01b031681565b6102026101fd366004611187565b61071d565b6040516101789190611206565b6101a961021d36600461127e565b610888565b61023561023036600461102c565b6108bd565b6040516101789493929190611339565b6101a9610253366004611375565b610a6d565b610194610b32565b61019461026e3660046110a3565b610b46565b61029c61028136600461116a565b6001600160a01b031660009081526006602052604090205490565b604051908152602001610178565b6000546001600160a01b0316610164565b61029c60075481565b6101646102d236600461102c565b6003602052600090815260409020546001600160a01b031681565b6103006102fb36600461102c565b610e21565b6040519015158152602001610178565b61029c61031e36600461102c565b60056020526000908152604090205481565b61029c61033e36600461116a565b60066020526000908152604090205481565b61019461035e36600461116a565b610e47565b6101946103713660046113c1565b610e85565b61037e610faf565b600085815260026020526040812080546103979061143b565b9050116103e05760405162461bcd60e51b81526020600482015260126024820152711412d4081b9bdd081c9959da5cdd195c995960721b60448201526064015b60405180910390fd5b6001600160a01b03821661042f5760405162461bcd60e51b8152602060048201526016602482015275496e76616c69642077616c6c6574206164647265737360501b60448201526064016103d7565b6041831461047f5760405162461bcd60e51b815260206004820152601d60248201527f496e76616c696420504b50207075626c6963206b6579206c656e67746800000060448201526064016103d7565b6000858152600360209081526040808320546001600160a01b03168084526006835281842084905588845260029092529091206104bd8587836114c4565b50600086815260036020908152604080832080546001600160a01b0319166001600160a01b038881169182179092556005845282852087905580855260069093528184208a9055905191929084169189917fbb179b5f0621462a3ecf644eb5b28f373ff55140ac0110e7af52bb9490e8fc1a91a4505050505050565b60008181526002602052604090208054606091906105569061143b565b80601f01602080910402602001604051908101604052809291908181526020018280546105829061143b565b80156105cf5780601f106105a4576101008083540402835291602001916105cf565b820191906000526020600020905b8154815290600101906020018083116105b257829003601f168201915b50505050509050919050565b6105e3610faf565b6001600160a01b0381166106395760405162461bcd60e51b815260206004820152601860248201527f496e76616c6964204167656e744e46542061646472657373000000000000000060448201526064016103d7565b600180546001600160a01b0319166001600160a01b0383169081179091556040517f8e93c1fcbff5fd000613b01b07a53a21a778a4342e61ef697323874af3ad8dc290600090a250565b6002602052600090815260409020805461069c9061143b565b80601f01602080910402602001604051908101604052809291908181526020018280546106c89061143b565b80156107155780601f106106ea57610100808354040283529160200191610715565b820191906000526020600020905b8154815290600101906020018083116106f857829003601f168201915b505050505081565b60608167ffffffffffffffff81111561073857610738611268565b60405190808252806020026020018201604052801561076b57816020015b60608152602001906001900390816107565790505b50905060005b8281101561088057600085815260046020526040902084848381811061079957610799611585565b90506020028101906107ab919061159b565b6040516107b99291906115e2565b908152602001604051809103902080546107d29061143b565b80601f01602080910402602001604051908101604052809291908181526020018280546107fe9061143b565b801561084b5780601f106108205761010080835404028352916020019161084b565b820191906000526020600020905b81548152906001019060200180831161082e57829003601f168201915b505050505082828151811061086257610862611585565b60200260200101819052508080610878906115f2565b915050610771565b509392505050565b600460209081526000928352604090922081518083018401805192815290840192909301919091209152805461069c9061143b565b606060008060006002600086815260200190815260200160002080546108e29061143b565b80601f016020809104026020016040519081016040528092919081815260200182805461090e9061143b565b801561095b5780601f106109305761010080835404028352916020019161095b565b820191906000526020600020905b81548152906001019060200180831161093e57829003601f168201915b505050600088815260036020908152604080832054600590925291829020546001549251634f558e7960e01b8152600481018c90529599506001600160a01b03918216985096501692634f558e7992506024019050602060405180830381865afa1580156109cd573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906109f19190611619565b15610a66576001546040516331a9108f60e11b8152600481018790526001600160a01b0390911690636352211e90602401602060405180830381865afa158015610a3f573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610a63919061163b565b90505b9193509193565b6060600460008581526020019081526020016000208383604051610a929291906115e2565b90815260200160405180910390208054610aab9061143b565b80601f0160208091040260200160405190810160405280929190818152602001828054610ad79061143b565b8015610b245780601f10610af957610100808354040283529160200191610b24565b820191906000526020600020905b815481529060010190602001808311610b0757829003601f168201915b505050505090509392505050565b610b3a610faf565b610b446000610fdc565b565b610b4e610faf565b600154604051634f558e7960e01b8152600481018790526001600160a01b0390911690634f558e7990602401602060405180830381865afa158015610b97573d6000803e3d6000fd5b505050506040513d601f19601f82011682018060405250810190610bbb9190611619565b610bfe5760405162461bcd60e51b81526020600482015260146024820152731059d95b9d08191bd95cc81b9bdd08195e1a5cdd60621b60448201526064016103d7565b6001600160a01b038216610c4d5760405162461bcd60e51b8152602060048201526016602482015275496e76616c69642077616c6c6574206164647265737360501b60448201526064016103d7565b60418314610c9d5760405162461bcd60e51b815260206004820152601d60248201527f496e76616c696420504b50207075626c6963206b6579206c656e67746800000060448201526064016103d7565b60008581526002602052604090208054610cb69061143b565b159050610cfe5760405162461bcd60e51b81526020600482015260166024820152751412d408185b1c9958591e481c9959da5cdd195c995960521b60448201526064016103d7565b6001600160a01b03821660009081526006602052604090205415610d645760405162461bcd60e51b815260206004820152601960248201527f57616c6c657420616c726561647920726567697374657265640000000000000060448201526064016103d7565b6000858152600260205260409020610d7d8486836114c4565b50600085815260036020908152604080832080546001600160a01b0319166001600160a01b038716908117909155600583528184208590558352600690915281208690556007805491610dcf836115f2565b9190505550816001600160a01b0316857f873a66609466528716dc68528665f92489c6271b582e2f6bcafa7dfd36948b59868685604051610e1293929190611681565b60405180910390a35050505050565b60008181526002602052604081208054829190610e3d9061143b565b9050119050919050565b610e4f610faf565b6001600160a01b038116610e7957604051631e4fbdf760e01b8152600060048201526024016103d7565b610e8281610fdc565b50565b610e8d610faf565b60008581526002602052604081208054610ea69061143b565b905011610eea5760405162461bcd60e51b81526020600482015260126024820152711412d4081b9bdd081c9959da5cdd195c995960721b60448201526064016103d7565b80610f295760405162461bcd60e51b815260206004820152600f60248201526e496e76616c6964206164647265737360881b60448201526064016103d7565b8181600460008881526020019081526020016000208686604051610f4e9291906115e2565b90815260200160405180910390209182610f699291906114c4565b50847f383be7b088da68e3b59775207e9403fa19794014a43136270ddbbe676939007085858585604051610fa094939291906116a5565b60405180910390a25050505050565b6000546001600160a01b03163314610b445760405163118cdaa760e01b81523360048201526024016103d7565b600080546001600160a01b038381166001600160a01b0319831681178455604051919092169283917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a35050565b60006020828403121561103e57600080fd5b5035919050565b60008083601f84011261105757600080fd5b50813567ffffffffffffffff81111561106f57600080fd5b60208301915083602082850101111561108757600080fd5b9250929050565b6001600160a01b0381168114610e8257600080fd5b6000806000806000608086880312156110bb57600080fd5b85359450602086013567ffffffffffffffff8111156110d957600080fd5b6110e588828901611045565b90955093505060408601356110f98161108e565b949793965091946060013592915050565b6000815180845260005b8181101561113057602081850181015186830182015201611114565b506000602082860101526020601f19601f83011685010191505092915050565b602081526000611163602083018461110a565b9392505050565b60006020828403121561117c57600080fd5b81356111638161108e565b60008060006040848603121561119c57600080fd5b83359250602084013567ffffffffffffffff808211156111bb57600080fd5b818601915086601f8301126111cf57600080fd5b8135818111156111de57600080fd5b8760208260051b85010111156111f357600080fd5b6020830194508093505050509250925092565b6000602080830181845280855180835260408601915060408160051b870101925083870160005b8281101561125b57603f1988860301845261124985835161110a565b9450928501929085019060010161122d565b5092979650505050505050565b634e487b7160e01b600052604160045260246000fd5b6000806040838503121561129157600080fd5b82359150602083013567ffffffffffffffff808211156112b057600080fd5b818501915085601f8301126112c457600080fd5b8135818111156112d6576112d6611268565b604051601f8201601f19908116603f011681019083821181831017156112fe576112fe611268565b8160405282815288602084870101111561131757600080fd5b8260208601602083013760006020848301015280955050505050509250929050565b60808152600061134c608083018761110a565b6001600160a01b0395861660208401526040830194909452509216606090920191909152919050565b60008060006040848603121561138a57600080fd5b83359250602084013567ffffffffffffffff8111156113a857600080fd5b6113b486828701611045565b9497909650939450505050565b6000806000806000606086880312156113d957600080fd5b85359450602086013567ffffffffffffffff808211156113f857600080fd5b61140489838a01611045565b9096509450604088013591508082111561141d57600080fd5b5061142a88828901611045565b969995985093965092949392505050565b600181811c9082168061144f57607f821691505b60208210810361146f57634e487b7160e01b600052602260045260246000fd5b50919050565b601f8211156114bf57600081815260208120601f850160051c8101602086101561149c5750805b601f850160051c820191505b818110156114bb578281556001016114a8565b5050505b505050565b67ffffffffffffffff8311156114dc576114dc611268565b6114f0836114ea835461143b565b83611475565b6000601f841160018114611524576000851561150c5750838201355b600019600387901b1c1916600186901b17835561157e565b600083815260209020601f19861690835b828110156115555786850135825560209485019460019092019101611535565b50868210156115725760001960f88860031b161c19848701351681555b505060018560011b0183555b5050505050565b634e487b7160e01b600052603260045260246000fd5b6000808335601e198436030181126115b257600080fd5b83018035915067ffffffffffffffff8211156115cd57600080fd5b60200191503681900382131561108757600080fd5b8183823760009101908152919050565b60006001820161161257634e487b7160e01b600052601160045260246000fd5b5060010190565b60006020828403121561162b57600080fd5b8151801515811461116357600080fd5b60006020828403121561164d57600080fd5b81516111638161108e565b81835281816020850137506000828201602090810191909152601f909101601f19169091010190565b604081526000611695604083018587611658565b9050826020830152949350505050565b6040815260006116b9604083018688611658565b82810360208401526116cc818587611658565b97965050505050505056fea26469706673582212202752c06932c5c2d3689d57dbac365562f2c6c2ac246a706c008abda155496b1564736f6c63430008140033",
+  "devdoc": {
+    "details": "Registry linking AgentNFT tokens to Lit Protocol PKP wallets",
+    "errors": {
+      "OwnableInvalidOwner(address)": [
+        {
+          "details": "The owner is not a valid owner account. (eg. `address(0)`)"
+        }
+      ],
+      "OwnableUnauthorizedAccount(address)": [
+        {
+          "details": "The caller account is not authorized to perform an operation."
+        }
+      ]
+    },
+    "kind": "dev",
+    "methods": {
+      "getAgentByWallet(address)": {
+        "details": "Get agent token ID from wallet address"
+      },
+      "getAgentPKP(uint256)": {
+        "details": "Get PKP public key for an agent"
+      },
+      "getAgentWallet(uint256)": {
+        "details": "Get EVM wallet address for an agent (same for all EVM chains)"
+      },
+      "getChainAddress(uint256,string)": {
+        "details": "Get chain-specific address for an agent",
+        "params": {
+          "agentTokenId": "The AgentNFT token ID",
+          "chainId": "The chain identifier"
+        }
+      },
+      "getChainAddresses(uint256,string[])": {
+        "details": "Get multiple chain addresses for an agent",
+        "params": {
+          "agentTokenId": "The AgentNFT token ID  ",
+          "chainIds": "Array of chain identifiers to query"
+        },
+        "returns": {
+          "addresses": "Array of addresses for each chain"
+        }
+      },
+      "getPKPInfo(uint256)": {
+        "details": "Get full PKP info for an agent"
+      },
+      "hasPKP(uint256)": {
+        "details": "Check if agent has a registered PKP"
+      },
+      "owner()": {
+        "details": "Returns the address of the current owner."
+      },
+      "registerPKP(uint256,bytes,address,bytes32)": {
+        "details": "Register PKP for an agent (only backend/owner can call) Called after backend mints PKP on Lit Protocol",
+        "params": {
+          "_evmAddress": "The derived Ethereum address (same for all EVM chains)",
+          "_pkpPublicKey": "The 65-byte uncompressed PKP public key",
+          "_pkpTokenId": "The PKP token ID from Lit Protocol",
+          "agentTokenId": "The AgentNFT token ID"
+        }
+      },
+      "renounceOwnership()": {
+        "details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
+      },
+      "setAgentNFT(address)": {
+        "details": "Update AgentNFT contract reference (in case of upgrade)"
+      },
+      "setChainAddress(uint256,string,string)": {
+        "details": "Set chain-specific address for an agent (Solana, Aptos, etc.)",
+        "params": {
+          "_address": "The address on that chain (as string due to different formats)",
+          "agentTokenId": "The AgentNFT token ID",
+          "chainId": "The chain identifier (e.g., \"solana\", \"aptos\")"
+        }
+      },
+      "transferOwnership(address)": {
+        "details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
+      },
+      "updatePKP(uint256,bytes,address,bytes32)": {
+        "details": "Update PKP for an agent (for recovery/migration)",
+        "params": {
+          "_newEvmAddress": "The new derived wallet address",
+          "_newPkpPublicKey": "The new PKP public key",
+          "_newPkpTokenId": "The new PKP token ID",
+          "agentTokenId": "The AgentNFT token ID"
+        }
+      }
+    },
+    "title": "AgentPKP",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 8,
+        "contract": "contracts/AgentPKP.sol:AgentPKP",
+        "label": "_owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 202,
+        "contract": "contracts/AgentPKP.sol:AgentPKP",
+        "label": "agentNFT",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_contract(IAgentNFT)196"
+      },
+      {
+        "astId": 206,
+        "contract": "contracts/AgentPKP.sol:AgentPKP",
+        "label": "pkpPublicKey",
+        "offset": 0,
+        "slot": "2",
+        "type": "t_mapping(t_uint256,t_bytes_storage)"
+      },
+      {
+        "astId": 210,
+        "contract": "contracts/AgentPKP.sol:AgentPKP",
+        "label": "evmAddress",
+        "offset": 0,
+        "slot": "3",
+        "type": "t_mapping(t_uint256,t_address)"
+      },
+      {
+        "astId": 216,
+        "contract": "contracts/AgentPKP.sol:AgentPKP",
+        "label": "chainAddresses",
+        "offset": 0,
+        "slot": "4",
+        "type": "t_mapping(t_uint256,t_mapping(t_string_memory_ptr,t_string_storage))"
+      },
+      {
+        "astId": 220,
+        "contract": "contracts/AgentPKP.sol:AgentPKP",
+        "label": "pkpTokenId",
+        "offset": 0,
+        "slot": "5",
+        "type": "t_mapping(t_uint256,t_bytes32)"
+      },
+      {
+        "astId": 224,
+        "contract": "contracts/AgentPKP.sol:AgentPKP",
+        "label": "walletToAgent",
+        "offset": 0,
+        "slot": "6",
+        "type": "t_mapping(t_address,t_uint256)"
+      },
+      {
+        "astId": 226,
+        "contract": "contracts/AgentPKP.sol:AgentPKP",
+        "label": "totalRegistered",
+        "offset": 0,
+        "slot": "7",
+        "type": "t_uint256"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_bytes_storage": {
+        "encoding": "bytes",
+        "label": "bytes",
+        "numberOfBytes": "32"
+      },
+      "t_contract(IAgentNFT)196": {
+        "encoding": "inplace",
+        "label": "contract IAgentNFT",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_mapping(t_string_memory_ptr,t_string_storage)": {
+        "encoding": "mapping",
+        "key": "t_string_memory_ptr",
+        "label": "mapping(string => string)",
+        "numberOfBytes": "32",
+        "value": "t_string_storage"
+      },
+      "t_mapping(t_uint256,t_address)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => address)",
+        "numberOfBytes": "32",
+        "value": "t_address"
+      },
+      "t_mapping(t_uint256,t_bytes32)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => bytes32)",
+        "numberOfBytes": "32",
+        "value": "t_bytes32"
+      },
+      "t_mapping(t_uint256,t_bytes_storage)": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => bytes)",
+        "numberOfBytes": "32",
+        "value": "t_bytes_storage"
+      },
+      "t_mapping(t_uint256,t_mapping(t_string_memory_ptr,t_string_storage))": {
+        "encoding": "mapping",
+        "key": "t_uint256",
+        "label": "mapping(uint256 => mapping(string => string))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_string_memory_ptr,t_string_storage)"
+      },
+      "t_string_memory_ptr": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_string_storage": {
+        "encoding": "bytes",
+        "label": "string",
+        "numberOfBytes": "32"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      }
+    }
+  }
+}
