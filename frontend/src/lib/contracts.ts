@@ -6,6 +6,7 @@ import AgentNFTAbi from "@/constants/AgentNFT.json";
 import AgentMarketplaceAbi from "@/constants/AgentMarketplace.json";
 import AgentCreditsAbi from "@/constants/AgentCredits.json";
 import RevenueShareAbi from "@/constants/RevenueShare.json";
+import AgentPKPAbi from "@/constants/AgentPKP.json";
 
 export function getAgentNFTContract(
   signerOrProvider: ethers.Signer | ethers.Provider,
@@ -13,6 +14,17 @@ export function getAgentNFTContract(
 ) {
   const addresses = getContractAddresses(chainId);
   return new ethers.Contract(addresses.AgentNFT, AgentNFTAbi, signerOrProvider);
+}
+
+export function getAgentPKPContract(
+  signerOrProvider: ethers.Signer | ethers.Provider,
+  chainId: number
+) {
+  const addresses = getContractAddresses(chainId) as any;
+  if (!addresses.AgentPKP) {
+    throw new Error("AgentPKP contract not deployed on this network");
+  }
+  return new ethers.Contract(addresses.AgentPKP, AgentPKPAbi, signerOrProvider);
 }
 
 export function getMarketplaceContract(
@@ -82,6 +94,54 @@ export async function mintAgentNFT(
   }
 
   return null;
+}
+
+// Mint Agent NFT and register PKP wallet
+export async function mintAgentWithPKP(
+  signer: ethers.Signer,
+  chainId: number,
+  name: string,
+  tokenURI: string,
+  personalityHash: string,
+  mintingFee: bigint
+): Promise<{ tokenId: number; pkpAddress?: string }> {
+  const tokenId = await mintAgentNFT(
+    signer,
+    chainId,
+    name,
+    tokenURI,
+    personalityHash,
+    mintingFee
+  );
+
+  if (!tokenId) {
+    throw new Error("Failed to mint agent NFT");
+  }
+
+  const userAddress = await signer.getAddress();
+
+  try {
+    const response = await fetch("/api/agent-pkp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        agentTokenId: tokenId,
+        userAddress,
+      }),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log("[PKP] Registered:", result.data.evmAddress);
+      return { tokenId, pkpAddress: result.data.evmAddress };
+    } else {
+      console.warn("[PKP] Registration failed, agent created without PKP");
+    }
+  } catch (error) {
+    console.error("[PKP] Error registering PKP:", error);
+  }
+
+  return { tokenId };
 }
 
 // Get minting fee
