@@ -1,0 +1,275 @@
+[
+  {
+    "type": "constructor",
+    "stateMutability": "undefined",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "_agentNFT" }]
+  },
+  {
+    "type": "error",
+    "name": "OwnableInvalidOwner",
+    "inputs": [{ "type": "address", "name": "owner" }]
+  },
+  {
+    "type": "error",
+    "name": "OwnableUnauthorizedAccount",
+    "inputs": [{ "type": "address", "name": "account" }]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "AgentNFTUpdated",
+    "inputs": [{ "type": "address", "name": "newAgentNFT", "indexed": true }]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "ChainAddressSet",
+    "inputs": [
+      { "type": "uint256", "name": "agentTokenId", "indexed": true },
+      { "type": "string", "name": "chainId", "indexed": false },
+      { "type": "string", "name": "chainAddress", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "OwnershipTransferred",
+    "inputs": [
+      { "type": "address", "name": "previousOwner", "indexed": true },
+      { "type": "address", "name": "newOwner", "indexed": true }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "PKPRegistered",
+    "inputs": [
+      { "type": "uint256", "name": "agentTokenId", "indexed": true },
+      { "type": "address", "name": "evmAddress", "indexed": true },
+      { "type": "bytes", "name": "pkpPublicKey", "indexed": false },
+      { "type": "bytes32", "name": "pkpTokenId", "indexed": false }
+    ]
+  },
+  {
+    "type": "event",
+    "anonymous": false,
+    "name": "PKPUpdated",
+    "inputs": [
+      { "type": "uint256", "name": "agentTokenId", "indexed": true },
+      { "type": "address", "name": "oldWallet", "indexed": true },
+      { "type": "address", "name": "newWallet", "indexed": true }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "agentNFT",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "address", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "chainAddresses",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "" },
+      { "type": "string", "name": "" }
+    ],
+    "outputs": [{ "type": "string", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "evmAddress",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "" }],
+    "outputs": [{ "type": "address", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getAgentByWallet",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "wallet" }],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getAgentPKP",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "agentTokenId" }],
+    "outputs": [{ "type": "bytes", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getAgentWallet",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "agentTokenId" }],
+    "outputs": [{ "type": "address", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getChainAddress",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "agentTokenId" },
+      { "type": "string", "name": "chainId" }
+    ],
+    "outputs": [{ "type": "string", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getChainAddresses",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "agentTokenId" },
+      { "type": "string[]", "name": "chainIds" }
+    ],
+    "outputs": [{ "type": "string[]", "name": "addresses" }]
+  },
+  {
+    "type": "function",
+    "name": "getPKPInfo",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "agentTokenId" }],
+    "outputs": [
+      { "type": "bytes", "name": "_pkpPublicKey" },
+      { "type": "address", "name": "_evmAddress" },
+      { "type": "bytes32", "name": "_pkpTokenId" },
+      { "type": "address", "name": "agentOwner" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "hasPKP",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "agentTokenId" }],
+    "outputs": [{ "type": "bool", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "owner",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "address", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "pkpPublicKey",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "" }],
+    "outputs": [{ "type": "bytes", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "pkpTokenId",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "" }],
+    "outputs": [{ "type": "bytes32", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "registerPKP",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "agentTokenId" },
+      { "type": "bytes", "name": "_pkpPublicKey" },
+      { "type": "address", "name": "_evmAddress" },
+      { "type": "bytes32", "name": "_pkpTokenId" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "renounceOwnership",
+    "constant": false,
+    "payable": false,
+    "inputs": [],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "setAgentNFT",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "_agentNFT" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "setChainAddress",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "agentTokenId" },
+      { "type": "string", "name": "chainId" },
+      { "type": "string", "name": "_address" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "totalRegistered",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "transferOwnership",
+    "constant": false,
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "newOwner" }],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "updatePKP",
+    "constant": false,
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "agentTokenId" },
+      { "type": "bytes", "name": "_newPkpPublicKey" },
+      { "type": "address", "name": "_newEvmAddress" },
+      { "type": "bytes32", "name": "_newPkpTokenId" }
+    ],
+    "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "walletToAgent",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "" }],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  }
+]
