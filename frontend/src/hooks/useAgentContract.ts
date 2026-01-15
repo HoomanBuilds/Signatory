@@ -70,7 +70,7 @@ export function useTokenURI(tokenId: number | undefined) {
 // Write hooks
 export function useMintAgent() {
   const { writeContract, data: hash, isPending, error } = useWriteContract();
-  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+  const { isLoading: isConfirming, isSuccess, data: receipt } = useWaitForTransactionReceipt({
     hash,
   });
 
@@ -89,6 +89,48 @@ export function useMintAgent() {
     });
   };
 
+  const extractTokenId = (): number | null => {
+    if (!receipt?.logs) return null;
+    
+    for (const log of receipt.logs) {
+      if (log.topics[0] === "0x" && log.topics.length >= 2) {
+        try {
+          const topic = log.topics[1];
+          if (topic) {
+            const tokenId = parseInt(topic, 16);
+            if (!isNaN(tokenId)) return tokenId;
+          }
+        } catch {
+          continue;
+        }
+      }
+    }
+    return null;
+  };
+
+  // Register PKP after successful mint
+  const registerPKP = async (tokenId: number, userAddress: string): Promise<string | null> => {
+    try {
+      const response = await fetch("/api/agent-pkp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          agentTokenId: tokenId,
+          userAddress,
+        }),
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        console.log("[PKP] Registered:", result.data.evmAddress);
+        return result.data.evmAddress;
+      }
+    } catch (error) {
+      console.error("[PKP] Error registering PKP:", error);
+    }
+    return null;
+  };
+
   return {
     mintAgent,
     isPending,
@@ -96,6 +138,9 @@ export function useMintAgent() {
     isSuccess,
     error,
     hash,
+    receipt,
+    extractTokenId,
+    registerPKP,
   };
 }
 
