@@ -86,6 +86,15 @@
   },
   {
     "type": "function",
+    "name": "MAX_LEADERBOARD_LIMIT",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
     "name": "adminClearListing",
     "constant": false,
     "payable": false,
@@ -94,6 +103,15 @@
       { "type": "uint256", "name": "tokenId" }
     ],
     "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "allSellers",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "" }],
+    "outputs": [{ "type": "address", "name": "" }]
   },
   {
     "type": "function",
@@ -153,6 +171,51 @@
       { "type": "uint256", "name": "_totalSales" },
       { "type": "uint256", "name": "_totalVolume" },
       { "type": "uint256", "name": "_marketplaceFee" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getTopSellersBySalesCount",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "limit" }],
+    "outputs": [
+      { "type": "address[]", "name": "sellers" },
+      { "type": "uint256[]", "name": "salesCounts" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getTopSellersByVolume",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "limit" }],
+    "outputs": [
+      { "type": "address[]", "name": "sellers" },
+      { "type": "uint256[]", "name": "volumes" }
+    ]
+  },
+  {
+    "type": "function",
+    "name": "getTotalSellersCount",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getUserSalesStats",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "user" }],
+    "outputs": [
+      { "type": "uint256", "name": "salesCount" },
+      { "type": "uint256", "name": "salesVolume" }
     ]
   },
   {
@@ -276,6 +339,24 @@
       { "type": "uint256", "name": "newPrice" }
     ],
     "outputs": []
+  },
+  {
+    "type": "function",
+    "name": "userSalesCount",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "" }],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "userSalesVolume",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "address", "name": "" }],
+    "outputs": [{ "type": "uint256", "name": "" }]
   },
   {
     "type": "function",

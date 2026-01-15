@@ -21,20 +21,16 @@ export function getProvider() {
     return new ethers.BrowserProvider(window.ethereum);
   }
 
-  // Fallback to localhost
   return new ethers.JsonRpcProvider("http://127.0.0.1:8545");
 }
 
-// Request account access - Prioritize MetaMask
 export async function connectWallet() {
   if (!window.ethereum) {
     throw new Error("No wallet detected. Please install MetaMask.");
   }
 
-  // If multiple wallets, try to use MetaMask specifically
   let provider;
   if (window.ethereum.providers?.length) {
-    // Multiple wallets detected, find MetaMask
     const metamaskProvider = window.ethereum.providers.find(
       (p: any) => p.isMetaMask
     );
@@ -60,13 +56,11 @@ export async function connectWallet() {
   };
 }
 
-// Switch to localhost network
 export async function switchToLocalhost() {
   if (!window.ethereum) {
     throw new Error("No wallet detected");
   }
 
-  // Get the correct provider (MetaMask if multiple wallets)
   let ethereum = window.ethereum;
   if (window.ethereum.providers?.length) {
     const metamaskProvider = window.ethereum.providers.find(
@@ -80,10 +74,9 @@ export async function switchToLocalhost() {
   try {
     await ethereum.request({
       method: "wallet_switchEthereumChain",
-      params: [{ chainId: "0x7a69" }], // 31337 in hex
+      params: [{ chainId: "0x7a69" }],
     });
   } catch (error: any) {
-    // Chain not added, add it
     if (error.code === 4902) {
       await ethereum.request({
         method: "wallet_addEthereumChain",
@@ -103,11 +96,5 @@ export async function switchToLocalhost() {
     } else {
       throw error;
     }
-  }
-}
-
-declare global {
-  interface Window {
-    ethereum?: any;
   }
 }

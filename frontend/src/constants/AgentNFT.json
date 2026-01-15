@@ -163,6 +163,15 @@
   },
   {
     "type": "function",
+    "name": "MAX_LEADERBOARD_LIMIT",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [],
+    "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
     "name": "agentIsPublic",
     "constant": true,
     "stateMutability": "view",
@@ -286,6 +295,21 @@
   },
   {
     "type": "function",
+    "name": "getAgentsWithChatCounts",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [
+      { "type": "uint256", "name": "offset" },
+      { "type": "uint256", "name": "limit" }
+    ],
+    "outputs": [
+      { "type": "uint256[]", "name": "tokenIds" },
+      { "type": "uint256[]", "name": "chatCounts" }
+    ]
+  },
+  {
+    "type": "function",
     "name": "getApproved",
     "constant": true,
     "stateMutability": "view",
@@ -301,6 +325,19 @@
     "payable": false,
     "inputs": [],
     "outputs": [{ "type": "uint256", "name": "" }]
+  },
+  {
+    "type": "function",
+    "name": "getTopAgentsByChats",
+    "constant": true,
+    "stateMutability": "view",
+    "payable": false,
+    "inputs": [{ "type": "uint256", "name": "limit" }],
+    "outputs": [
+      { "type": "uint256[]", "name": "tokenIds" },
+      { "type": "uint256[]", "name": "chatCounts" },
+      { "type": "string[]", "name": "names" }
+    ]
   },
   {
     "type": "function",
