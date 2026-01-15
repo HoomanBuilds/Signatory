@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Upload, Sparkles, ArrowRight, ArrowLeft, Check } from "lucide-react";
 import {
   uploadAgentAvatar,
@@ -14,11 +14,13 @@ import Stepper from "./Stepper";
 
 export default function MintAgentForm() {
   const { address, isConnected } = useAccount();
-  const { mintAgent, isPending, isConfirming, isSuccess } = useMintAgent();
+  const { mintAgent, isPending, isConfirming, isSuccess, receipt, registerPKP } = useMintAgent();
 
   const [step, setStep] = useState(1);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
+  const [pkpRegistering, setPkpRegistering] = useState(false);
+  const [pkpAddress, setPkpAddress] = useState<string | null>(null);
 
   // Form data
   const [name, setName] = useState("");
@@ -32,6 +34,40 @@ export default function MintAgentForm() {
   const [role, setRole] = useState("assistant");
   const [knowledgeFocus, setKnowledgeFocus] = useState("general");
   const [backstory, setBackstory] = useState("");
+
+  useEffect(() => {
+    const handlePKPRegistration = async () => {
+      if (isSuccess && receipt && address && !pkpRegistering && !pkpAddress) {
+        setPkpRegistering(true);
+        
+        let tokenId: number | null = null;
+        for (const log of receipt.logs) {
+          if (log.topics && log.topics.length >= 2) {
+            try {
+              const topic = log.topics[1];
+              if (topic) {
+                tokenId = parseInt(topic, 16);
+                if (!isNaN(tokenId)) break;
+              }
+            } catch {
+              continue;
+            }
+          }
+        }
+
+        if (tokenId) {
+          console.log("[PKP] Registering PKP for token:", tokenId);
+          const pkpAddr = await registerPKP(tokenId, address);
+          if (pkpAddr) {
+            setPkpAddress(pkpAddr);
+          }
+        }
+        setPkpRegistering(false);
+      }
+    };
+
+    handlePKPRegistration();
+  }, [isSuccess, receipt, address, pkpRegistering, pkpAddress, registerPKP]);
 
   // Handle avatar upload
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
