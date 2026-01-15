@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
     "pino",
     "thread-stream",
     "pino-pretty",
+    "@lit-protocol/lit-node-client",
+    "@lit-protocol/contracts-sdk",
+    "@lit-protocol/auth-helpers",
+    "@lit-protocol/constants",
+    "@lit-protocol/logger",
   ],
 
   // Empty turbopack config to acknowledge we're using Turbopack
