@@ -1,92 +1,149 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { Wallet, Copy, ArrowUpRight, ArrowDownLeft, Loader2, RefreshCw } from "lucide-react";
+import { Wallet, Copy, ExternalLink, Loader2, RefreshCw, Shield, ChevronDown, ChevronUp } from "lucide-react";
+import { 
+  NetworkEthereum,
+  NetworkCronos,
+  NetworkBase,
+  NetworkPolygon,
+  NetworkArbitrumOne,
+  NetworkOptimism,
+  NetworkSolana,
+  NetworkCosmosHub,
+  NetworkBitcoin,
+} from "@web3icons/react";
 
 interface AgentWalletProps {
   tokenId: number;
   isOwner: boolean;
 }
 
-export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
-  const [address, setAddress] = useState<string | null>(null);
-  const [balance, setBalance] = useState<string>("0");
-  const [isLoading, setIsLoading] = useState(true);
-  const [isWithdrawing, setIsWithdrawing] = useState(false);
+interface PKPInfo {
+  hasPKP: boolean;
+  evmAddress: string | null;
+  chainAddresses: Record<string, string>;
+  accessControl?: string;
+}
 
-  const fetchWalletInfo = async () => {
+// Chain configuration with icon components
+const CHAIN_CONFIG: Record<string, { 
+  name: string; 
+  Icon: React.ComponentType<{ size?: number; variant?: "branded" | "mono" }>;
+  explorer?: string;
+}> = {
+  ethereum: { 
+    name: "Ethereum", 
+    Icon: NetworkEthereum,
+    explorer: "https://etherscan.io/address/" 
+  },
+  cronos: { 
+    name: "Cronos", 
+    Icon: NetworkCronos,
+    explorer: "https://cronoscan.com/address/" 
+  },
+  base: { 
+    name: "Base", 
+    Icon: NetworkBase,
+    explorer: "https://basescan.org/address/" 
+  },
+  polygon: { 
+    name: "Polygon", 
+    Icon: NetworkPolygon,
+    explorer: "https://polygonscan.com/address/" 
+  },
+  arbitrum: { 
+    name: "Arbitrum", 
+    Icon: NetworkArbitrumOne,
+    explorer: "https://arbiscan.io/address/" 
+  },
+  optimism: { 
+    name: "Optimism", 
+    Icon: NetworkOptimism,
+    explorer: "https://optimistic.etherscan.io/address/" 
+  },
+  solana: { 
+    name: "Solana", 
+    Icon: NetworkSolana,
+    explorer: "https://solscan.io/account/" 
+  },
+  cosmos: { 
+    name: "Cosmos", 
+    Icon: NetworkCosmosHub,
+  },
+  bitcoin: { 
+    name: "Bitcoin", 
+    Icon: NetworkBitcoin,
+  },
+};
+
+export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
+  const [pkpInfo, setPkpInfo] = useState<PKPInfo | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [copied, setCopied] = useState<string | null>(null);
+  const [showAllChains, setShowAllChains] = useState(false);
+
+  const fetchPKPInfo = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(`/api/agent-wallet/info?tokenId=${tokenId}`);
+      const response = await fetch(`/api/agent-pkp?agentTokenId=${tokenId}`);
       if (response.ok) {
         const data = await response.json();
-        setAddress(data.address);
-        setBalance(data.balance);
-
-        // Auto-register if needed
-        if (data.address && !data.isRegistered) {
-          console.log("Wallet not registered on-chain. Registering now...");
-          try {
-            await fetch("/api/agent/register-wallet", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ 
-                agentId: tokenId, 
-                walletAddress: data.address 
-              }),
-            });
-            console.log("Wallet auto-registered successfully!");
-          } catch (err) {
-            console.error("Failed to auto-register wallet:", err);
-          }
-        }
+        setPkpInfo(data);
       }
     } catch (error) {
-      console.error("Error fetching wallet info:", error);
+      console.error("Error fetching PKP info:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchWalletInfo();
+    fetchPKPInfo();
   }, [tokenId]);
 
-  const handleCopy = () => {
-    if (address) {
-      navigator.clipboard.writeText(address);
-      alert("Address copied to clipboard!");
-    }
+  const handleCopy = (address: string, chain: string) => {
+    navigator.clipboard.writeText(address);
+    setCopied(chain);
+    setTimeout(() => setCopied(null), 2000);
   };
 
-  const handleWithdraw = async () => {
-    if (!confirm("Are you sure you want to withdraw all funds to your wallet?")) return;
-
-    try {
-      setIsWithdrawing(true);
-      const response = await fetch("/api/agent-wallet/withdraw", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tokenId }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(`Successfully withdrawn ${data.amount} ETH!`);
-        fetchWalletInfo(); 
-      } else {
-        alert(`Withdrawal failed: ${data.error}`);
-      }
-    } catch (error) {
-      console.error("Withdrawal error:", error);
-      alert("Withdrawal failed");
-    } finally {
-      setIsWithdrawing(false);
-    }
+  const truncateAddress = (addr: string) => {
+    if (addr.length <= 12) return addr;
+    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
-  if (isLoading && !address) {
-    return <div className="animate-pulse h-24 bg-emerald-500/5 rounded-xl"></div>;
+  if (isLoading) {
+    return (
+      <div className="glass-panel p-6 rounded-xl border border-emerald-500/20 mb-6">
+        <div className="flex items-center gap-3">
+          <Loader2 className="w-5 h-5 text-emerald-400 animate-spin" />
+          <span className="text-green-200/60 text-sm">Loading wallet...</span>
+        </div>
+      </div>
+    );
   }
+
+  if (!pkpInfo?.hasPKP) {
+    return (
+      <div className="glass-panel p-6 rounded-xl border border-emerald-500/20 mb-6">
+        <div className="flex items-center gap-3">
+          <Wallet className="w-5 h-5 text-green-200/40" />
+          <span className="text-green-200/60 text-sm">
+            No wallet assigned to this agent
+          </span>
+        </div>
+      </div>
+    );
+  }
+
+  const chainAddresses = pkpInfo.chainAddresses || {};
+  const evmChains = ["cronos", "ethereum", "base", "polygon", "arbitrum", "optimism"];
+  const nonEvmChains = ["solana", "cosmos", "bitcoin"];
+  
+  const displayedChains = showAllChains 
+    ? [...evmChains, ...nonEvmChains] 
+    : ["cronos", "ethereum", "solana"];
 
   return (
     <div className="glass-panel p-6 rounded-xl border border-emerald-500/30 mb-6">
@@ -95,55 +152,96 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
           <Wallet className="w-5 h-5 text-emerald-400" />
           Agent Wallet
         </h3>
-        <button 
-          onClick={fetchWalletInfo}
-          className="p-1.5 hover:bg-emerald-500/10 rounded-lg text-emerald-400/60 hover:text-emerald-300 transition-colors"
-        >
-          <RefreshCw className="w-4 h-4" />
-        </button>
-      </div>
-
-      <div className="space-y-4">
-        {/* Balance */}
-        <div className="flex items-end justify-between">
-          <div>
-            <div className="text-sm text-green-200/60 mb-1">Balance</div>
-            <div className="text-2xl font-bold text-emerald-300">
-              {parseFloat(balance).toFixed(4)} ETH
-            </div>
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 rounded-full border border-emerald-500/20">
+            <Shield className="w-3 h-3 text-emerald-400" />
+            <span className="text-xs text-emerald-300">Lit PKP</span>
           </div>
-          {isOwner && parseFloat(balance) > 0 && (
-            <button
-              onClick={handleWithdraw}
-              disabled={isWithdrawing}
-              className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-300 text-sm font-medium hover:bg-emerald-500/20 transition-all flex items-center gap-2 disabled:opacity-50"
-            >
-              {isWithdrawing ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <ArrowUpRight className="w-4 h-4" />
-              )}
-              Withdraw
-            </button>
-          )}
-        </div>
-
-        {/* Address */}
-        <div className="p-3 bg-black/40 rounded-lg border border-emerald-500/20 flex items-center justify-between group">
-          <code className="text-sm text-emerald-400/80 font-mono truncate mr-4">
-            {address}
-          </code>
-          <button
-            onClick={handleCopy}
-            className="p-1.5 hover:bg-emerald-500/20 rounded-md text-emerald-500/60 hover:text-emerald-400 transition-colors"
-            title="Copy Address"
+          <button 
+            onClick={fetchPKPInfo}
+            className="p-1.5 hover:bg-emerald-500/10 rounded-lg text-emerald-400/60 hover:text-emerald-300 transition-colors"
+            title="Refresh"
           >
-            <Copy className="w-4 h-4" />
+            <RefreshCw className="w-4 h-4" />
           </button>
         </div>
+      </div>
 
-        <div className="text-xs text-green-200/40">
-          Fund this wallet to let the agent pay for its own chats.
+      <div className="space-y-2">
+        {displayedChains.map(chain => {
+          const config = CHAIN_CONFIG[chain];
+          const address = chainAddresses[chain];
+          if (!config || !address) return null;
+
+          const IconComponent = config.Icon;
+
+          return (
+            <div 
+              key={chain}
+              className="p-2.5 bg-black/40 rounded-lg border border-emerald-500/10 flex items-center justify-between group hover:border-emerald-500/30 transition-colors"
+            >
+              <div className="flex items-center gap-2.5">
+                <div className="w-6 h-6 flex items-center justify-center">
+                  <IconComponent size={24} variant="branded" />
+                </div>
+                <div>
+                  <div className="text-xs text-green-200/50">{config.name}</div>
+                  <code className="text-sm text-emerald-400/80 font-mono">
+                    {truncateAddress(address)}
+                  </code>
+                </div>
+              </div>
+              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <button
+                  onClick={() => handleCopy(address, chain)}
+                  className="p-1.5 hover:bg-emerald-500/20 rounded-md text-emerald-500/60 hover:text-emerald-400 transition-colors"
+                  title="Copy Address"
+                >
+                  {copied === chain ? (
+                    <span className="text-xs text-emerald-400">✓</span>
+                  ) : (
+                    <Copy className="w-3.5 h-3.5" />
+                  )}
+                </button>
+                {config.explorer && (
+                  <a
+                    href={`${config.explorer}${address}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="p-1.5 hover:bg-emerald-500/20 rounded-md text-emerald-500/60 hover:text-emerald-400 transition-colors"
+                    title="View on Explorer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                )}
+              </div>
+            </div>
+          );
+        })}
+
+        <button
+          onClick={() => setShowAllChains(!showAllChains)}
+          className="w-full py-2 text-xs text-emerald-400/60 hover:text-emerald-400 flex items-center justify-center gap-1 transition-colors"
+        >
+          {showAllChains ? (
+            <>
+              <ChevronUp className="w-4 h-4" />
+              Show less
+            </>
+          ) : (
+            <>
+              <ChevronDown className="w-4 h-4" />
+              Show all {Object.keys(chainAddresses).length} chains
+            </>
+          )}
+        </button>
+
+        <div className="text-xs text-green-200/40 mt-2">
+          {isOwner ? (
+            <>Multi-chain wallet powered by Lit Protocol. Sign transactions with your agent.</>
+          ) : (
+            <>Agent&apos;s autonomous wallet supports multiple blockchains.</>
+          )}
         </div>
       </div>
     </div>
