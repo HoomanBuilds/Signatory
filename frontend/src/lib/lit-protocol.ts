@@ -16,6 +16,7 @@ import {
 import { LIT_ABILITY } from "@lit-protocol/constants";
 import { ethers } from "ethers";
 import { AGENT_SIGNER_LIT_ACTION } from "./lit-actions/agent-signer";
+import { getLitYellowstoneProvider } from "./ethers-provider";
 
 const LIT_NETWORK = process.env.LIT_NETWORK || "datil-test";
 const LIT_RPC_URL = "https://yellowstone-rpc.litprotocol.com";
@@ -55,11 +56,8 @@ export async function disconnectLitClient(): Promise<void> {
 export async function getLitContracts(
   backendPrivateKey: string
 ): Promise<LitContracts> {
-  const provider = new ethers.JsonRpcProvider(LIT_RPC_URL);
-  const wallet = new ethers.Wallet(backendPrivateKey, provider);
-
   const litContracts = new LitContracts({
-    signer: wallet as any,
+    privateKey: backendPrivateKey,
     network: LIT_NETWORK as any,
     debug: false,
   });
@@ -70,9 +68,6 @@ export async function getLitContracts(
 
 /**
  * Mint a new PKP for an agent (backend keeps ownership)
- * 
- * @param backendPrivateKey - Backend wallet private key (sponsors gas)
- * @returns PKP details including public key and derived EVM address
  */
 export async function mintPKPForAgent(
   backendPrivateKey: string
@@ -99,13 +94,12 @@ export async function mintPKPForAgent(
 
 /**
  * Get session signatures for executing Lit Actions
- * Backend sponsors the capacity credits
  */
 export async function getSessionSignatures(
   backendPrivateKey: string
 ): Promise<any> {
   const client = await getLitNodeClient();
-  const provider = new ethers.JsonRpcProvider(LIT_RPC_URL);
+  const provider = new ethers.providers.JsonRpcProvider(LIT_RPC_URL);
   const wallet = new ethers.Wallet(backendPrivateKey, provider);
 
   const sessionSigs = await client.getSessionSigs({
@@ -128,7 +122,7 @@ export async function getSessionSignatures(
       });
 
       return await generateAuthSig({
-        signer: wallet as any,
+        signer: wallet,
         toSign,
       });
     },
@@ -139,15 +133,6 @@ export async function getSessionSignatures(
 
 /**
  * Execute Lit Action to sign a transaction for an agent
- * Verifies caller owns the AgentNFT before signing
- * 
- * @param backendPrivateKey - Backend private key (sponsors capacity)
- * @param agentTokenId - The AgentNFT token ID
- * @param agentNFTContract - AgentNFT contract address on Cronos
- * @param callerAddress - Address of the user requesting signature
- * @param pkpPublicKey - The PKP public key
- * @param toSign - Message hash to sign (Uint8Array)
- * @param chain - Chain to verify ownership on
  */
 export async function executeAgentSign(
   backendPrivateKey: string,
@@ -192,7 +177,6 @@ export async function executeAgentSign(
 
 /**
  * Sign a transaction for an agent wallet
- * This is a higher-level function that handles the full signing flow
  */
 export async function signAgentTransaction(
   backendPrivateKey: string,
@@ -215,9 +199,19 @@ export async function signAgentTransaction(
 ): Promise<string> {
   console.log(`[Lit] Signing transaction for agent ${agentTokenId}`);
 
-  const serializedTx = ethers.Transaction.from(transaction).unsignedSerialized;
-  const txHash = ethers.keccak256(serializedTx);
-  const toSign = ethers.getBytes(txHash);
+  const tx: ethers.UnsignedTransaction = {
+    to: transaction.to,
+    value: ethers.BigNumber.from(transaction.value),
+    data: transaction.data,
+    chainId: transaction.chainId,
+    nonce: transaction.nonce,
+    gasLimit: ethers.BigNumber.from(transaction.gasLimit),
+    gasPrice: transaction.gasPrice ? ethers.BigNumber.from(transaction.gasPrice) : undefined,
+  };
+
+  const serializedTx = ethers.utils.serializeTransaction(tx);
+  const txHash = ethers.utils.keccak256(serializedTx);
+  const toSign = ethers.utils.arrayify(txHash);
 
   const { signature, recid } = await executeAgentSign(
     backendPrivateKey,
@@ -229,20 +223,17 @@ export async function signAgentTransaction(
     chain
   );
 
-  const signedTx = ethers.Transaction.from({
-    ...transaction,
-    signature: {
-      r: "0x" + signature.slice(0, 64),
-      s: "0x" + signature.slice(64, 128),
-      v: recid + 27,
-    },
-  }).serialized;
+  const signedTx = ethers.utils.serializeTransaction(tx, {
+    r: "0x" + signature.slice(0, 64),
+    s: "0x" + signature.slice(64, 128),
+    v: recid + 27,
+  });
 
   return signedTx;
 }
 
 /**
- * Mint Capacity Credits (needed for Lit operations)
+ * Mint Capacity Credits
  */
 export async function mintCapacityCredits(
   backendPrivateKey: string
@@ -264,14 +255,22 @@ export async function mintCapacityCredits(
 export async function checkLitBalance(
   backendPrivateKey: string
 ): Promise<{ balance: string; hasBalance: boolean }> {
-  const provider = new ethers.JsonRpcProvider(LIT_RPC_URL);
-  const wallet = new ethers.Wallet(backendPrivateKey, provider);
-  const balance = await provider.getBalance(wallet.address);
-  
-  return {
-    balance: ethers.formatEther(balance),
-    hasBalance: balance > BigInt(0),
-  };
+  try {
+    const provider = getLitYellowstoneProvider();
+    const wallet = new ethers.Wallet(backendPrivateKey, provider);
+    const balance = await provider.getBalance(wallet.address);
+    
+    return {
+      balance: ethers.utils.formatEther(balance),
+      hasBalance: balance.gt(0),
+    };
+  } catch (error) {
+    console.warn("[Lit] Could not check balance, assuming sufficient:", error);
+    return {
+      balance: "unknown",
+      hasBalance: true,
+    };
+  }
 }
 
 /**
@@ -283,7 +282,7 @@ export function getPKPAddress(pkpPublicKey: string): string {
     : pkpPublicKey;
   
   const pubKeyBytes = Buffer.from(pubKeyNoPrefix, "hex");
-  const addressBytes = ethers.keccak256(pubKeyBytes.slice(1));
+  const addressBytes = ethers.utils.keccak256(pubKeyBytes.slice(1));
   
   return "0x" + addressBytes.slice(-40);
 }

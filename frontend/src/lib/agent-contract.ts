@@ -7,7 +7,7 @@ import { getBackendWallet } from "./credits";
  * Get AgentNFT contract instance (server-side only)
  */
 export function getAgentNFTContract(
-    signerOrProvider: ethers.Signer | ethers.Provider,
+    signerOrProvider: ethers.Signer | ethers.providers.Provider,
     chainId: number
 ) {
     const addresses = getContractAddresses(chainId);

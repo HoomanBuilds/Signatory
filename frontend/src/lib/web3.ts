@@ -18,10 +18,10 @@ export function getProvider() {
   if (typeof window === "undefined") return null;
 
   if (window.ethereum) {
-    return new ethers.BrowserProvider(window.ethereum);
+    return new ethers.providers.Web3Provider(window.ethereum);
   }
 
-  return new ethers.JsonRpcProvider("http://127.0.0.1:8545");
+  return new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545");
 }
 
 export async function connectWallet() {
@@ -35,12 +35,12 @@ export async function connectWallet() {
       (p: any) => p.isMetaMask
     );
     if (metamaskProvider) {
-      provider = new ethers.BrowserProvider(metamaskProvider);
+      provider = new ethers.providers.Web3Provider(metamaskProvider);
     } else {
-      provider = new ethers.BrowserProvider(window.ethereum);
+      provider = new ethers.providers.Web3Provider(window.ethereum);
     }
   } else {
-    provider = new ethers.BrowserProvider(window.ethereum);
+    provider = new ethers.providers.Web3Provider(window.ethereum);
   }
 
   await provider.send("eth_requestAccounts", []);

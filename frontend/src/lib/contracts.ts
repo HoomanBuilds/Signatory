@@ -9,7 +9,7 @@ import RevenueShareAbi from "@/constants/RevenueShare.json";
 import AgentPKPAbi from "@/constants/AgentPKP.json";
 
 export function getAgentNFTContract(
-  signerOrProvider: ethers.Signer | ethers.Provider,
+  signerOrProvider: ethers.Signer | ethers.providers.Provider,
   chainId: number
 ) {
   const addresses = getContractAddresses(chainId);
@@ -17,7 +17,7 @@ export function getAgentNFTContract(
 }
 
 export function getAgentPKPContract(
-  signerOrProvider: ethers.Signer | ethers.Provider,
+  signerOrProvider: ethers.Signer | ethers.providers.Provider,
   chainId: number
 ) {
   const addresses = getContractAddresses(chainId) as any;
@@ -28,7 +28,7 @@ export function getAgentPKPContract(
 }
 
 export function getMarketplaceContract(
-  signerOrProvider: ethers.Signer | ethers.Provider,
+  signerOrProvider: ethers.Signer | ethers.providers.Provider,
   chainId: number
 ) {
   const addresses = getContractAddresses(chainId);
@@ -40,7 +40,7 @@ export function getMarketplaceContract(
 }
 
 export function getCreditsContract(
-  signerOrProvider: ethers.Signer | ethers.Provider,
+  signerOrProvider: ethers.Signer | ethers.providers.Provider,
   chainId: number
 ) {
   const addresses = getContractAddresses(chainId);
@@ -52,7 +52,7 @@ export function getCreditsContract(
 }
 
 export function getRevenueShareContract(
-  signerOrProvider: ethers.Signer | ethers.Provider,
+  signerOrProvider: ethers.Signer | ethers.providers.Provider,
   chainId: number
 ) {
   const addresses = getContractAddresses(chainId);
@@ -70,7 +70,7 @@ export async function mintAgentNFT(
   name: string,
   tokenURI: string,
   personalityHash: string,
-  mintingFee: bigint
+  mintingFee: ethers.BigNumber
 ) {
   const contract = getAgentNFTContract(signer, chainId);
   const tx = await contract.mintAgent(name, tokenURI, personalityHash, {
@@ -103,7 +103,7 @@ export async function mintAgentWithPKP(
   name: string,
   tokenURI: string,
   personalityHash: string,
-  mintingFee: bigint
+  mintingFee: ethers.BigNumber
 ): Promise<{ tokenId: number; pkpAddress?: string }> {
   const tokenId = await mintAgentNFT(
     signer,
@@ -146,27 +146,27 @@ export async function mintAgentWithPKP(
 
 // Get minting fee
 export async function getMintingFee(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   chainId: number
-): Promise<bigint> {
+): Promise<ethers.BigNumber> {
   const contract = getAgentNFTContract(provider, chainId);
   return await contract.mintingFee();
 }
 
 // Get user's agents
 export async function getUserAgents(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   chainId: number,
   address: string
 ): Promise<number[]> {
   const contract = getAgentNFTContract(provider, chainId);
   const agents = await contract.getAgentsByOwner(address);
-  return agents.map((id: bigint) => Number(id));
+  return agents.map((id: ethers.BigNumber) => id.toNumber());
 }
 
 // Get agent metadata
 export async function getAgentMetadata(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   chainId: number,
   tokenId: number
 ) {
@@ -178,19 +178,19 @@ export async function getAgentMetadata(
 
 // Get user's credit balance
 export async function getUserCredits(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   chainId: number,
   address: string
-): Promise<bigint> {
+): Promise<ethers.BigNumber> {
   const contract = getCreditsContract(provider, chainId);
   return await contract.getUserCredits(address);
 }
 
 // Get credit price
 export async function getCreditPrice(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   chainId: number
-): Promise<bigint> {
+): Promise<ethers.BigNumber> {
   const contract = getCreditsContract(provider, chainId);
   return await contract.creditPrice();
 }
@@ -210,7 +210,7 @@ export async function purchaseCredits(
   signer: ethers.Signer,
   chainId: number,
   amount: number,
-  totalCost: bigint
+  totalCost: ethers.BigNumber
 ) {
   const contract = getCreditsContract(signer, chainId);
   const tx = await contract.purchaseCredits(amount, { value: totalCost });
@@ -222,7 +222,7 @@ export async function purchaseCreditPlan(
   signer: ethers.Signer,
   chainId: number,
   planId: number,
-  planPrice: bigint
+  planPrice: ethers.BigNumber
 ) {
   const contract = getCreditsContract(signer, chainId);
   const tx = await contract.purchasePlan(planId, { value: planPrice });
@@ -231,7 +231,7 @@ export async function purchaseCreditPlan(
 
 // Get active credit plans
 export async function getActiveCreditPlans(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   chainId: number
 ) {
   const contract = getCreditsContract(provider, chainId);
@@ -240,7 +240,7 @@ export async function getActiveCreditPlans(
 
 // Check if user claimed free tier
 export async function hasClaimedFreeTier(
-  provider: ethers.Provider,
+  provider: ethers.providers.Provider,
   chainId: number,
   address: string
 ): Promise<boolean> {

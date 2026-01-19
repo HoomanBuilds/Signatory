@@ -6,7 +6,7 @@ import { getContractAddresses } from "./web3";
  * Get AgentCredits contract instance (server-side only)
  */
 export function getCreditsContract(
-  signerOrProvider: ethers.Signer | ethers.Provider,
+  signerOrProvider: ethers.Signer | ethers.providers.Provider,
   chainId: number
 ) {
   const addresses = getContractAddresses(chainId);
@@ -31,7 +31,7 @@ export function getBackendWallet(): ethers.Wallet {
     throw new Error("RPC_URL not configured");
   }
 
-  const provider = new ethers.JsonRpcProvider(rpcUrl);
+  const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
   return new ethers.Wallet(privateKey, provider);
 }
 
@@ -41,7 +41,7 @@ export function getBackendWallet(): ethers.Wallet {
 export async function checkUserCredits(
   userAddress: string,
   requiredCredits: number = 1
-): Promise<{ hasCredits: boolean; balance: bigint }> {
+): Promise<{ hasCredits: boolean; balance: ethers.BigNumber }> {
   const wallet = getBackendWallet();
   if (!wallet.provider) {
     throw new Error("Wallet provider not available");
@@ -52,7 +52,7 @@ export async function checkUserCredits(
   const balance = await contract.getUserCredits(userAddress);
 
   return {
-    hasCredits: balance >= BigInt(requiredCredits),
+    hasCredits: balance.gte(requiredCredits),
     balance,
   };
 }
@@ -104,7 +104,7 @@ export async function spendUserCredits(
  */
 export async function getUserCreditBalance(
   userAddress: string
-): Promise<bigint> {
+): Promise<ethers.BigNumber> {
   const wallet = getBackendWallet();
   if (!wallet.provider) {
     throw new Error("Wallet provider not available");
@@ -123,7 +123,7 @@ export async function checkSessionCredits(
   userAddress: string,
   nftContract: string,
   agentId: number
-): Promise<{ hasCredits: boolean; balance: bigint }> {
+): Promise<{ hasCredits: boolean; balance: ethers.BigNumber }> {
   const wallet = getBackendWallet();
   if (!wallet.provider) {
     throw new Error("Wallet provider not available");
@@ -131,11 +131,10 @@ export async function checkSessionCredits(
   const chainId = 11155111;
   const contract = getCreditsContract(wallet, Number(chainId));
 
-  // New signature: getSessionCredits(address user, address nftContract, uint256 agentId)
   const balance = await contract.getSessionCredits(userAddress, nftContract, agentId);
 
   return {
-    hasCredits: balance > BigInt(0),
+    hasCredits: balance.gt(0),
     balance,
   };
 }
