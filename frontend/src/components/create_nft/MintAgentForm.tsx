@@ -40,13 +40,18 @@ export default function MintAgentForm() {
       if (isSuccess && receipt && address && !pkpRegistering && !pkpAddress) {
         setPkpRegistering(true);
         
+        // ERC721 Transfer event signature
+        const TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
         let tokenId: number | null = null;
+        
         for (const log of receipt.logs) {
-          if (log.topics && log.topics.length >= 2) {
+          // Check for Transfer event (tokenId is in topics[3])
+          if (log.topics && log.topics[0] === TRANSFER_TOPIC && log.topics.length >= 4) {
             try {
-              const topic = log.topics[1];
+              const topic = log.topics[3];
               if (topic) {
                 tokenId = parseInt(topic, 16);
+                console.log("[PKP] Found Transfer event, tokenId:", tokenId);
                 if (!isNaN(tokenId)) break;
               }
             } catch {
@@ -61,6 +66,8 @@ export default function MintAgentForm() {
           if (pkpAddr) {
             setPkpAddress(pkpAddr);
           }
+        } else {
+          console.error("[PKP] Could not extract token ID from receipt");
         }
         setPkpRegistering(false);
       }

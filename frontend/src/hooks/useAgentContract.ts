@@ -92,13 +92,33 @@ export function useMintAgent() {
   const extractTokenId = (): number | null => {
     if (!receipt?.logs) return null;
     
+    // The tokenId is in topics[3] for Transfer
+    const TRANSFER_TOPIC = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef";
+    
     for (const log of receipt.logs) {
-      if (log.topics[0] === "0x" && log.topics.length >= 2) {
+      // Check for Transfer event
+      if (log.topics && log.topics[0] === TRANSFER_TOPIC && log.topics.length >= 4) {
+        try {
+          const topic = log.topics[3]; 
+          if (topic) {
+            const tokenId = parseInt(topic, 16);
+            console.log("[extractTokenId] Found Transfer event, tokenId:", tokenId);
+            if (!isNaN(tokenId)) return tokenId;
+          }
+        } catch {
+          continue;
+        }
+      }
+      // Also check for any event with tokenId in topics[1] (AgentMinted)
+      if (log.topics && log.topics.length >= 2) {
         try {
           const topic = log.topics[1];
           if (topic) {
             const tokenId = parseInt(topic, 16);
-            if (!isNaN(tokenId)) return tokenId;
+            if (!isNaN(tokenId) && tokenId > 0 && tokenId < 1000000) {
+              console.log("[extractTokenId] Found potential tokenId in topics[1]:", tokenId);
+              return tokenId;
+            }
           }
         } catch {
           continue;
