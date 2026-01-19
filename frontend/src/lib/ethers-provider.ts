@@ -1,0 +1,78 @@
+/**
+ * Ethers v5 Provider Utilities
+ * 
+ * Creates providers with proper configuration to avoid Node.js 18+ fetch issues.
+ * The issue: ethers v5 uses `Referrer: "client"` which is invalid in Node.js.
+ */
+
+import { ethers } from "ethers";
+
+// Known network configurations
+const NETWORKS = {
+  cronos_testnet: {
+    name: "cronos-testnet",
+    chainId: 338,
+    rpcUrl: "https://evm-t3.cronos.org",
+  },
+  lit_yellowstone: {
+    name: "lit-yellowstone", 
+    chainId: 175188,
+    rpcUrl: "https://yellowstone-rpc.litprotocol.com",
+  },
+  sepolia: {
+    name: "sepolia",
+    chainId: 11155111,
+    rpcUrl: "https://rpc.sepolia.org",
+  },
+};
+
+/**
+ * Create an ethers v5 provider with custom fetch to avoid Referrer issues
+ */
+export function createProvider(
+  rpcUrl: string,
+  network: { name: string; chainId: number }
+): ethers.providers.JsonRpcProvider {
+  // Create a custom connection with proper headers
+  const connection: ethers.utils.ConnectionInfo = {
+    url: rpcUrl,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    // Skip sending problematic headers by not using native fetch behavior
+    skipFetchSetup: true,
+  };
+
+  return new ethers.providers.JsonRpcProvider(connection, network);
+}
+
+/**
+ * Create Cronos Testnet provider
+ */
+export function getCronosTestnetProvider(): ethers.providers.JsonRpcProvider {
+  return createProvider(NETWORKS.cronos_testnet.rpcUrl, {
+    name: NETWORKS.cronos_testnet.name,
+    chainId: NETWORKS.cronos_testnet.chainId,
+  });
+}
+
+/**
+ * Create Lit Yellowstone provider
+ */
+export function getLitYellowstoneProvider(): ethers.providers.JsonRpcProvider {
+  return createProvider(NETWORKS.lit_yellowstone.rpcUrl, {
+    name: NETWORKS.lit_yellowstone.name,
+    chainId: NETWORKS.lit_yellowstone.chainId,
+  });
+}
+
+/**
+ * Create Sepolia provider
+ */
+export function getSepoliaProvider(): ethers.providers.JsonRpcProvider {
+  const rpcUrl = process.env.RPC_URL || NETWORKS.sepolia.rpcUrl;
+  return createProvider(rpcUrl, {
+    name: NETWORKS.sepolia.name,
+    chainId: NETWORKS.sepolia.chainId,
+  });
+}
