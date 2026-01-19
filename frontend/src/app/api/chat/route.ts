@@ -272,30 +272,8 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // 3. Try Agent Auto-Pay (Agent Wallet)
-      try {
-        const { getAgentWallet } = require("@/lib/agent-wallet");
-        const { ethers } = require("ethers");
-        
-        const agentWallet = getAgentWallet(agentId);
-        const balance = await agentWallet.provider.getBalance(agentWallet.address);
-        const priceWei = ethers.parseEther(CREDIT_PRICE_ETH);
-        const gasBuffer = ethers.parseEther("0.00005");
-        
-        if (balance >= (priceWei + gasBuffer)) {
-          console.log(`Agent ${agentId} auto-paying for chat...`);
-          const contract = new ethers.Contract(
-            AGENT_CREDITS_ADDRESS,
-            AGENT_CREDITS_ABI_EXPORT,
-            agentWallet
-          );
-          const tx = await contract.purchaseCredits(CREDIT_AMOUNT, { value: priceWei });
-          await tx.wait();
-          return coreChatLogic(req, true);
-        }
-      } catch (error) {
-        console.error("Agent auto-pay failed:", error);
-      }
+      // 3. Agent Auto-Pay disabled - now using PKP wallets
+      // TODO: Implement PKP-based auto-pay using /api/agent-wallet/sign
 
       // 4. Return 402 for AgentCredits
       return NextResponse.json(
