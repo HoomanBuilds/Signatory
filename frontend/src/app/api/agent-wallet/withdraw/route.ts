@@ -1,12 +1,28 @@
+/**
+ * API Route: Withdraw from Agent Wallet
+ */
+
 import { NextRequest, NextResponse } from "next/server";
-import { getAgentWallet } from "@/lib/agent-wallet";
-import { getAgentOwner } from "@/lib/agent-contract";
 import { ethers } from "ethers";
+import { signAgentTransaction } from "@/lib/lit-protocol";
+import { getCronosTestnetProvider } from "@/lib/ethers-provider";
+import AgentPKPAbi from "@/constants/AgentPKP.json";
+import AgentNFTAbi from "@/constants/AgentNFT.json";
+import contractAddresses from "@/constants/contractAddresses.json";
 import { getAuthenticatedAddress } from "@/lib/auth";
+
+const CRONOS_TESTNET_CHAIN_ID = "338";
+
+type ChainAddresses = {
+  AgentNFT: string;
+  AgentMarketplace: string;
+  AgentCredits: string;
+  RevenueShare: string;
+  AgentPKP?: string;
+};
 
 export async function POST(req: NextRequest) {
   try {
-    // Verify SIWE Authentication
     const authenticatedAddress = await getAuthenticatedAddress();
     
     if (!authenticatedAddress) {
@@ -25,73 +41,124 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 1. Verify Owner
-    // We strictly withdraw ONLY to the current owner to prevent theft.
-    const ownerAddress = await getAgentOwner(Number(tokenId));
-    
-    if (!ownerAddress) {
-        return NextResponse.json(
-            { error: "Could not determine agent owner" },
-            { status: 404 }
-        );
+    const backendPrivateKey = process.env.BACKEND_PRIVATE_KEY;
+    if (!backendPrivateKey) {
+      return NextResponse.json(
+        { error: "Backend not configured" },
+        { status: 500 }
+      );
     }
 
-    // Verify authenticated user is the owner
-    if (authenticatedAddress.toLowerCase() !== ownerAddress.toLowerCase()) {
+    const addresses = (contractAddresses as Record<string, ChainAddresses>)[CRONOS_TESTNET_CHAIN_ID];
+    if (!addresses?.AgentPKP || !addresses?.AgentNFT) {
       return NextResponse.json(
-        { error: "Only the agent owner can withdraw funds." },
+        { error: "Contracts not deployed" },
+        { status: 500 }
+      );
+    }
+
+    const provider = getCronosTestnetProvider();
+
+    // Verify caller is the owner
+    const agentNFTContract = new ethers.Contract(
+      addresses.AgentNFT,
+      AgentNFTAbi,
+      provider
+    );
+    const owner = await agentNFTContract.ownerOf(tokenId);
+
+    if (authenticatedAddress.toLowerCase() !== owner.toLowerCase()) {
+      return NextResponse.json(
+        { error: "Only the agent owner can withdraw funds" },
         { status: 403 }
       );
     }
 
-    // 2. Get Agent Wallet
-    const agentWallet = getAgentWallet(Number(tokenId));
-    const balance = await agentWallet.provider?.getBalance(agentWallet.address);
+    // Get PKP info
+    const agentPKPContract = new ethers.Contract(
+      addresses.AgentPKP,
+      AgentPKPAbi,
+      provider
+    );
 
-    if (!balance || balance === BigInt(0)) {
+    const hasPKP = await agentPKPContract.hasPKP(tokenId);
+    if (!hasPKP) {
+      return NextResponse.json(
+        { error: "Agent does not have a PKP wallet" },
+        { status: 400 }
+      );
+    }
+
+    const pkpInfo = await agentPKPContract.getPKPInfo(tokenId);
+    const pkpAddress = pkpInfo._evmAddress;
+    const pkpPublicKey = pkpInfo._pkpPublicKey;
+
+    // Check balance
+    const balance = await provider.getBalance(pkpAddress);
+    if (balance.isZero()) {
       return NextResponse.json(
         { error: "Insufficient funds" },
         { status: 400 }
       );
     }
 
-    // 3. Calculate Gas and Amount
-    // Simple transfer gas limit is usually 21000
-    const gasLimit = BigInt(21000);
-    const feeData = await agentWallet.provider?.getFeeData();
-    const gasPrice = feeData?.gasPrice || ethers.parseUnits("10", "gwei"); // Fallback
-    const gasCost = gasLimit * gasPrice;
+    // Calculate gas
+    const gasLimit = ethers.BigNumber.from(21000);
+    const gasPrice = await provider.getGasPrice();
+    const gasCost = gasLimit.mul(gasPrice);
 
-    if (balance <= gasCost) {
-        return NextResponse.json(
-            { error: "Balance too low to cover gas" },
-            { status: 400 }
-        );
+    if (balance.lte(gasCost)) {
+      return NextResponse.json(
+        { error: "Balance too low to cover gas" },
+        { status: 400 }
+      );
     }
 
-    const amountToSend = balance - gasCost;
+    const amountToSend = balance.sub(gasCost);
+    const nonce = await provider.getTransactionCount(pkpAddress);
 
-    console.log(`Withdrawing ${ethers.formatEther(amountToSend)} ETH from Agent ${tokenId} to Owner ${ownerAddress}`);
+    console.log(`[Withdraw] Withdrawing ${ethers.utils.formatEther(amountToSend)} CRO from Agent ${tokenId} to ${owner}`);
 
-    // 4. Send Transaction
-    const tx = await agentWallet.sendTransaction({
-      to: ownerAddress,
-      value: amountToSend,
-      gasLimit: gasLimit,
-      gasPrice: gasPrice
-    });
+    // Sign transaction using Lit Actions
+    const signedTx = await signAgentTransaction(
+      backendPrivateKey,
+      Number(tokenId),
+      addresses.AgentNFT,
+      authenticatedAddress,
+      pkpPublicKey,
+      {
+        to: owner,
+        value: amountToSend.toString(),
+        data: "0x",
+        chainId: 338,
+        nonce,
+        gasLimit: gasLimit.toString(),
+        gasPrice: gasPrice.toString(),
+      },
+      "cronos"
+    );
 
-    await tx.wait();
+    // Broadcast transaction
+    const txResponse = await provider.sendTransaction(signedTx);
+    await txResponse.wait();
 
     return NextResponse.json({
       success: true,
-      txHash: tx.hash,
-      amount: ethers.formatEther(amountToSend),
-      recipient: ownerAddress
+      txHash: txResponse.hash,
+      amount: ethers.utils.formatEther(amountToSend),
+      recipient: owner,
     });
 
   } catch (error: any) {
-    console.error("Withdrawal error:", error);
+    console.error("[Withdraw] Error:", error);
+    
+    if (error.message?.includes("does not own")) {
+      return NextResponse.json(
+        { error: "Caller does not own this agent" },
+        { status: 403 }
+      );
+    }
+
     return NextResponse.json(
       { error: error.message || "Withdrawal failed" },
       { status: 500 }

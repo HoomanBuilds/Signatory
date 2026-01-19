@@ -1,19 +1,16 @@
 /**
  * API Route: Sign Transaction for Agent Wallet
- * 
- * Signs a transaction using the agent's PKP wallet.
- * Verifies caller owns the AgentNFT via Lit Actions before signing.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { executeAgentSign, signAgentTransaction } from "@/lib/lit-protocol";
 import { ethers } from "ethers";
+import { getCronosTestnetProvider } from "@/lib/ethers-provider";
 
 import AgentPKPAbi from "@/constants/AgentPKP.json";
 import contractAddresses from "@/constants/contractAddresses.json";
 
 const CRONOS_TESTNET_CHAIN_ID = "338";
-const CRONOS_TESTNET_RPC = "https://evm-t3.cronos.org";
 
 type ChainAddresses = {
   AgentNFT: string;
@@ -23,21 +20,11 @@ type ChainAddresses = {
   AgentPKP?: string;
 };
 
-/**
- * POST: Sign a message or transaction for an agent
- * 
- * Body:
- * - agentTokenId: The AgentNFT token ID
- * - callerAddress: Address of the user requesting signature (must own AgentNFT)
- * - message?: Raw message to sign (for signMessage)
- * - transaction?: Transaction object to sign (for sendTransaction)
- */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const { agentTokenId, callerAddress, message, transaction } = body;
 
-    // Validate input
     if (!agentTokenId || !callerAddress) {
       return NextResponse.json(
         { error: "Missing agentTokenId or callerAddress" },
@@ -68,7 +55,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const cronosProvider = new ethers.JsonRpcProvider(CRONOS_TESTNET_RPC);
+    const cronosProvider = getCronosTestnetProvider();
     const agentPKPContract = new ethers.Contract(
       addresses.AgentPKP,
       AgentPKPAbi,
@@ -89,8 +76,8 @@ export async function POST(request: NextRequest) {
     console.log(`[Sign] Agent ${agentTokenId} signing request from ${callerAddress}`);
 
     if (message) {
-      const messageHash = ethers.hashMessage(message);
-      const toSign = ethers.getBytes(messageHash);
+      const messageHash = ethers.utils.hashMessage(message);
+      const toSign = ethers.utils.arrayify(messageHash);
 
       const { signature, recid } = await executeAgentSign(
         backendPrivateKey,

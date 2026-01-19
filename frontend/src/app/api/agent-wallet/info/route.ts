@@ -1,26 +1,25 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getAgentWalletAddress, getAgentBalance } from "@/lib/agent-wallet";
-import { ethers } from "ethers";
-import RevenueShareABI from "@/constants/RevenueShare.json";
-import contractAddresses from "@/constants/contractAddresses.json";
-import { getBackendWallet } from "@/lib/credits";
-import { getAuthenticatedAddress } from "@/lib/auth";
+/**
+ * API Route: Get Agent Wallet Info
+ */
 
-const CHAIN_ID = "11155111"; // Sepolia
-const REVENUE_SHARE_ADDRESS = (contractAddresses as any)[CHAIN_ID]?.RevenueShare;
+import { NextRequest, NextResponse } from "next/server";
+import { ethers } from "ethers";
+import { getCronosTestnetProvider } from "@/lib/ethers-provider";
+import AgentPKPAbi from "@/constants/AgentPKP.json";
+import contractAddresses from "@/constants/contractAddresses.json";
+
+const CRONOS_TESTNET_CHAIN_ID = "338";
+
+type ChainAddresses = {
+  AgentNFT: string;
+  AgentMarketplace: string;
+  AgentCredits: string;
+  RevenueShare: string;
+  AgentPKP?: string;
+};
 
 export async function GET(req: NextRequest) {
   try {
-    // Verify SIWE Authentication
-    const authenticatedAddress = await getAuthenticatedAddress();
-    
-    if (!authenticatedAddress) {
-      return NextResponse.json(
-        { error: "Authentication required. Please sign in with your wallet." },
-        { status: 401 }
-      );
-    }
-
     const { searchParams } = new URL(req.url);
     const tokenId = searchParams.get("tokenId");
 
@@ -31,30 +30,41 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const address = getAgentWalletAddress(Number(tokenId));
-    const balance = await getAgentBalance(Number(tokenId));
-
-    // Check registration status
-    let isRegistered = false;
-    try {
-        const wallet = getBackendWallet();
-        if (wallet && REVENUE_SHARE_ADDRESS) {
-            const contract = new ethers.Contract(
-                REVENUE_SHARE_ADDRESS,
-                RevenueShareABI,
-                wallet
-            );
-            const registeredWallet = await contract.agentWallets(tokenId);
-            isRegistered = registeredWallet.toLowerCase() === address.toLowerCase();
-        }
-    } catch (e) {
-        console.error("Error checking registration:", e);
+    const addresses = (contractAddresses as Record<string, ChainAddresses>)[CRONOS_TESTNET_CHAIN_ID];
+    if (!addresses?.AgentPKP) {
+      return NextResponse.json(
+        { error: "AgentPKP contract not deployed" },
+        { status: 500 }
+      );
     }
 
+    const provider = getCronosTestnetProvider();
+    const agentPKPContract = new ethers.Contract(
+      addresses.AgentPKP,
+      AgentPKPAbi,
+      provider
+    );
+
+    const hasPKP = await agentPKPContract.hasPKP(tokenId);
+    
+    if (!hasPKP) {
+      return NextResponse.json({
+        hasPKP: false,
+        address: null,
+        balance: "0",
+      });
+    }
+
+    const evmAddress = await agentPKPContract.getAgentWallet(tokenId);
+    
+    // Get balance on Cronos
+    const balance = await provider.getBalance(evmAddress);
+
     return NextResponse.json({
-      address,
-      balance,
-      isRegistered
+      hasPKP: true,
+      address: evmAddress,
+      balance: ethers.utils.formatEther(balance),
+      accessControl: "lit-actions",
     });
 
   } catch (error: any) {

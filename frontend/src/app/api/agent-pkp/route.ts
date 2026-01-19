@@ -1,20 +1,16 @@
 /**
  * API Route: Register PKP for Agent
- * 
- * Called after an agent is minted to create a PKP wallet.
- * Backend sponsors Lit Protocol gas costs and retains PKP ownership.
- * Access is controlled via Lit Actions that check AgentNFT ownership.
  */
 
 import { NextRequest, NextResponse } from "next/server";
 import { mintPKPForAgent, checkLitBalance } from "@/lib/lit-protocol";
 import { ethers } from "ethers";
+import { getCronosTestnetProvider } from "@/lib/ethers-provider";
 
 import AgentPKPAbi from "@/constants/AgentPKP.json";
 import contractAddresses from "@/constants/contractAddresses.json";
 
 const CRONOS_TESTNET_CHAIN_ID = "338";
-const CRONOS_TESTNET_RPC = "https://evm-t3.cronos.org";
 
 type ChainAddresses = {
   AgentNFT: string;
@@ -62,8 +58,13 @@ export async function POST(request: NextRequest) {
 
     console.log(`[PKP] PKP minted: ${evmAddress}`);
 
+    // Derive multi-chain addresses
+    const { deriveAllChainAddresses } = await import("@/lib/pkp-addresses");
+    const chainAddresses = deriveAllChainAddresses(pkpPublicKey);
+    console.log(`[PKP] Derived addresses for ${chainAddresses.length} chains`);
+
     // Register PKP in AgentPKP contract on Cronos
-    const cronosProvider = new ethers.JsonRpcProvider(CRONOS_TESTNET_RPC);
+    const cronosProvider = getCronosTestnetProvider();
     const cronosWallet = new ethers.Wallet(backendPrivateKey, cronosProvider);
 
     const addresses = (contractAddresses as Record<string, ChainAddresses>)[CRONOS_TESTNET_CHAIN_ID];
@@ -84,10 +85,8 @@ export async function POST(request: NextRequest) {
       ? pkpPublicKey
       : "0x" + pkpPublicKey;
 
-    const pkpTokenIdBytes32 = ethers.zeroPadValue(
-      ethers.toBeHex(BigInt(pkpTokenId)),
-      32
-    );
+    const pkpTokenIdBN = ethers.BigNumber.from(pkpTokenId);
+    const pkpTokenIdBytes32 = ethers.utils.hexZeroPad(pkpTokenIdBN.toHexString(), 32);
 
     console.log(`[PKP] Registering PKP in AgentPKP contract...`);
     const tx = await agentPKPContract.registerPKP(
@@ -97,8 +96,26 @@ export async function POST(request: NextRequest) {
       pkpTokenIdBytes32
     );
 
-    const receipt = await tx.wait();
-    console.log(`[PKP] Registration tx: ${receipt.hash}`);
+    await tx.wait();
+    console.log(`[PKP] PKP registered`);
+
+    // Store non-EVM chain addresses
+    const nonEvmChains = chainAddresses.filter(c => c.type !== "evm");
+    for (const chainAddr of nonEvmChains) {
+      try {
+        console.log(`[PKP] Setting ${chainAddr.chain} address: ${chainAddr.address}`);
+        const setTx = await agentPKPContract.setChainAddress(
+          agentTokenId,
+          chainAddr.chain,
+          chainAddr.address
+        );
+        await setTx.wait();
+      } catch (err) {
+        console.error(`[PKP] Failed to set ${chainAddr.chain} address:`, err);
+      }
+    }
+
+    console.log(`[PKP] All chain addresses registered`);
 
     return NextResponse.json({
       success: true,
@@ -107,7 +124,10 @@ export async function POST(request: NextRequest) {
         pkpTokenId,
         pkpPublicKey,
         evmAddress,
-        transactionHash: receipt.hash,
+        chainAddresses: chainAddresses.reduce((acc, c) => {
+          acc[c.chain] = c.address;
+          return acc;
+        }, {} as Record<string, string>),
         accessControl: "lit-actions",
       },
     });
@@ -135,7 +155,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const cronosProvider = new ethers.JsonRpcProvider(CRONOS_TESTNET_RPC);
+    const cronosProvider = getCronosTestnetProvider();
     const addresses = (contractAddresses as Record<string, ChainAddresses>)[CRONOS_TESTNET_CHAIN_ID];
     
     if (!addresses?.AgentPKP) {
@@ -157,18 +177,30 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({
         hasPKP: false,
         evmAddress: null,
+        chainAddresses: {},
       });
     }
 
     const evmAddress = await agentPKPContract.getAgentWallet(agentTokenId);
     const pkpInfo = await agentPKPContract.getPKPInfo(agentTokenId);
+    const pkpPublicKey = pkpInfo._pkpPublicKey;
+
+    // Derive all chain addresses from public key
+    const { deriveAllChainAddresses } = await import("@/lib/pkp-addresses");
+    const derivedAddresses = deriveAllChainAddresses(pkpPublicKey);
+    
+    const chainAddresses = derivedAddresses.reduce((acc, c) => {
+      acc[c.chain] = c.address;
+      return acc;
+    }, {} as Record<string, string>);
 
     return NextResponse.json({
       hasPKP: true,
       evmAddress,
-      pkpPublicKey: pkpInfo._pkpPublicKey,
+      pkpPublicKey,
       pkpTokenId: pkpInfo._pkpTokenId,
       agentOwner: pkpInfo.agentOwner,
+      chainAddresses,
       accessControl: "lit-actions",
     });
   } catch (error: any) {
