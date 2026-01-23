@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
     "pino",
     "thread-stream",
     "pino-pretty",
+  ],
+
+  // Transpile Lit packages to handle ESM/CJS interop
+  transpilePackages: [
     "@lit-protocol/lit-node-client",
     "@lit-protocol/contracts-sdk",
     "@lit-protocol/auth-helpers",
