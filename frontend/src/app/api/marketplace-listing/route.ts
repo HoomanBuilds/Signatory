@@ -4,6 +4,7 @@ import { hardhat, sepolia } from "viem/chains";
 import AgentMarketplaceABI from "@/constants/AgentMarketplace.json";
 import AgentNFTABI from "@/constants/AgentNFT.json";
 import contractAddresses from "@/constants/contractAddresses.json";
+import { resolveIPFS } from "@/lib/pinata";
 
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID
   ? parseInt(process.env.NEXT_PUBLIC_CHAIN_ID)
@@ -79,21 +80,14 @@ export async function GET() {
           args: [tokenId],
         });
 
-        // Fetch IPFS metadata if available
         let imageUrl;
         if (tokenURI && typeof tokenURI === "string" && tokenURI.length > 0) {
           try {
-            const ipfsUrl = tokenURI.replace(
-              "ipfs://",
-              "https://ipfs.io/ipfs/"
-            );
-            const response = await fetch(ipfsUrl, { cache: "no-store" });
+            const ipfsUrl = resolveIPFS(tokenURI);
+            const response = await fetch(ipfsUrl, { next: { revalidate: 300 } });
             if (response.ok) {
               const ipfsData = await response.json();
-              imageUrl = ipfsData.image?.replace(
-                "ipfs://",
-                "https://ipfs.io/ipfs/"
-              );
+              imageUrl = resolveIPFS(ipfsData.image);
             }
           } catch (error) {
             console.error("Error fetching IPFS data:", error);
@@ -186,18 +180,14 @@ export async function POST(request: NextRequest) {
       args: [BigInt(tokenId)],
     });
 
-    // Fetch IPFS metadata if available
     let imageUrl;
     if (tokenURI && typeof tokenURI === "string" && tokenURI.length > 0) {
       try {
-        const ipfsUrl = tokenURI.replace("ipfs://", "https://ipfs.io/ipfs/");
-        const response = await fetch(ipfsUrl, { cache: "no-store" });
+        const ipfsUrl = resolveIPFS(tokenURI);
+        const response = await fetch(ipfsUrl, { next: { revalidate: 300 } });
         if (response.ok) {
           const ipfsData = await response.json();
-          imageUrl = ipfsData.image?.replace(
-            "ipfs://",
-            "https://ipfs.io/ipfs/"
-          );
+          imageUrl = resolveIPFS(ipfsData.image);
         }
       } catch (error) {
         console.error("Error fetching IPFS data:", error);

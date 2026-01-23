@@ -1,6 +1,24 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Allow IPFS gateway images
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.pinata.cloud",
+      },
+      {
+        protocol: "https",
+        hostname: "gateway.pinata.cloud",
+      },
+      {
+        protocol: "https",
+        hostname: "ipfs.io",
+      },
+    ],
+  },
+
   // Tell Next.js to NOT bundle these packages (use Node.js require instead)
   serverExternalPackages: [
     "chromadb",

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Bot } from "lucide-react";
 
 interface AgentImageProps {
@@ -19,12 +20,15 @@ export default function AgentImage({
 }: AgentImageProps) {
   return (
     <div className="bg-black p-4 border border-[#333]">
-      <div className="w-full max-w-sm mx-auto aspect-square bg-[#111] mb-6 flex items-center justify-center border border-[#333] overflow-hidden">
+      <div className="w-full max-w-sm mx-auto aspect-square bg-[#111] mb-6 flex items-center justify-center border border-[#333] overflow-hidden relative">
         {imageUrl ? (
-          <img
+          <Image
             src={imageUrl}
             alt={name}
-            className="w-full h-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, 384px"
+            className="object-cover"
+            priority
           />
         ) : (
           <Bot className="w-20 h-20 text-[#333]" />
@@ -49,3 +53,4 @@ export default function AgentImage({
     </div>
   );
 }
+

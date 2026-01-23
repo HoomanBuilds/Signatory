@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Bot } from "lucide-react";
 
 interface AgentCardProps {
@@ -27,16 +28,19 @@ export default function AgentCard({
     >
       <div className="aspect-square bg-[#111] border-b border-[#333] flex items-center justify-center overflow-hidden relative">
         {imageUrl ? (
-          <img
+          <Image
             src={imageUrl}
             alt={name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 16vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
           />
         ) : (
           <Bot className="w-12 h-12 text-[#333]" />
         )}
         {isListed && price && (
-          <div className="absolute top-0 right-0 px-2 py-1 bg-white text-black text-xs font-bold">
+          <div className="absolute top-0 right-0 px-2 py-1 bg-white text-black text-xs font-bold z-10">
             {price} TCRO
           </div>
         )}
