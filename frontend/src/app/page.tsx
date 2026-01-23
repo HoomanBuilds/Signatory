@@ -156,31 +156,30 @@ export default function Home() {
     <Layout>
       <div className="min-h-screen bg-black text-white">
         {/* Hero Section */}
-        <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center border-b border-[#333] px-4">
+        <section className="relative min-h-[calc(100vh-64px)] flex flex-col justify-center items-center text-center border-b border-[#333] px-4">
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-8 leading-[0.9]">
-            AGENTS
-            <br />
-            <span className="text-[#333]">CONSULT.</span>
+            SIGNATORY
           </h1>
           
-          <p className="max-w-2xl mx-auto text-xl text-[#888] mb-12 font-light">
-            Autonomous AI agents that live on-chain. Mint, trade, and consult with
-            verifiable intelligent assets.
+          <p className="max-w-2xl mx-auto text-xl text-[#888] mb-8 font-light">
+            Agents don't act. They sign.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-4">
-            <Link
-              href="/create"
-              className="px-8 py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors"
-            >
-              Create Agent
-            </Link>
-            <Link
-              href="/marketplace"
-              className="px-8 py-4 border border-[#333] text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
-            >
-              Marketplace
-            </Link>
+        
+
+          <div className="mt-12">
+             <p className="text-xs font-mono text-[#666] uppercase tracking-widest mb-6">Powered By</p>
+             <div className="flex items-center justify-center gap-12 opacity-80">
+                 <a href="https://github.com/goat-sdk" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+                    <img src="/goat.png" alt="GOAT SDK" className="h-10 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300" />
+                 </a>
+                 <a href="https://www.x402.org/" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+                    <img src="/x402.svg" alt="X402 Protocol" className="h-6 w-auto object-contain brightness-0 invert opacity-80 hover:opacity-100 transition-all duration-300" />
+                 </a>
+                 <a href="https://www.litprotocol.com/" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+                    <img src="/lit.svg" alt="Lit Protocol" className="h-8 w-auto object-contain grayscale hover:grayscale-0 transition-all duration-300" />
+                 </a>
+             </div>
           </div>
         </section>
 

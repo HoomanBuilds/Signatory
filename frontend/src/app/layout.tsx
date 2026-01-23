@@ -54,7 +54,7 @@ const getSelectedChain = () => {
 const selectedChain = getSelectedChain();
 
 const config = getDefaultConfig({
-  appName: "AI Agent NFT Marketplace",
+  appName: "SIGNATORY",
   projectId:
     process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "YOUR_PROJECT_ID",
   chains: [selectedChain],
@@ -105,7 +105,7 @@ export default function RootLayout({
           return createSiweMessage({
             domain: window.location.host,
             address,
-            statement: "Sign in to AI NFT Marketplace",
+            statement: "Sign in to SIGNATORY",
             uri: window.location.origin,
             version: "1",
             chainId,

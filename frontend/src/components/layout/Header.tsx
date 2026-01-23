@@ -21,12 +21,9 @@ export default function Header() {
       <div className="w-full px-6 lg:px-12">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-white flex items-center justify-center">
-              <Bot className="w-5 h-5 text-black" />
+            <div className="w-8 h-8 flex items-center justify-center">
+              <img src="/favicon.png" alt="SIGNATORY" className="w-8 h-8 object-contain brightness-0 invert" />
             </div>
-            <span className="text-xl font-bold text-white tracking-tight">
-              AI Agents
-            </span>
           </Link>
 
           <nav className="hidden md:flex space-x-8">
