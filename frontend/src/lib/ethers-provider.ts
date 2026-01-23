@@ -22,28 +22,27 @@ const NETWORKS = {
   sepolia: {
     name: "sepolia",
     chainId: 11155111,
-    rpcUrl: "https://rpc.sepolia.org",
+    rpcUrl: "https://eth-sepolia.g.alchemy.com/v2/A_0usON465b2gUAMboNs3",
   },
 };
 
 /**
  * Create an ethers v5 provider with custom fetch to avoid Referrer issues
+ * Uses StaticJsonRpcProvider to skip network detection (avoids network mismatch errors)
  */
 export function createProvider(
   rpcUrl: string,
   network: { name: string; chainId: number }
-): ethers.providers.JsonRpcProvider {
-  // Create a custom connection with proper headers
+): ethers.providers.StaticJsonRpcProvider {
   const connection: ethers.utils.ConnectionInfo = {
     url: rpcUrl,
     headers: {
       "Content-Type": "application/json",
     },
-    // Skip sending problematic headers by not using native fetch behavior
     skipFetchSetup: true,
   };
 
-  return new ethers.providers.JsonRpcProvider(connection, network);
+  return new ethers.providers.StaticJsonRpcProvider(connection, network);
 }
 
 /**
@@ -70,7 +69,7 @@ export function getLitYellowstoneProvider(): ethers.providers.JsonRpcProvider {
  * Create Sepolia provider
  */
 export function getSepoliaProvider(): ethers.providers.JsonRpcProvider {
-  const rpcUrl = process.env.RPC_URL || NETWORKS.sepolia.rpcUrl;
+  const rpcUrl = process.env.SEPOLIA_RPC_URL || process.env.NEXT_PUBLIC_SEPOLIA_RPC_URL || NETWORKS.sepolia.rpcUrl;
   return createProvider(rpcUrl, {
     name: NETWORKS.sepolia.name,
     chainId: NETWORKS.sepolia.chainId,
