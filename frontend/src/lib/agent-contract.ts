@@ -2,6 +2,10 @@ import { ethers } from "ethers";
 import AgentNFTAbi from "@/constants/AgentNFT.json";
 import { getContractAddresses } from "./web3";
 import { getBackendWallet } from "./credits";
+import { getCronosTestnetProvider } from "./ethers-provider";
+
+// Cronos Testnet chain ID where agents are minted
+const CRONOS_TESTNET_CHAIN_ID = "338";
 
 /**
  * Get AgentNFT contract instance (server-side only)
@@ -50,13 +54,10 @@ export async function recordAgentChat(
 }
 /**
  * Get the owner of an agent
+ * Uses Cronos testnet since that's where agents are minted
  */
 export async function getAgentOwner(tokenId: number): Promise<string> {
-    const wallet = getBackendWallet();
-    if (!wallet.provider) {
-        throw new Error("Wallet provider not available");
-    }
-    const chainId = (await wallet.provider.getNetwork()).chainId;
-    const contract = getAgentNFTContract(wallet, Number(chainId));
+    const provider = getCronosTestnetProvider();
+    const contract = getAgentNFTContract(provider, Number(CRONOS_TESTNET_CHAIN_ID));
     return await contract.ownerOf(tokenId);
 }

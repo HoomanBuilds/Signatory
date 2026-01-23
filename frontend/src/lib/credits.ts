@@ -1,6 +1,9 @@
 import { ethers } from "ethers";
 import AgentCreditsAbi from "@/constants/AgentCredits.json";
 import { getContractAddresses } from "./web3";
+import { getCronosTestnetProvider } from "./ethers-provider";
+
+const CRONOS_CHAIN_ID = 338;
 
 /**
  * Get AgentCredits contract instance (server-side only)
@@ -18,7 +21,8 @@ export function getCreditsContract(
 }
 
 /**
- * Get backend wallet for authorized spending
+ * Get backend wallet for authorized spending on Cronos Testnet
+ * All contracts (AgentNFT, AgentCredits, etc.) are deployed on Cronos
  */
 export function getBackendWallet(): ethers.Wallet {
   const privateKey = process.env.BACKEND_PRIVATE_KEY;
@@ -26,12 +30,8 @@ export function getBackendWallet(): ethers.Wallet {
     throw new Error("BACKEND_PRIVATE_KEY not configured");
   }
 
-  const rpcUrl = process.env.RPC_URL;
-  if (!rpcUrl) {
-    throw new Error("RPC_URL not configured");
-  }
-
-  const provider = new ethers.providers.JsonRpcProvider(rpcUrl);
+  // Use Cronos Testnet provider since all contracts are on Cronos
+  const provider = getCronosTestnetProvider();
   return new ethers.Wallet(privateKey, provider);
 }
 
@@ -46,8 +46,7 @@ export async function checkUserCredits(
   if (!wallet.provider) {
     throw new Error("Wallet provider not available");
   }
-  const chainId = 11155111;
-  const contract = getCreditsContract(wallet, Number(chainId));
+  const contract = getCreditsContract(wallet, CRONOS_CHAIN_ID);
 
   const balance = await contract.getUserCredits(userAddress);
 
@@ -109,8 +108,7 @@ export async function getUserCreditBalance(
   if (!wallet.provider) {
     throw new Error("Wallet provider not available");
   }
-  const chainId = 11155111;
-  const contract = getCreditsContract(wallet, Number(chainId));
+  const contract = getCreditsContract(wallet, CRONOS_CHAIN_ID);
 
   return await contract.getUserCredits(userAddress);
 }
@@ -128,8 +126,7 @@ export async function checkSessionCredits(
   if (!wallet.provider) {
     throw new Error("Wallet provider not available");
   }
-  const chainId = 11155111;
-  const contract = getCreditsContract(wallet, Number(chainId));
+  const contract = getCreditsContract(wallet, CRONOS_CHAIN_ID);
 
   const balance = await contract.getSessionCredits(userAddress, nftContract, agentId);
 
@@ -153,8 +150,7 @@ export async function useSessionCredit(
     if (!wallet.provider) {
       throw new Error("Wallet provider not available");
     }
-    const chainId = 11155111; 
-    const contract = getCreditsContract(wallet, Number(chainId));
+    const contract = getCreditsContract(wallet, CRONOS_CHAIN_ID);
 
     // Check balance first
     const { hasCredits } = await checkSessionCredits(userAddress, nftContract, agentId);
