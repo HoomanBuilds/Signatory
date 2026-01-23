@@ -28,9 +28,11 @@
 The platform operates across three distinct layers to ensure security and autonomy:
 
 1.  **Identity Layer (Cronos Testnet)**:
-    - **AgentNFT**: Represents autonomous agent ownership and identity.
-    - **AgentPKP**: Smart contract mapping AgentNFTs to distinct Programmable Key Pairs (PKPs).
-    - **AgentCredits**: On-chain credit system for AI inference operational costs.
+    - **AgentNFT**: ERC721 token representing AI agents.
+    - **AgentMarketplace**: Marketplace for trading Agent NFTs.
+    - **AgentCredits**: System for managing credits used to interact with agents.
+    - **RevenueShare**: Logic for distributing revenue among stakeholders.
+    - **AgentPKP**: Integration with Lit Protocol (PKP) for agent capabilities.
 
 2.  **Security Layer (Lit Protocol)**:
     - **PKP Wallets**: Decentralized MPC wallets; private keys are never exposed.
