@@ -20,26 +20,45 @@ const go = async () => {
     throw new Error('Missing required parameters');
   }
 
-  // ERC721 ownerOf function signature
-  const ownerOfAbi = [{
-    "inputs": [{"name": "tokenId", "type": "uint256"}],
-    "name": "ownerOf",
-    "outputs": [{"name": "", "type": "address"}],
-    "stateMutability": "view",
-    "type": "function"
-  }];
+  console.log('Verifying ownership for agent:', agentTokenId);
+  console.log('AgentNFT contract:', agentNFTContract);
+  console.log('Caller:', callerAddress);
 
-  // Check who owns the AgentNFT
-  const owner = await Lit.Actions.callContract({
-    chain: chain || "cronos",
-    txn: ethers.utils.hexlify(
-      new ethers.utils.Interface(ownerOfAbi).encodeFunctionData('ownerOf', [agentTokenId])
-    ),
-    contractAddress: agentNFTContract,
+  // ERC721 ownerOf function selector + encoded tokenId
+  // ownerOf(uint256) = 0x6352211e
+  const tokenIdHex = agentTokenId.toString(16).padStart(64, '0');
+  const callData = '0x6352211e' + tokenIdHex;
+
+  console.log('Call data:', callData);
+
+  // Cronos Testnet RPC URL
+  const rpcUrl = 'https://evm-t3.cronos.org';
+
+  // Make direct RPC call using fetch
+  const response = await fetch(rpcUrl, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      jsonrpc: '2.0',
+      method: 'eth_call',
+      params: [{
+        to: agentNFTContract,
+        data: callData,
+      }, 'latest'],
+      id: 1,
+    }),
   });
 
-  // Decode the owner address from the response
-  const decodedOwner = ethers.utils.defaultAbiCoder.decode(['address'], owner)[0];
+  const data = await response.json();
+  console.log('RPC response:', JSON.stringify(data));
+
+  if (data.error) {
+    throw new Error('RPC error: ' + JSON.stringify(data.error));
+  }
+
+  // Decode the owner address from the response (response is 32 bytes, last 20 bytes is address)
+  const rawResult = data.result;
+  const decodedOwner = '0x' + rawResult.slice(-40);
   
   console.log('AgentNFT owner:', decodedOwner);
   console.log('Caller address:', callerAddress);

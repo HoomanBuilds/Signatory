@@ -99,7 +99,16 @@ export async function getSessionSignatures(
   backendPrivateKey: string
 ): Promise<any> {
   const client = await getLitNodeClient();
-  const provider = new ethers.providers.JsonRpcProvider(LIT_RPC_URL);
+  
+  const connection: ethers.utils.ConnectionInfo = {
+    url: LIT_RPC_URL,
+    headers: { "Content-Type": "application/json" },
+    skipFetchSetup: true,
+  };
+  const provider = new ethers.providers.StaticJsonRpcProvider(connection, {
+    name: "lit-yellowstone",
+    chainId: 175188,
+  });
   const wallet = new ethers.Wallet(backendPrivateKey, provider);
 
   const sessionSigs = await client.getSessionSigs({
@@ -159,6 +168,7 @@ export async function executeAgentSign(
       toSign: Array.from(toSign),
       publicKey: pkpPublicKey,
       chain,
+      chainId: 338, // Cronos Testnet
     },
   });
 
@@ -223,11 +233,20 @@ export async function signAgentTransaction(
     chain
   );
 
-  const signedTx = ethers.utils.serializeTransaction(tx, {
-    r: "0x" + signature.slice(0, 64),
-    s: "0x" + signature.slice(64, 128),
-    v: recid + 27,
-  });
+  console.log(`[Lit] Raw signature: ${signature}`);
+  console.log(`[Lit] Recid: ${recid}`);
+
+  const cleanSig = signature.startsWith("0x") ? signature.slice(2) : signature;
+  
+  const r = "0x" + cleanSig.slice(0, 64);
+  const s = "0x" + cleanSig.slice(64, 128);
+  const v = recid + 27;
+
+  console.log(`[Lit] Parsed r: ${r}`);
+  console.log(`[Lit] Parsed s: ${s}`);
+  console.log(`[Lit] Parsed v: ${v}`);
+
+  const signedTx = ethers.utils.serializeTransaction(tx, { r, s, v });
 
   return signedTx;
 }
