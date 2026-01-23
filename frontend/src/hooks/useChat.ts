@@ -5,6 +5,11 @@ export interface Message {
   role: "user" | "assistant";
   content: string;
   timestamp: number;
+  swapConfirmation?: {
+    fromToken: string;
+    toToken: string;
+    amount: string;
+  };
 }
 
 export interface ChatSession {
@@ -105,6 +110,22 @@ export function useChat(
 
   const [paymentRequirement, setPaymentRequirement] = useState<any>(null);
   const [isPaying, setIsPaying] = useState(false);
+  const [pendingSwap, setPendingSwap] = useState<{
+    fromToken: string;
+    toToken: string;
+    amount: string;
+    walletAddress?: string;
+    network?: string;
+  } | null>(null);
+  const [isSwapping, setIsSwapping] = useState(false);
+  const [pendingBridge, setPendingBridge] = useState<{
+    srcChain: string;
+    dstChain: string;
+    amount: string;
+    token: string;
+    walletAddress?: string;
+  } | null>(null);
+  const [isBridging, setIsBridging] = useState(false);
 
 
   const confirmPayment = useCallback(async () => {
@@ -328,6 +349,48 @@ export function useChat(
         });
       }
 
+      // Check for swap confirmation in response
+      if (fullText.includes("SWAP_CONFIRMATION:")) {
+        const match = fullText.match(/SWAP_CONFIRMATION:(\{.*?\})/);
+        if (match) {
+          try {
+            const swapData = JSON.parse(match[1]);
+            setPendingSwap(swapData);
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                ...newMessages[newMessages.length - 1],
+                content: `I'm ready to swap **${swapData.amount} ${swapData.fromToken}** for **${swapData.toToken}**. Please confirm below.`,
+              };
+              return newMessages;
+            });
+          } catch (e) {
+            console.error("Failed to parse swap confirmation:", e);
+          }
+        }
+      }
+
+      // Check for bridge confirmation in response
+      if (fullText.includes("BRIDGE_CONFIRMATION:")) {
+        const match = fullText.match(/BRIDGE_CONFIRMATION:(\{.*?\})/);
+        if (match) {
+          try {
+            const bridgeData = JSON.parse(match[1]);
+            setPendingBridge(bridgeData);
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                ...newMessages[newMessages.length - 1],
+                content: `I'm ready to bridge **${bridgeData.amount} ${bridgeData.token}** from **${bridgeData.srcChain}** to **${bridgeData.dstChain}**. Please confirm below.`,
+              };
+              return newMessages;
+            });
+          } catch (e) {
+            console.error("Failed to parse bridge confirmation:", e);
+          }
+        }
+      }
+
       if (address) {
         const sessionsResponse = await fetch(
           `/api/chat/sessions?agentId=${agentId}&userAddress=${address}`
@@ -392,6 +455,147 @@ export function useChat(
     setMessages([]);
   }, []);
 
+  // Swap confirmation flow
+  const confirmSwap = useCallback(async () => {
+    if (!pendingSwap || !agentId || !address || !tokenURI || !currentSessionId) return;
+
+    setIsSwapping(true);
+    try {
+      // Send confirmation message to backend to execute swap
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          agentId,
+          tokenURI,
+          message: `CONFIRM_SWAP:${JSON.stringify(pendingSwap)}`,
+          useMemory: true,
+          sessionId: currentSessionId,
+          personality,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Swap failed");
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("No response body");
+
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: "",
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      let fullText = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = {
+            ...newMessages[newMessages.length - 1],
+            content: fullText,
+          };
+          return newMessages;
+        });
+      }
+    } catch (error: any) {
+      console.error("Swap error:", error);
+      setMessages((prev) => [...prev, {
+        role: "assistant",
+        content: `❌ Swap failed: ${error.message}`,
+        timestamp: Date.now(),
+      }]);
+    } finally {
+      setIsSwapping(false);
+      setPendingSwap(null);
+    }
+  }, [pendingSwap, agentId, address, tokenURI, currentSessionId, personality]);
+
+  const cancelSwap = useCallback(() => {
+    setPendingSwap(null);
+    setMessages((prev) => [...prev, {
+      role: "assistant",
+      content: "Swap cancelled.",
+      timestamp: Date.now(),
+    }]);
+  }, []);
+
+  // Bridge confirmation flow
+  const confirmBridge = useCallback(async () => {
+    if (!pendingBridge || !agentId || !address || !tokenURI || !currentSessionId) return;
+
+    setIsBridging(true);
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          agentId,
+          tokenURI,
+          message: `CONFIRM_BRIDGE:${JSON.stringify(pendingBridge)}`,
+          useMemory: true,
+          sessionId: currentSessionId,
+          personality,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Bridge failed");
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("No response body");
+
+      const assistantMessage: Message = {
+        role: "assistant",
+        content: "",
+        timestamp: Date.now(),
+      };
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      let fullText = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = {
+            ...newMessages[newMessages.length - 1],
+            content: fullText,
+          };
+          return newMessages;
+        });
+      }
+    } catch (error: any) {
+      console.error("Bridge error:", error);
+      setMessages((prev) => [...prev, {
+        role: "assistant",
+        content: `❌ Bridge failed: ${error.message}`,
+        timestamp: Date.now(),
+      }]);
+    } finally {
+      setIsBridging(false);
+      setPendingBridge(null);
+    }
+  }, [pendingBridge, agentId, address, tokenURI, currentSessionId, personality]);
+
+  const cancelBridge = useCallback(() => {
+    setPendingBridge(null);
+    setMessages((prev) => [...prev, {
+      role: "assistant",
+      content: "Bridge cancelled.",
+      timestamp: Date.now(),
+    }]);
+  }, []);
+
   return {
     messages,
     sessions,
@@ -409,5 +613,15 @@ export function useChat(
     isPaying,
     confirmPayment: confirmPaymentAndRetry,
     clearPaymentRequirement: () => setPaymentRequirement(null),
+    pendingSwap,
+    setPendingSwap,
+    isSwapping,
+    confirmSwap,
+    cancelSwap,
+    pendingBridge,
+    setPendingBridge,
+    isBridging,
+    confirmBridge,
+    cancelBridge,
   };
 }

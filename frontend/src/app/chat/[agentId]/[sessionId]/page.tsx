@@ -105,6 +105,14 @@ export default function ChatSessionPage() {
     isPaying,
     confirmPayment,
     clearPaymentRequirement,
+    pendingSwap,
+    isSwapping,
+    confirmSwap,
+    cancelSwap,
+    pendingBridge,
+    isBridging,
+    confirmBridge,
+    cancelBridge,
   } = useChat(
     agentId,
     selectedAgentData?.name,
@@ -233,6 +241,14 @@ export default function ChatSessionPage() {
                   messages={messages}
                   agentName={selectedAgentData.name}
                   isThinking={isSending}
+                  pendingSwap={pendingSwap}
+                  isSwapping={isSwapping}
+                  onConfirmSwap={confirmSwap}
+                  onCancelSwap={cancelSwap}
+                  pendingBridge={pendingBridge}
+                  isBridging={isBridging}
+                  onConfirmBridge={confirmBridge}
+                  onCancelBridge={cancelBridge}
                 />
               )}
 

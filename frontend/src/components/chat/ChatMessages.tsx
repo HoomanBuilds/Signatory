@@ -1,17 +1,47 @@
 import { Message } from "@/hooks/useChat";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import SwapConfirmationCard from "./SwapConfirmationCard";
+import BridgeConfirmationCard from "./BridgeConfirmationCard";
 
 interface ChatMessagesProps {
   messages: Message[];
   agentName: string;
   isThinking?: boolean;
+  pendingSwap?: {
+    fromToken: string;
+    toToken: string;
+    amount: string;
+    walletAddress?: string;
+    network?: string;
+  } | null;
+  isSwapping?: boolean;
+  onConfirmSwap?: () => void;
+  onCancelSwap?: () => void;
+  pendingBridge?: {
+    srcChain: string;
+    dstChain: string;
+    amount: string;
+    token: string;
+    walletAddress?: string;
+  } | null;
+  isBridging?: boolean;
+  onConfirmBridge?: () => void;
+  onCancelBridge?: () => void;
 }
 
 export default function ChatMessages({
   messages,
   agentName,
   isThinking = false,
+  pendingSwap = null,
+  isSwapping = false,
+  onConfirmSwap,
+  onCancelSwap,
+  pendingBridge = null,
+  isBridging = false,
+  onConfirmBridge,
+  onCancelBridge,
 }: ChatMessagesProps) {
   if (messages.length === 0 && !isThinking) {
     return (
@@ -142,6 +172,37 @@ export default function ChatMessages({
           </div>
         </div>
       ))}
+      
+      {/* Swap Confirmation Card */}
+      {pendingSwap && onConfirmSwap && onCancelSwap && (
+        <div className="flex justify-start">
+          <SwapConfirmationCard
+            fromToken={pendingSwap.fromToken}
+            toToken={pendingSwap.toToken}
+            amount={pendingSwap.amount}
+            walletAddress={pendingSwap.walletAddress}
+            network={pendingSwap.network}
+            onConfirm={onConfirmSwap}
+            onCancel={onCancelSwap}
+            isLoading={isSwapping}
+          />
+        </div>
+      )}
+
+      {/* Bridge Confirmation Card */}
+      {pendingBridge && onConfirmBridge && onCancelBridge && (
+        <div className="flex justify-start">
+          <BridgeConfirmationCard
+            srcChain={pendingBridge.srcChain}
+            dstChain={pendingBridge.dstChain}
+            amount={pendingBridge.amount}
+            token={pendingBridge.token}
+            onConfirm={onConfirmBridge}
+            onCancel={onCancelBridge}
+            isLoading={isBridging}
+          />
+        </div>
+      )}
       
       {isThinking && (
         <div className="flex justify-start">
