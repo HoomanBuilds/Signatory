@@ -20,6 +20,23 @@ DISLIKES: ${dislikes?.join(", ") || "being unhelpful"}
 
 ${backstory ? `BACKSTORY: ${backstory}` : ""}
 
+## IMPORTANT: Tool Usage Instructions
+
+You have access to blockchain tools. When users request financial operations, you MUST use the appropriate tool:
+
+1. **swap_tokens**: Use this when the user wants to swap/exchange tokens (e.g., "swap ETH for USDC", "exchange 0.1 ETH to DAI")
+   - Call this tool IMMEDIATELY when user requests a swap - do NOT ask for confirmation first
+   - The tool will return a confirmation prompt for the user
+
+2. **bridge_tokens**: Use this when the user wants to bridge tokens across chains (e.g., "bridge ETH to Base", "send tokens from Ethereum to Polygon")
+   - Call this tool IMMEDIATELY when user requests a bridge - do NOT ask for confirmation first
+   - The tool will return a confirmation prompt for the user
+
+When a user says things like "swap", "exchange", "trade", "convert" tokens - USE THE swap_tokens TOOL.
+When a user says things like "bridge", "transfer to another chain", "move to Base/Polygon/etc" - USE THE bridge_tokens TOOL.
+
+DO NOT ask "would you like to proceed?" - just call the tool directly. The tool handles confirmation.
+
 You MUST respond in this character consistently. Stay true to your personality in every response.
 If you are provided with "Context from Knowledge Base", use that information to answer the user's questions.
 Always follow safety, ethical, and legal guidelines. Avoid harmful advice or explicit content.`;
@@ -53,15 +70,17 @@ export async function generateAgentResponse(
 
 /**
  * Generate AI response with streaming
+ * Handles both text and tool call results by creating a custom stream
  */
 export async function streamAgentResponse(
   personality: any,
   userMessage: string,
-  chatHistory: Array<{ role: "user" | "assistant"; content: string }> = []
+  chatHistory: Array<{ role: "user" | "assistant"; content: string }> = [],
+  tools?: any
 ) {
   const systemPrompt = buildPersonalityPrompt(personality);
 
-  const result = await streamText({
+  const result = streamText({
     model: openai("gpt-4o-mini"),
     system: systemPrompt,
     messages: [
@@ -72,9 +91,52 @@ export async function streamAgentResponse(
       { role: "user" as const, content: userMessage },
     ],
     temperature: personality.model?.temperature || 0.8,
+    tools,
   });
 
-  return result.toTextStreamResponse();
+  // Create a custom stream that includes tool results
+  const encoder = new TextEncoder();
+  
+  const stream = new ReadableStream({
+    async start(controller) {
+      try {
+        let textContent = "";
+        
+        // Stream the text content
+        for await (const chunk of result.textStream) {
+          textContent += chunk;
+          controller.enqueue(encoder.encode(chunk));
+        }
+        
+        // After text streaming, check for tool results
+        const toolResultsArr = await result.toolResults;
+        if (toolResultsArr && toolResultsArr.length > 0) {
+          console.log("[AI] Tool results found:", toolResultsArr);
+          for (const toolResult of toolResultsArr) {
+            // toolResult contains toolCallId, toolName, input, and output
+            const resultStr = String((toolResult as any).output || "");
+            console.log("[AI] Including tool result in stream:", resultStr);
+            // Append tool result to stream
+            if (resultStr) {
+              controller.enqueue(encoder.encode(resultStr));
+            }
+          }
+        }
+        
+        controller.close();
+      } catch (error) {
+        console.error("[AI] Streaming error:", error);
+        controller.error(error);
+      }
+    },
+  });
+
+  return new Response(stream, {
+    headers: {
+      "Content-Type": "text/plain; charset=utf-8",
+      "Transfer-Encoding": "chunked",
+    },
+  });
 }
 
 /**

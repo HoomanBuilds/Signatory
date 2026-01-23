@@ -93,14 +93,20 @@ export async function getAgentMemoryCollection(): Promise<Collection> {
  * Generate embedding for text using OpenAI via Vercel AI SDK
  */
 export async function generateEmbedding(text: string): Promise<number[]> {
+  if (!text || typeof text !== 'string' || text.trim().length === 0) {
+    console.warn(`[generateEmbedding] Skipping empty text, returning empty embedding`);
+    return new Array(1536).fill(0);
+  }
+
   try {
+    console.log(`[generateEmbedding] Generating embedding for text: "${text.substring(0, 50)}..."`);
     const { embedding } = await embed({
       model: openai.embedding("text-embedding-3-small"),
-      value: text,
+      value: text.trim(),
     });
     return embedding;
   } catch (error) {
-    console.error("Error generating embedding:", error);
+    console.error("[generateEmbedding] Error generating embedding:", error);
     throw error;
   }
 }
