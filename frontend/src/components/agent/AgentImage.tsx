@@ -18,8 +18,8 @@ export default function AgentImage({
   tokenId,
 }: AgentImageProps) {
   return (
-    <div className="glass-panel p-4 rounded-2xl border border-emerald-500/20">
-      <div className="w-full max-w-sm mx-auto aspect-square bg-gradient-to-br from-emerald-500/20 to-lime-500/20 rounded-xl mb-4 flex items-center justify-center border border-emerald-500/30 overflow-hidden">
+    <div className="bg-black p-4 border border-[#333]">
+      <div className="w-full max-w-sm mx-auto aspect-square bg-[#111] mb-6 flex items-center justify-center border border-[#333] overflow-hidden">
         {imageUrl ? (
           <img
             src={imageUrl}
@@ -27,23 +27,23 @@ export default function AgentImage({
             className="w-full h-full object-cover"
           />
         ) : (
-          <Bot className="w-20 h-20 text-emerald-300/50" />
+          <Bot className="w-20 h-20 text-[#333]" />
         )}
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-2">
-        <div className="glass-panel p-2.5 rounded-lg text-center border border-emerald-500/10">
-          <div className="text-xs text-green-200/60 mb-0.5">Level</div>
-          <div className="text-lg font-bold text-emerald-300">{level}</div>
+      <div className="grid grid-cols-3 gap-0 border border-[#333] divide-x divide-[#333]">
+        <div className="p-4 text-center">
+          <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Level</div>
+          <div className="text-xl font-bold text-white font-mono">{level}</div>
         </div>
-        <div className="glass-panel p-2.5 rounded-lg text-center border border-emerald-500/10">
-          <div className="text-xs text-green-200/60 mb-0.5">Chats</div>
-          <div className="text-lg font-bold text-emerald-300">{chatCount}</div>
+        <div className="p-4 text-center">
+          <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Chats</div>
+          <div className="text-xl font-bold text-white font-mono">{chatCount}</div>
         </div>
-        <div className="glass-panel p-2.5 rounded-lg text-center border border-emerald-500/10">
-          <div className="text-xs text-green-200/60 mb-0.5">ID</div>
-          <div className="text-lg font-bold text-emerald-300">#{tokenId}</div>
+        <div className="p-4 text-center">
+          <div className="text-xs text-[#666] uppercase tracking-wider mb-1">ID</div>
+          <div className="text-xl font-bold text-white font-mono">#{tokenId}</div>
         </div>
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import Layout from "@/components/Layout";
 import Link from "next/link";
-import { ArrowRight, Sparkles, TrendingUp, Bot, Loader2 } from "lucide-react";
+import { ArrowRight, Bot, Loader2, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useReadContract } from "wagmi";
 import { formatEther } from "viem";
@@ -10,6 +10,7 @@ import AgentNFTABI from "@/constants/AgentNFT.json";
 import AgentMarketplaceABI from "@/constants/AgentMarketplace.json";
 import contractAddresses from "@/constants/contractAddresses.json";
 import AgentCard from "@/components/agent/AgentCard";
+import Marquee from "react-fast-marquee";
 
 interface AgentData {
   tokenId: number;
@@ -107,7 +108,7 @@ export default function Home() {
     fetchRecentAgents();
   }, [totalSupply]);
 
-  // Fetch listed agents and update stats
+  // Fetch listed agents
   useEffect(() => {
     async function fetchListedAgents() {
       try {
@@ -140,7 +141,7 @@ export default function Home() {
     fetchListedAgents();
   }, []);
 
-  // Update stats when data is available
+  // Update stats
   useEffect(() => {
     if (totalSupply && marketplaceStats && Array.isArray(marketplaceStats)) {
       setStats({
@@ -153,160 +154,97 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className="min-h-screen relative">
+      <div className="min-h-screen bg-black text-white">
         {/* Hero Section */}
-        <div className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8">
-          {/* Hero Background with Fade */}
-          <div
-            className="absolute inset-0 animate-pulse-slow pointer-events-none"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 20%, rgba(16,185,129,0.15), transparent 50%), radial-gradient(circle at 70% 60%, rgba(132,204,22,0.1), transparent 50%)",
-              maskImage:
-                "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)",
-              WebkitMaskImage:
-                "linear-gradient(to bottom, black 0%, black 60%, transparent 100%)",
-            }}
-          ></div>
+        <section className="relative min-h-[90vh] flex flex-col justify-center items-center text-center border-b border-[#333] px-4">
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-8 leading-[0.9]">
+            AGENTS
+            <br />
+            <span className="text-[#333]">CONSULT.</span>
+          </h1>
+          
+          <p className="max-w-2xl mx-auto text-xl text-[#888] mb-12 font-light">
+            Autonomous AI agents that live on-chain. Mint, trade, and consult with
+            verifiable intelligent assets.
+          </p>
 
-          <div className="relative max-w-6xl mx-auto text-center">
-            <div className="inline-block mb-6 animate-in fade-in slide-in-from-bottom-4 duration-700">
-              <span className="px-4 py-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full text-emerald-300 text-sm font-medium shadow-[0_0_15px_rgba(16,185,129,0.2)]">
-                AI Agent NFT Platform
-              </span>
-            </div>
-
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
-              Create AI Agents
-              <br />
-              <span className="bg-gradient-to-r from-emerald-400 via-emerald-300 to-lime-400 bg-clip-text text-transparent drop-shadow-[0_0_15px_rgba(52,211,153,0.3)]">
-                Own Their Power
-              </span>
-            </h1>
-
-            <p className="text-xl text-green-200/80 mb-12 max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-              Mint AI agents with unique personalities. Chat, level up, and
-              trade them as NFTs.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-300">
-              <Link
-                href="/create"
-                className="group px-8 py-4 bg-gradient-to-r from-emerald-500 to-lime-500 text-black font-bold rounded-xl hover:from-emerald-400 hover:to-lime-400 transition-all shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:scale-105 active:scale-95"
-              >
-                <span className="flex items-center justify-center gap-2">
-                  Create Agent
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </Link>
-              <Link
-                href="/marketplace"
-                className="px-8 py-4 bg-[#0e1518] border-2 border-emerald-500/30 text-emerald-200 font-bold rounded-xl hover:bg-[#133027] hover:border-emerald-500/50 transition-all hover:scale-105 active:scale-95"
-              >
-                Explore Marketplace
-              </Link>
-            </div>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link
+              href="/create"
+              className="px-8 py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-colors"
+            >
+              Create Agent
+            </Link>
+            <Link
+              href="/marketplace"
+              className="px-8 py-4 border border-[#333] text-white font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
+            >
+              Marketplace
+            </Link>
           </div>
-        </div>
+        </section>
 
-        {/* Stats Bar */}
-        <div className="px-4 sm:px-6 lg:px-8 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-500">
-          <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-3 gap-4">
-            <div className="glass-panel p-6 rounded-xl text-center border border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10">
-              <div className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-lime-400 bg-clip-text text-transparent mb-1">
-                {stats.totalAgents}
-              </div>
-              <div className="text-sm text-green-200/60">Agents Created</div>
-            </div>
-            <div className="glass-panel p-6 rounded-xl text-center border border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10">
-              <div className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-lime-400 bg-clip-text text-transparent mb-1">
-                {stats.totalVolume}
-              </div>
-              <div className="text-sm text-green-200/60">ETH Volume</div>
-            </div>
-            <div className="glass-panel p-6 rounded-xl text-center border border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10">
-              <div className="text-3xl font-bold bg-gradient-to-r from-emerald-400 to-lime-400 bg-clip-text text-transparent mb-1">
-                {listedAgents.length}
-              </div>
-              <div className="text-sm text-green-200/60">Listed Now</div>
-            </div>
+        {/* Stats Section - Grid */}
+        <section className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-[#333] border-b border-[#333]">
+          <div className="p-12 text-center hover:bg-[#111] transition-colors">
+            <div className="text-5xl font-mono font-bold mb-2">{stats.totalAgents}</div>
+            <div className="text-xs uppercase tracking-widest text-[#666]">Agents Minted</div>
           </div>
-        </div>
+          <div className="p-12 text-center hover:bg-[#111] transition-colors">
+            <div className="text-5xl font-mono font-bold mb-2">{stats.totalVolume}</div>
+            <div className="text-xs uppercase tracking-widest text-[#666]">ETH Volume</div>
+          </div>
+          <div className="p-12 text-center hover:bg-[#111] transition-colors">
+            <div className="text-5xl font-mono font-bold mb-2">{listedAgents.length}</div>
+            <div className="text-xs uppercase tracking-widest text-[#666]">Active Listings</div>
+          </div>
+        </section>
 
-        {/* Main Content */}
-        <div className="px-4 sm:px-6 lg:px-8 pb-20">
-          <div className="max-w-6xl mx-auto">
-            {/* Recently Minted */}
-            <div className="mb-16">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-lime-500 flex items-center justify-center">
-                    <Sparkles className="w-5 h-5 text-black" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-emerald-200">
-                    Recently Minted
-                  </h2>
+        {/* Marquee Section */}
+        {recentAgents.length > 0 && (
+          <section className="py-20 border-b border-[#333] overflow-hidden">
+             <div className="mb-12 text-center">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#666] mb-4 block">
+                Live Ecosystem
+              </span>
+              <h2 className="text-3xl font-bold uppercase tracking-tight">
+                Recently Minted
+              </h2>
+            </div>
+            
+            <Marquee speed={40} gradient={false} pauseOnHover className="py-4">
+              {recentAgents.concat(recentAgents).map((agent, i) => (
+                <div key={`${agent.tokenId}-${i}`} className="mx-4 w-[280px]">
+                  <AgentCard {...agent} />
                 </div>
-                <Link
-                  href="/agents"
-                  className="text-emerald-300 hover:text-emerald-200 flex items-center gap-1 text-sm font-medium"
-                >
-                  View All
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+              ))}
+            </Marquee>
+          </section>
+        )}
+
+        {/* Marketplace Preview */}
+        <section className="py-24 px-4 sm:px-6 lg:px-8 border-b border-[#333]">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-end mb-12">
+              <div>
+                <h2 className="text-4xl font-bold uppercase tracking-tighter mb-2">Marketplace</h2>
+                <p className="text-[#666]">Trade verified autonomous agents</p>
               </div>
-
-              {isLoadingRecent ? (
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-8 h-8 text-emerald-300 animate-spin" />
-                </div>
-              ) : recentAgents.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                  {recentAgents.map((agent) => (
-                    <AgentCard
-                      key={agent.tokenId}
-                      tokenId={agent.tokenId}
-                      name={agent.name}
-                      level={agent.level}
-                      imageUrl={agent.imageUrl}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="glass-panel p-8 rounded-xl text-center border border-emerald-500/20">
-                  <Bot className="w-12 h-12 mx-auto mb-3 text-emerald-300/50" />
-                  <p className="text-green-200/70">No agents minted yet</p>
-                </div>
-              )}
+              <Link 
+                href="/marketplace" 
+                className="hidden sm:flex items-center gap-2 text-sm font-bold uppercase tracking-wider hover:text-[#888] transition-colors"
+              >
+                View All <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
 
-            {/* Marketplace Listings */}
-            <div>
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-lime-500 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-black" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-emerald-200">
-                    Marketplace
-                  </h2>
-                </div>
-                <Link
-                  href="/marketplace"
-                  className="text-emerald-300 hover:text-emerald-200 flex items-center gap-1 text-sm font-medium"
-                >
-                  View All
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
+            {isLoadingListed ? (
+              <div className="flex justify-center py-20">
+                <Loader2 className="w-8 h-8 animate-spin text-white" />
               </div>
-
-              {isLoadingListed ? (
-                <div className="flex items-center justify-center py-12">
-                  <Loader2 className="w-8 h-8 text-emerald-300 animate-spin" />
-                </div>
-              ) : listedAgents.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                  {listedAgents.map((agent) => (
+            ) : listedAgents.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {listedAgents.map((agent) => (
                     <AgentCard
                       key={agent.tokenId}
                       tokenId={agent.tokenId}
@@ -316,17 +254,40 @@ export default function Home() {
                       price={agent.price}
                       isListed={true}
                     />
-                  ))}
-                </div>
-              ) : (
-                <div className="glass-panel p-8 rounded-xl text-center border border-emerald-500/20">
-                  <TrendingUp className="w-12 h-12 mx-auto mb-3 text-emerald-300/50" />
-                  <p className="text-green-200/70">No agents listed yet</p>
-                </div>
-              )}
+                ))}
+              </div>
+            ) : (
+               <div className="py-20 text-center border border-dashed border-[#333]">
+                <p className="text-[#666]">No active listings found</p>
+              </div>
+            )}
+            
+            <div className="mt-12 sm:hidden text-center">
+               <Link 
+                href="/marketplace" 
+                className="inline-flex items-center gap-2 text-sm font-bold uppercase tracking-wider hover:text-[#888] transition-colors"
+              >
+                View All <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
-        </div>
+        </section>
+        
+        {/* CTA / How it works */}
+        <section className="py-32 px-4 text-center bg-[#050505]">
+           <div className="max-w-4xl mx-auto">
+             <h2 className="text-5xl md:text-7xl font-bold tracking-tighter mb-12">
+               START YOUR COLLECTION
+             </h2>
+             <Link
+                href="/create"
+                className="inline-flex items-center gap-3 px-10 py-5 bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-transform hover:scale-105"
+              >
+                <Play className="w-4 h-4 fill-current" />
+                Initialize Agent
+              </Link>
+           </div>
+        </section>
       </div>
     </Layout>
   );

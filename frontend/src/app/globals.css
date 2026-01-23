@@ -1,17 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #040607;
-  --foreground: #e6ffec;
-  --accent: #00ff88;
-  --accent-2: #00c56e;
-  --muted: #0e1518;
-  --muted-2: #0a0f11;
-  --border: #133027;
-  --blue: #3b82f6;
-  --purple: #a855f7;
-  --cyan: #06b6d4;
-  --pink: #ec4899;
+  --background: #000000;
+  --foreground: #ffffff;
+  --muted: #1a1a1a;
+  --muted-foreground: #a3a3a3;
+  --border: #333333;
 }
 
 @theme inline {
@@ -25,6 +19,7 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
 @layer base {
@@ -34,52 +29,20 @@ body {
 }
 
 @layer components {
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .btn-primary {
+    @apply px-6 py-3 bg-white text-black font-medium border border-white hover:bg-transparent hover:text-white transition-colors duration-200 text-sm uppercase tracking-wide;
   }
 
-  .line-clamp-3 {
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .glass-panel {
-    background: linear-gradient(
-      180deg,
-      rgba(14, 21, 24, 0.7) 0%,
-      rgba(10, 15, 17, 0.7) 100%
-    );
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--border);
+  .btn-secondary {
+    @apply px-6 py-3 bg-transparent text-white font-medium border border-[#333] hover:bg-white hover:text-black transition-colors duration-200 text-sm uppercase tracking-wide;
   }
 }
 
 @layer utilities {
-  .text-gradient {
-    @apply bg-gradient-to-r from-emerald-400 to-lime-400 bg-clip-text text-transparent;
-  }
-
-  .bg-gradient-primary {
-    @apply bg-gradient-to-r from-emerald-500 to-lime-500;
-  }
-
-  .shadow-glow {
-    box-shadow: 0 0 24px rgba(0, 255, 136, 0.25);
-  }
-
-  .neon-glow {
-    box-shadow: 0 0 0 1px rgba(0, 255, 136, 0.25),
-      0 0 24px rgba(0, 255, 136, 0.15), inset 0 0 24px rgba(0, 255, 136, 0.05);
-  }
-
-  .accent-ring {
-    box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.35);
+  .container-full {
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
   }
 
   /* Hide scrollbar but keep functionality */
@@ -90,16 +53,5 @@ body {
 
   .scrollbar-hide::-webkit-scrollbar {
     display: none; /* Chrome, Safari and Opera */
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
   }
 }

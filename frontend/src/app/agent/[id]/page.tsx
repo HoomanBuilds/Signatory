@@ -180,8 +180,8 @@ export default function AgentDetailPage() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-emerald-300 animate-spin" />
+        <div className="min-h-screen bg-black flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-white animate-spin" />
         </div>
       </Layout>
     );
@@ -190,18 +190,18 @@ export default function AgentDetailPage() {
   if (error || !agent) {
     return (
       <Layout>
-        <div className="min-h-screen flex items-center justify-center px-4">
-          <div className="glass-panel p-12 rounded-2xl text-center max-w-md border border-emerald-500/20">
-            <Bot className="w-16 h-16 mx-auto mb-6 text-emerald-300/50" />
-            <h2 className="text-2xl font-bold text-emerald-200 mb-3">
+        <div className="min-h-screen bg-black flex items-center justify-center px-4">
+          <div className="border border-[#333] p-12 text-center max-w-md bg-[#050505]">
+            <Bot className="w-16 h-16 mx-auto mb-6 text-[#333]" />
+            <h2 className="text-2xl font-bold text-white mb-3 uppercase tracking-wide">
               Agent Not Found
             </h2>
-            <p className="text-green-200/70 mb-6">
+            <p className="text-[#666] mb-6">
               {error || "This agent doesn't exist"}
             </p>
             <button
               onClick={() => router.push("/")}
-              className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-lime-500 text-black font-bold rounded-xl hover:from-emerald-400 hover:to-lime-400 transition-all"
+              className="px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition-all uppercase tracking-wider"
             >
               Go Home
             </button>
@@ -220,8 +220,15 @@ export default function AgentDetailPage() {
 
   return (
     <Layout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-black border-b border-[#333]">
+        <div className="w-full px-6 lg:px-12 py-12">
+          <div className="mb-8">
+            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-2 uppercase tracking-tight">
+              {agent.name}
+            </h1>
+            <p className="text-[#666] font-mono">ID: #{agent.tokenId}</p>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
             {/* Left Column - Image */}
             <div className="lg:col-span-2">
@@ -233,11 +240,11 @@ export default function AgentDetailPage() {
                 tokenId={agent.tokenId}
               />
 
-              {/* Chat Button - Show if user owns the agent OR if it's public */}
+              {/* Chat Button */}
               {(isOwner || isPublic) && (
                 <button
                   onClick={handleChatClick}
-                  className="w-full py-4 mt-6 bg-linear-to-r from-emerald-500 to-lime-500 text-black font-bold rounded-xl hover:from-emerald-400 hover:to-lime-400 transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2"
+                  className="w-full py-4 mt-6 bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
                 >
                   <Bot className="w-5 h-5" />
                   Chat with {agent.name}
@@ -246,18 +253,18 @@ export default function AgentDetailPage() {
 
               {/* Marketplace Actions */}
               {activeListing?.active ? (
-                <div className="glass-panel p-6 rounded-xl mt-6 border border-emerald-500/30 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="bg-[#111] p-6 border border-[#333] mt-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <div className="text-sm text-green-200/60 mb-1">
+                      <div className="text-xs text-[#666] uppercase tracking-wider mb-1">
                         Current Price
                       </div>
-                      <div className="text-2xl font-bold text-emerald-300">
+                      <div className="text-2xl font-bold text-white font-mono">
                         {formatEther(BigInt(activeListing.price))} ETH
                       </div>
                     </div>
-                    <div className="px-3 py-1 bg-emerald-500/20 text-emerald-300 text-sm rounded-full border border-emerald-500/20">
-                      Listed for Sale
+                    <div className="px-3 py-1 bg-white text-black text-xs font-bold uppercase tracking-wider">
+                      Listed
                     </div>
                   </div>
                   
@@ -265,7 +272,7 @@ export default function AgentDetailPage() {
                     <button 
                         onClick={handleCancelListing}
                         disabled={isCancelling}
-                        className="w-full py-4 bg-red-500/10 border border-red-500/20 text-red-400 font-bold rounded-xl hover:bg-red-500/20 transition-all flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-transparent border border-red-500/50 text-red-500 font-bold uppercase tracking-wider hover:bg-red-500/10 transition-all flex items-center justify-center gap-2"
                     >
                         {isCancelling ? <Loader2 className="w-5 h-5 animate-spin" /> : "Cancel Listing"}
                     </button>
@@ -273,7 +280,7 @@ export default function AgentDetailPage() {
                     <button 
                         onClick={handleBuy}
                         disabled={isBuying}
-                        className="w-full py-4 bg-gradient-to-r from-emerald-500 to-lime-500 text-black font-bold rounded-xl hover:from-emerald-400 hover:to-lime-400 transition-all shadow-lg shadow-emerald-500/25 flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
                     >
                         {isBuying ? <Loader2 className="w-5 h-5 animate-spin" /> : "Buy Now"}
                     </button>
@@ -283,7 +290,7 @@ export default function AgentDetailPage() {
                 <div className="mt-6">
                     <button 
                         onClick={() => setIsListingModalOpen(true)}
-                        className="w-full py-4 bg-white/5 border border-white/10 text-white font-bold rounded-xl hover:bg-white/10 transition-all flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-transparent border border-[#333] text-white font-bold uppercase tracking-wider hover:border-white transition-all flex items-center justify-center gap-2"
                     >
                         <Tag className="w-5 h-5" />
                         List for Sale
@@ -293,14 +300,7 @@ export default function AgentDetailPage() {
             </div>
 
             {/* Right Column - Details */}
-            <div className="lg:col-span-3">
-              <div className="mb-6">
-                <h1 className="text-4xl font-bold text-emerald-200 mb-2">
-                  {agent.name}
-                </h1>
-                <p className="text-green-200/70">AI Agent NFT</p>
-              </div>
-
+            <div className="lg:col-span-3 space-y-8">
               {/* Agent Wallet */}
               <AgentWallet 
                 tokenId={agent.tokenId} 
@@ -314,7 +314,6 @@ export default function AgentDetailPage() {
                 tokenId={agent.tokenId}
                 agentName={agent.name}
               />
-
 
               {/* Details */}
               <AgentDetails

@@ -17,14 +17,14 @@ export default function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="glass-panel sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 bg-[#000000] border-b border-[#333] w-full">
+      <div className="w-full px-6 lg:px-12">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-lime-500 rounded-lg flex items-center justify-center neon-glow">
+            <div className="w-8 h-8 bg-white flex items-center justify-center">
               <Bot className="w-5 h-5 text-black" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-lime-400 bg-clip-text text-transparent">
+            <span className="text-xl font-bold text-white tracking-tight">
               AI Agents
             </span>
           </Link>
@@ -37,10 +37,10 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                  className={`flex items-center space-x-2 px-3 py-2 text-sm font-medium transition-colors ${
                     isActive
-                      ? "text-emerald-300 bg-[#0f1b16] accent-ring"
-                      : "text-gray-300 hover:text-emerald-300 hover:bg-[#0c1411]"
+                      ? "text-white bg-[#1a1a1a]"
+                      : "text-gray-400 hover:text-white hover:bg-[#1a1a1a]"
                   }`}
                 >
                   <Icon className="w-4 h-4" />
@@ -51,12 +51,12 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center space-x-4">
-            <ConnectButton />
+            <ConnectButton showBalance={false} chainStatus="icon" />
           </div>
         </div>
 
-        <div className="md:hidden border-t border-[#133027]">
-          <nav className="flex space-x-4 py-2 overflow-x-auto">
+        <div className="md:hidden border-t border-[#333]">
+          <nav className="flex space-x-4 py-2 overflow-x-auto scrollbar-hide">
             {navigation.map((item) => {
               const Icon = item.icon;
               const isActive = pathname === item.href;
@@ -64,10 +64,10 @@ export default function Header() {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors ${
+                  className={`flex items-center space-x-2 px-3 py-2 text-sm font-medium whitespace-nowrap transition-colors ${
                     isActive
-                      ? "text-emerald-300 bg-[#0f1b16] accent-ring"
-                      : "text-gray-300 hover:text-emerald-300 hover:bg-[#0c1411]"
+                      ? "text-white bg-[#1a1a1a]"
+                      : "text-gray-400 hover:text-white hover:bg-[#1a1a1a]"
                   }`}
                 >
                   <Icon className="w-4 h-4" />

@@ -23,30 +23,32 @@ export default function AgentCard({
   return (
     <Link
       href={`/agent/${tokenId}`}
-      className="glass-panel p-3 rounded-xl hover:bg-[#0e1518] transition-all duration-300 group border border-transparent hover:border-emerald-500/30 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10"
+      className="block bg-black border border-[#333] hover:border-white transition-colors duration-200 group relative"
     >
-      <div className="aspect-square bg-gradient-to-br from-emerald-500/20 to-lime-500/20 rounded-lg mb-2 flex items-center justify-center border border-emerald-500/30 group-hover:border-emerald-500/50 transition-all overflow-hidden relative">
+      <div className="aspect-square bg-[#111] border-b border-[#333] flex items-center justify-center overflow-hidden relative">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
-          <Bot className="w-12 h-12 text-emerald-300/50" />
+          <Bot className="w-12 h-12 text-[#333]" />
         )}
         {isListed && price && (
-          <div className="absolute top-2 right-2 px-2 py-1 bg-emerald-500/90 backdrop-blur-sm text-black text-xs font-bold rounded">
+          <div className="absolute top-0 right-0 px-2 py-1 bg-white text-black text-xs font-bold">
             {price} ETH
           </div>
         )}
       </div>
-      <h3 className="text-sm font-bold text-emerald-200 mb-1 truncate">
-        {name}
-      </h3>
-      <span className="inline-block px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-xs rounded-full border border-emerald-500/20">
-        Level {level}
-      </span>
+      <div className="p-4">
+        <h3 className="text-sm font-bold text-white mb-1 truncate group-hover:underline decoration-1 underline-offset-4">
+          {name}
+        </h3>
+        <span className="inline-block text-[#666] text-xs uppercase tracking-wider">
+          Level {level}
+        </span>
+      </div>
     </Link>
   );
 }

@@ -64,27 +64,27 @@ export default function AgentDetails({
   const isUpdating = isPending || isConfirming;
 
   return (
-    <div className="glass-panel p-6 rounded-xl mb-6 border border-emerald-500/20">
-      <h2 className="text-xl font-bold text-emerald-200 mb-4">Details</h2>
-      <div className="space-y-4">
+    <div className="bg-black p-6 mb-6 border border-[#333]">
+      <h2 className="text-xl font-bold text-white mb-6 uppercase tracking-tight">Details</h2>
+      <div className="space-y-6">
         {/* Public/Private Toggle (Owner Only) */}
         {isOwner && (
-          <div className="flex items-center justify-between p-3 bg-emerald-500/10 rounded-lg border border-emerald-500/20 mb-4">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between p-4 bg-[#111] border border-[#333]">
+            <div className="flex items-center gap-3">
               {isPublic ? (
-                <Globe className="w-5 h-5 text-emerald-400" />
+                <Globe className="w-5 h-5 text-white" />
               ) : (
-                <Lock className="w-5 h-5 text-amber-400" />
+                <Lock className="w-5 h-5 text-[#888]" />
               )}
               <div>
-                <div className="text-sm font-medium text-emerald-200">
+                <div className="text-sm font-bold text-white uppercase tracking-wide">
                   {isPublic ? "Public Chat" : "Private Chat"}
                 </div>
-                <div className="text-xs text-green-200/60">
+                <div className="text-xs text-[#666] mt-1">
                   {isUpdating ? (
                     <span className="flex items-center gap-1">
                       <Loader2 className="w-3 h-3 animate-spin" />
-                      {isPending ? "Confirm in wallet..." : "Updating..."}
+                      {isPending ? "Confirming..." : "Updating..."}
                     </span>
                   ) : isPublic ? "Anyone can chat" : "Only you can chat"}
                 </div>
@@ -94,29 +94,29 @@ export default function AgentDetails({
             <button
               onClick={handleToggle}
               disabled={isUpdating}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 ${
-                isPublic ? "bg-emerald-500" : "bg-gray-600"
+              className={`relative inline-flex h-6 w-11 items-center transition-colors focus:outline-none ${
+                isPublic ? "bg-white" : "bg-[#333]"
               } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               <span
                 className={`${
-                  isPublic ? "translate-x-6" : "translate-x-1"
-                } inline-block h-4 w-4 transform rounded-full bg-white transition-transform`}
+                  isPublic ? "translate-x-6 bg-black" : "translate-x-1 bg-[#666]"
+                } inline-block h-4 w-4 transform transition-transform`}
               />
             </button>
           </div>
         )}
 
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-            <UserCircle className="w-5 h-5 text-emerald-400" />
+        <div className="flex items-center gap-4 py-2 border-b border-[#222]">
+          <div className="w-10 h-10 bg-[#111] flex items-center justify-center flex-shrink-0 border border-[#333]">
+            <UserCircle className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-green-200/60 mb-0.5">Creator</div>
-            <div className="text-emerald-200 font-mono text-sm truncate">
+            <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Creator</div>
+            <div className="text-white font-mono text-sm truncate">
               {creator.slice(0, 6)}...{creator.slice(-4)}
               {isCreator && (
-                <span className="ml-2 px-2 py-0.5 bg-emerald-500/20 text-emerald-300 text-xs rounded">
+                <span className="ml-2 px-2 py-0.5 bg-[#333] text-white text-xs uppercase">
                   You
                 </span>
               )}
@@ -124,37 +124,37 @@ export default function AgentDetails({
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-            <Calendar className="w-5 h-5 text-emerald-400" />
+        <div className="flex items-center gap-4 py-2 border-b border-[#222]">
+          <div className="w-10 h-10 bg-[#111] flex items-center justify-center flex-shrink-0 border border-[#333]">
+            <Calendar className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1">
-            <div className="text-xs text-green-200/60 mb-0.5">Created</div>
-            <div className="text-emerald-200 text-sm">
+            <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Created</div>
+            <div className="text-white text-sm font-mono">
               {new Date(createdAt * 1000).toLocaleDateString()}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-            <MessageCircle className="w-5 h-5 text-emerald-400" />
+        <div className="flex items-center gap-4 py-2 border-b border-[#222]">
+          <div className="w-10 h-10 bg-[#111] flex items-center justify-center flex-shrink-0 border border-[#333]">
+            <MessageCircle className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1">
-            <div className="text-xs text-green-200/60 mb-0.5">Total Chats</div>
-            <div className="text-emerald-200 text-sm">
+            <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Total Chats</div>
+            <div className="text-white text-sm font-mono">
               {chatCount.toLocaleString()}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-emerald-500/10 flex items-center justify-center flex-shrink-0">
-            <Zap className="w-5 h-5 text-emerald-400" />
+        <div className="flex items-center gap-4 py-2 border-b border-[#222]">
+          <div className="w-10 h-10 bg-[#111] flex items-center justify-center flex-shrink-0 border border-[#333]">
+            <Zap className="w-5 h-5 text-white" />
           </div>
           <div className="flex-1">
-            <div className="text-xs text-green-200/60 mb-0.5">Level</div>
-            <div className="text-emerald-200 text-sm">Level {level}</div>
+            <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Level</div>
+            <div className="text-white text-sm font-mono">Level {level}</div>
           </div>
         </div>
       </div>
