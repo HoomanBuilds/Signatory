@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Wallet, Copy, ExternalLink, Loader2, RefreshCw, Shield, ChevronDown, ChevronUp } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Wallet, Copy, ExternalLink, Loader2, RefreshCw, Shield, ChevronDown, ArrowUpRight, Check } from "lucide-react";
 import { 
   NetworkEthereum,
   NetworkCronos,
@@ -26,62 +26,72 @@ interface PKPInfo {
   accessControl?: string;
 }
 
-// Chain configuration with icon components
+// Chain configuration - TESTNETS ONLY
 const CHAIN_CONFIG: Record<string, { 
   name: string; 
   Icon: React.ComponentType<{ size?: number; variant?: "branded" | "mono" }>;
   explorer?: string;
+  color: string;
 }> = {
-  ethereum: { 
-    name: "Ethereum", 
+  sepolia: { 
+    name: "Sepolia", 
     Icon: NetworkEthereum,
-    explorer: "https://etherscan.io/address/" 
+    explorer: "https://sepolia.etherscan.io/address/",
+    color: "from-purple-500 to-indigo-600",
   },
   cronos: { 
-    name: "Cronos", 
+    name: "Cronos Testnet", 
     Icon: NetworkCronos,
-    explorer: "https://cronoscan.com/address/" 
+    explorer: "https://explorer.cronos.org/testnet3/address/",
+    color: "from-blue-700 to-blue-900",
   },
-  base: { 
-    name: "Base", 
+  base_sepolia: { 
+    name: "Base Sepolia", 
     Icon: NetworkBase,
-    explorer: "https://basescan.org/address/" 
+    explorer: "https://sepolia.basescan.org/address/",
+    color: "from-blue-500 to-blue-700",
   },
-  polygon: { 
-    name: "Polygon", 
+  polygon_amoy: { 
+    name: "Polygon Amoy", 
     Icon: NetworkPolygon,
-    explorer: "https://polygonscan.com/address/" 
+    explorer: "https://amoy.polygonscan.com/address/",
+    color: "from-purple-500 to-purple-700",
   },
-  arbitrum: { 
-    name: "Arbitrum", 
+  arbitrum_sepolia: { 
+    name: "Arbitrum Sepolia", 
     Icon: NetworkArbitrumOne,
-    explorer: "https://arbiscan.io/address/" 
+    explorer: "https://sepolia.arbiscan.io/address/",
+    color: "from-blue-400 to-cyan-500",
   },
-  optimism: { 
-    name: "Optimism", 
+  optimism_sepolia: { 
+    name: "Optimism Sepolia", 
     Icon: NetworkOptimism,
-    explorer: "https://optimistic.etherscan.io/address/" 
-  },
-  solana: { 
-    name: "Solana", 
-    Icon: NetworkSolana,
-    explorer: "https://solscan.io/account/" 
-  },
-  cosmos: { 
-    name: "Cosmos", 
-    Icon: NetworkCosmosHub,
-  },
-  bitcoin: { 
-    name: "Bitcoin", 
-    Icon: NetworkBitcoin,
+    explorer: "https://sepolia-optimism.etherscan.io/address/",
+    color: "from-red-500 to-rose-600",
   },
 };
 
 export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
   const [pkpInfo, setPkpInfo] = useState<PKPInfo | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [copied, setCopied] = useState<string | null>(null);
-  const [showAllChains, setShowAllChains] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [selectedChain, setSelectedChain] = useState<string>("sepolia");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [balance, setBalance] = useState<string | null>(null);
+  const [tokens, setTokens] = useState<Array<{ symbol: string; balance: string; name: string }>>([]);
+  const [isLoadingBalance, setIsLoadingBalance] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   const fetchPKPInfo = async () => {
     try {
@@ -98,19 +108,50 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
     }
   };
 
+  const fetchBalance = async () => {
+    // All EVM testnets use the same address
+    if (!pkpInfo?.evmAddress) return;
+    
+    setIsLoadingBalance(true);
+    try {
+      const response = await fetch(
+        `/api/agent/balance?agentId=${tokenId}&chain=${selectedChain}`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setBalance(data.balance || "0");
+        setTokens(data.tokens || []);
+      } else {
+        setBalance(null);
+        setTokens([]);
+      }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+      setBalance(null);
+      setTokens([]);
+    } finally {
+      setIsLoadingBalance(false);
+    }
+  };
+
   useEffect(() => {
     fetchPKPInfo();
   }, [tokenId]);
 
-  const handleCopy = (address: string, chain: string) => {
-    navigator.clipboard.writeText(address);
-    setCopied(chain);
-    setTimeout(() => setCopied(null), 2000);
-  };
+  useEffect(() => {
+    // Fetch balance whenever chain changes or PKP info becomes available
+    if (pkpInfo?.evmAddress) {
+      fetchBalance();
+    }
+  }, [selectedChain, pkpInfo?.evmAddress]);
 
-  const truncateAddress = (addr: string) => {
-    if (addr.length <= 12) return addr;
-    return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
+  const handleCopy = () => {
+    const address = pkpInfo?.chainAddresses?.[selectedChain];
+    if (address) {
+      navigator.clipboard.writeText(address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
   };
 
   if (isLoading) {
@@ -137,16 +178,15 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
     );
   }
 
-  const chainAddresses = pkpInfo.chainAddresses || {};
-  const evmChains = ["cronos", "ethereum", "base", "polygon", "arbitrum", "optimism"];
-  const nonEvmChains = ["solana", "cosmos", "bitcoin"];
-  
-  const displayedChains = showAllChains 
-    ? [...evmChains, ...nonEvmChains] 
-    : ["cronos", "ethereum", "solana"];
+  // All EVM testnets use the same address from the PKP
+  const availableChains = Object.keys(CHAIN_CONFIG);
+  const selectedConfig = CHAIN_CONFIG[selectedChain];
+  const selectedAddress = pkpInfo.evmAddress; // Same address for all EVM chains
+  const SelectedIcon = selectedConfig?.Icon;
 
   return (
-    <div className="glass-panel p-6 rounded-xl border border-emerald-500/30 mb-6">
+    <div className="glass-panel p-5 rounded-xl border border-emerald-500/30 mb-6">
+      {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-lg font-bold text-emerald-200 flex items-center gap-2">
           <Wallet className="w-5 h-5 text-emerald-400" />
@@ -157,92 +197,161 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
             <Shield className="w-3 h-3 text-emerald-400" />
             <span className="text-xs text-emerald-300">Lit PKP</span>
           </div>
-          <button 
-            onClick={fetchPKPInfo}
-            className="p-1.5 hover:bg-emerald-500/10 rounded-lg text-emerald-400/60 hover:text-emerald-300 transition-colors"
-            title="Refresh"
-          >
-            <RefreshCw className="w-4 h-4" />
-          </button>
         </div>
       </div>
 
-      <div className="space-y-2">
-        {displayedChains.map(chain => {
-          const config = CHAIN_CONFIG[chain];
-          const address = chainAddresses[chain];
-          if (!config || !address) return null;
-
-          const IconComponent = config.Icon;
-
-          return (
-            <div 
-              key={chain}
-              className="p-2.5 bg-black/40 rounded-lg border border-emerald-500/10 flex items-center justify-between group hover:border-emerald-500/30 transition-colors"
-            >
-              <div className="flex items-center gap-2.5">
-                <div className="w-6 h-6 flex items-center justify-center">
-                  <IconComponent size={24} variant="branded" />
-                </div>
-                <div>
-                  <div className="text-xs text-green-200/50">{config.name}</div>
-                  <code className="text-sm text-emerald-400/80 font-mono">
-                    {truncateAddress(address)}
-                  </code>
-                </div>
+      {/* Chain Selector Dropdown */}
+      <div className="relative mb-4" ref={dropdownRef}>
+        <button
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="w-full flex items-center justify-between p-3 bg-black/50 border border-emerald-500/20 rounded-xl hover:border-emerald-500/40 transition-colors"
+        >
+          <div className="flex items-center gap-3">
+            {SelectedIcon && (
+              <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 p-1.5 flex items-center justify-center">
+                <SelectedIcon size={20} variant="branded" />
               </div>
-              <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+            )}
+            <span className="font-medium text-emerald-100">{selectedConfig?.name || selectedChain}</span>
+          </div>
+          <ChevronDown className={`w-5 h-5 text-emerald-400 transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+        </button>
+
+        {/* Dropdown Menu */}
+        {isDropdownOpen && (
+          <div className="absolute top-full left-0 right-0 mt-2 bg-black/90 border border-emerald-500/30 rounded-xl shadow-xl z-50 max-h-64 overflow-y-auto backdrop-blur-xl">
+            {availableChains.map(chain => {
+              const config = CHAIN_CONFIG[chain];
+              const IconComp = config?.Icon;
+              const isSelected = chain === selectedChain;
+
+              return (
                 <button
-                  onClick={() => handleCopy(address, chain)}
-                  className="p-1.5 hover:bg-emerald-500/20 rounded-md text-emerald-500/60 hover:text-emerald-400 transition-colors"
+                  key={chain}
+                  onClick={() => {
+                    setSelectedChain(chain);
+                    setIsDropdownOpen(false);
+                  }}
+                  className={`w-full flex items-center gap-3 p-3 hover:bg-emerald-500/10 transition-colors ${
+                    isSelected ? "bg-emerald-500/20" : ""
+                  }`}
+                >
+                  {IconComp && (
+                    <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 p-1 flex items-center justify-center">
+                      <IconComp size={18} variant="branded" />
+                    </div>
+                  )}
+                  <span className={`flex-1 text-left ${isSelected ? "text-emerald-300 font-medium" : "text-green-200/80"}`}>
+                    {config?.name || chain}
+                  </span>
+                  {isSelected && <Check className="w-4 h-4 text-emerald-400" />}
+                </button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Selected Chain Details */}
+      {selectedAddress && (
+        <div className="space-y-3">
+          {/* Address */}
+          <div className="p-3 bg-black/40 rounded-lg border border-emerald-500/10">
+            <div className="text-xs text-green-200/50 mb-1">Address</div>
+            <div className="flex items-center justify-between gap-2">
+              <code className="text-sm text-emerald-400/90 font-mono flex-1 break-all">
+                {selectedAddress}
+              </code>
+              <div className="flex items-center gap-1 flex-shrink-0">
+                <button
+                  onClick={handleCopy}
+                  className="p-2 hover:bg-emerald-500/20 rounded-lg text-emerald-500/60 hover:text-emerald-400 transition-colors"
                   title="Copy Address"
                 >
-                  {copied === chain ? (
-                    <span className="text-xs text-emerald-400">✓</span>
+                  {copied ? (
+                    <Check className="w-4 h-4 text-emerald-400" />
                   ) : (
-                    <Copy className="w-3.5 h-3.5" />
+                    <Copy className="w-4 h-4" />
                   )}
                 </button>
-                {config.explorer && (
+                {selectedConfig?.explorer && (
                   <a
-                    href={`${config.explorer}${address}`}
+                    href={`${selectedConfig.explorer}${selectedAddress}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-1.5 hover:bg-emerald-500/20 rounded-md text-emerald-500/60 hover:text-emerald-400 transition-colors"
+                    className="p-2 hover:bg-emerald-500/20 rounded-lg text-emerald-500/60 hover:text-emerald-400 transition-colors"
                     title="View on Explorer"
                   >
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <ExternalLink className="w-4 h-4" />
                   </a>
                 )}
               </div>
             </div>
-          );
-        })}
+          </div>
 
-        <button
-          onClick={() => setShowAllChains(!showAllChains)}
-          className="w-full py-2 text-xs text-emerald-400/60 hover:text-emerald-400 flex items-center justify-center gap-1 transition-colors"
-        >
-          {showAllChains ? (
-            <>
-              <ChevronUp className="w-4 h-4" />
-              Show less
-            </>
-          ) : (
-            <>
-              <ChevronDown className="w-4 h-4" />
-              Show all {Object.keys(chainAddresses).length} chains
-            </>
-          )}
-        </button>
+          {/* Balance */}
+          <div className="p-3 bg-black/40 rounded-lg border border-emerald-500/10">
+            <div className="text-xs text-green-200/50 mb-1">Balance</div>
+            <div className="flex items-center justify-between mb-2">
+              <div className="text-lg font-semibold text-emerald-100">
+                {isLoadingBalance ? (
+                  <Loader2 className="w-5 h-5 animate-spin text-emerald-400" />
+                ) : (
+                  <>{balance ? `${parseFloat(balance).toFixed(6)}` : "—"} {selectedConfig?.name === "Cronos" ? "CRO" : "ETH"}</>
+                )}
+              </div>
+              <button
+                onClick={fetchBalance}
+                className="p-2 hover:bg-emerald-500/10 rounded-lg text-emerald-400/60 hover:text-emerald-300 transition-colors"
+                title="Refresh Balance"
+              >
+                <RefreshCw className={`w-4 h-4 ${isLoadingBalance ? "animate-spin" : ""}`} />
+              </button>
+            </div>
 
-        <div className="text-xs text-green-200/40 mt-2">
-          {isOwner ? (
-            <>Multi-chain wallet powered by Lit Protocol. Sign transactions with your agent.</>
-          ) : (
-            <>Agent&apos;s autonomous wallet supports multiple blockchains.</>
+            {/* Token Balances */}
+            {!isLoadingBalance && tokens.length > 0 && (
+              <div className="space-y-2 mt-3 pt-3 border-t border-emerald-500/10">
+                {tokens.map((token) => (
+                  <div key={token.symbol} className="flex items-center justify-between text-sm">
+                    <span className="text-emerald-400/80">{token.symbol}</span>
+                    <span className="font-mono text-emerald-100">{parseFloat(token.balance).toFixed(4)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Actions for Owner */}
+          {isOwner && (
+            <div className="flex gap-2">
+              <a
+                href={selectedConfig?.explorer ? `${selectedConfig.explorer}${selectedAddress}` : "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg text-emerald-300 text-sm font-medium hover:bg-emerald-500/20 transition-colors"
+              >
+                <ExternalLink className="w-4 h-4" />
+                View on Explorer
+              </a>
+              <button
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-4 bg-gradient-to-r from-emerald-600 to-emerald-500 rounded-lg text-white text-sm font-medium hover:from-emerald-500 hover:to-emerald-400 transition-colors shadow-lg shadow-emerald-500/25"
+                onClick={() => {
+                  // TODO: Implement withdraw modal
+                  alert("Withdraw coming soon!");
+                }}
+              >
+                <ArrowUpRight className="w-4 h-4" />
+                Withdraw
+              </button>
+            </div>
           )}
         </div>
+      )}
+
+      {/* Footer */}
+      <div className="text-xs text-green-200/40 mt-4 text-center">
+        Multi-chain wallet • {availableChains.length} networks supported
       </div>
     </div>
   );
