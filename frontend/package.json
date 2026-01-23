@@ -10,6 +10,12 @@
   },
   "dependencies": {
     "@ai-sdk/openai": "^2.0.76",
+    "@goat-sdk/core": "^0.5.0",
+    "@goat-sdk/plugin-debridge": "^0.0.8",
+    "@goat-sdk/plugin-erc20": "^0.2.14",
+    "@goat-sdk/plugin-uniswap": "^0.2.16",
+    "@goat-sdk/wallet-evm": "^0.3.0",
+    "@goat-sdk/wallet-viem": "^0.3.0",
     "@lit-protocol/auth-helpers": "^7.4.0",
     "@lit-protocol/constants": "^7.4.0",
     "@lit-protocol/contracts-sdk": "^7.4.0",
@@ -35,7 +41,8 @@
     "viem": "^2.40.3",
     "wagmi": "^2.19.5",
     "x402-fetch": "^0.7.3",
-    "x402-next": "^0.7.3"
+    "x402-next": "^0.7.3",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
