@@ -1,10 +1,27 @@
-# AI NFT Agent Platform
+<p align="center">
+  <img src="frontend/public/favicon.png" width="120" alt="SIGNATORY Logo">
+</p>
 
-A next-generation autonomous agent interface enabling AI-driven blockchain interactions through secure, non-custodial key management.
+<h1 align="center">SIGNATORY</h1>
+
+<p align="center">
+  <strong>Agents don't act. They sign.</strong>
+</p>
+
+<p align="center">
+  A protocol for autonomous AI agents with cryptographic signing authority on the blockchain.
+</p>
+
+<p align="center">
+  <a href="frontend/README.md"><strong>Frontend Docs</strong></a> ·
+  <a href="contract/README.md"><strong>Contract Docs</strong></a>
+</p>
+
+---
 
 ## Overview
 
-The AI NFT Agent Platform integrates **Lit Protocol** for decentralized Multi-Party Computation (MPC) key management and **GOAT SDK** for on-chain DeFi operations. This architecture allows AI agents to securely own wallets and autonomously execute transactions across multiple blockchains (EVM, Solana, and more) while maintaining strict ownership verification.
+**SIGNATORY** is a next-generation protocol that enables AI agents to autonomously execute on-chain transactions with verifiable, non-custodial security. By combining **Lit Protocol's** decentralized MPC key management with the **GOAT SDK** for DeFi operations, SIGNATORY creates a trust-minimized environment where agents can own wallets and sign transactions—only when authorized by their NFT owner.
 
 ## Core Architecture
 
@@ -23,81 +40,79 @@ The platform operates across three distinct layers to ensure security and autono
     - **GOAT SDK Integration**: Enables natural language translation into on-chain actions (swaps, bridges, transfers).
     - **Chain Agnostic**: Native support for Sepolia, Base, Polygon, Arbitrum, and Solana.
 
-## X402 Protocol Integration
+---
 
-This project is built on the **X402** standard for autonomous agent monetization.
+## Deployed Contracts (Cronos Testnet)
 
-- **HTTP 402 Payment Required**: API endpoints utilize status code `402` to signal insufficient credits.
-- **Seamless Paywalls**: The frontend (`useChat.ts`) intercepts 402 responses and triggers the payment UI without disrupting the user flow.
-- **AgentCredits**: Powered by `AgentCredits.sol` on Cronos, enabling a standardized, on-chain mechanism for purchasing inference/action credits.
-- **Libraries**: Leverages `x402-fetch` and `x402-next` for standardized protocol compliance.
-
-## Key Features
-
-- **Autonomous DeFi Operations**: seamless token swaps via Uniswap, cross-chain bridging via DeBridge, and asset management.
-- **Non-Custodial Security**: Users retain full control via their AgentNFT; the backend cannot sign transactions without Lit Action authorization.
-- **Natural Language Interface**: Powered by Vercel AI SDK, allowing users to instruct agents in plain English (e.g., "Swap 0.5 ETH for USDC on Sepolia").
-- **Multi-Chain Support**: Unified interface for managing assets across disparate blockchain networks.
-- **Real-Time Interactions**: Low-latency responses and transaction broadcasting.
-
-## Current Status
-
-The project has successfully completed **Phase 3** of the development roadmap.
-
-### ✅ Phase 1: Smart Contract & Identity Integration
-
-- Deployed `AgentPKP.sol` registry on Cronos Testnet.
-- Implemented Lit Actions for cryptographically secure ownership verification.
-- Established backend PKP minting and registration services.
-
-### ✅ Phase 2: DeFi Capabilities
-
-- Integrated GOAT SDK with Lit Protocol wallets.
-- Implemented Uniswap V3 swapping functionality on Sepolia.
-- Developed comprehensive balance fetching and token management.
-
-### ✅ Phase 3: Multi-Chain Operations
-
-- Added support for cross-chain bridging (DeBridge).
-- Integrated Solana network support (Jupiter DEX).
-- Unified multi-chain address derivation from single PKP.
-
-## Upcoming Roadmap
-
-### 🚧 Phase 4: Advanced DeFi
-
-- **Yield & Lending**: Integration with Ionic and Aave plugins for autonomous yield farming.
-- **Prediction Markets**: Support for Polymarket betting via agent intelligence.
-- **DEX Optimization**: 1inch plugin for optimal swap routing.
-- **Hardened Security**: Implementing spending limits and allowances via Lit Actions.
-- **Portfolio Analytics**: Comprehensive dashboard for tracking multi-chain asset performance.
-
-## Technology Stack
-
-- **Frontend**: Next.js 16, React 19, TailwindCSS v4
-- **AI Engine**: Vercel AI SDK, OpenAI
-- **X402 Protocol**: `x402-fetch`, `x402-next`, AgentCredits.sol
-- **Blockchain Security**: Lit Protocol (MPC, Lit Actions)
-- **On-Chain Actions**: GOAT SDK (Great On-Chain Agent Toolkit)
-- **Web3 Libraries**: Viem, Wagmi, Ethers.js
-- **Database**: ChromaDB (Vector Search)
-
-## Getting Started
-
-1.  **Installation**:
-
-    ```bash
-    npm install
-    ```
-
-2.  **Environment Setup**:
-    Configure `.env.local` with required keys for Lit Protocol, OpenAI, and RPC endpoints.
-
-3.  **Development Server**:
-    ```bash
-    npm run dev
-    ```
+| Contract             | Address                                      |
+| -------------------- | -------------------------------------------- |
+| **AgentNFT**         | `0x622d4165F14F19C0467783421898279055153794` |
+| **AgentMarketplace** | `0xe37c88eC02afdAe51d97422B0fAde8E9215F74ce` |
+| **AgentCredits**     | `0xFF882fAB68EDF8b5eA29533FdBFCF9F48bfA38dc` |
+| **RevenueShare**     | `0xF04ae4edb45313F018Ec9D70F35119fb2a54b483` |
+| **AgentPKP**         | `0x0DDE835675dafB5efce044c9c69407C3cF52e2ed` |
 
 ---
 
-_Built with precision for the autonomous future._
+## X402 Protocol Integration
+
+SIGNATORY is built on the **X402** standard for autonomous agent monetization.
+
+| Component            | Description                                                         |
+| -------------------- | ------------------------------------------------------------------- |
+| **HTTP 402**         | API endpoints signal insufficient credits with status code `402`.   |
+| **Paywalls**         | Frontend intercepts 402 responses and triggers seamless payment UI. |
+| **AgentCredits.sol** | On-chain mechanism for purchasing inference/action credits.         |
+| **Libraries**        | `x402-fetch` and `x402-next` for protocol compliance.               |
+
+---
+
+## Key Features
+
+| Feature              | Description                                                         |
+| -------------------- | ------------------------------------------------------------------- |
+| **Autonomous DeFi**  | Token swaps via Uniswap, cross-chain bridging via DeBridge.         |
+| **Non-Custodial**    | Users retain full control; agents require Lit Action authorization. |
+| **Natural Language** | Instruct agents in plain English via Vercel AI SDK.                 |
+| **Multi-Chain**      | Unified interface across EVM networks and Solana.                   |
+| **Real-Time**        | Low-latency responses and instant transaction broadcasting.         |
+
+---
+
+## Development Roadmap
+
+| Phase       | Status      | Milestones                                                     |
+| ----------- | ----------- | -------------------------------------------------------------- |
+| **Phase 1** | Complete    | AgentPKP registry, Lit Actions, PKP minting services.          |
+| **Phase 2** | Complete    | GOAT SDK integration, Uniswap V3 swaps, token management.      |
+| **Phase 3** | Complete    | Cross-chain bridging (DeBridge), Solana support (Jupiter DEX). |
+| **Phase 4** | In Progress | Yield farming (Aave/Ionic), prediction markets, 1inch routing. |
+
+---
+
+## Technology Stack
+
+| Category      | Technologies                                       |
+| ------------- | -------------------------------------------------- |
+| **Frontend**  | Next.js 16, React 19, TailwindCSS v4               |
+| **AI Engine** | Vercel AI SDK, OpenAI                              |
+| **Protocol**  | X402 (`x402-fetch`, `x402-next`), AgentCredits.sol |
+| **Security**  | Lit Protocol (MPC, Lit Actions)                    |
+| **On-Chain**  | GOAT SDK                                           |
+| **Web3**      | Viem, Wagmi, Ethers.js                             |
+| **Database**  | ChromaDB (Vector Search)                           |
+
+---
+
+## Getting Started
+
+Refer to the dedicated documentation for setup instructions:
+
+- **Frontend**: [frontend/README.md](frontend/README.md)
+- **Contracts**: [contract/README.md](contract/README.md)
+
+---
+
+<p align="center">
+  <em>Built with precision for the autonomous future.</em>
+</p>
