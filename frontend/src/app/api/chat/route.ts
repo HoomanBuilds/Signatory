@@ -11,6 +11,9 @@ import { recordAgentChat } from "@/lib/agent-contract";
 import { sepolia } from "viem/chains";
 import { getAuthenticatedAddress } from "@/lib/auth";
 import contractAddresses from "@/constants/contractAddresses.json";
+import { tool } from "ai";
+import { z } from "zod";
+import { executeAgentSwap } from "@/lib/agent-actions";
 
 // Get NFT contract address for session credits
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID || "11155111";
@@ -123,10 +126,149 @@ User Message:
 ${message}`;
     }
 
+    // Handle swap confirmation message
+    if (message.startsWith("CONFIRM_SWAP:")) {
+      try {
+        const swapData = JSON.parse(message.replace("CONFIRM_SWAP:", ""));
+        console.log("[Chat] Executing confirmed swap:", swapData);
+        
+        const result = await executeAgentSwap({
+          agentId,
+          fromToken: swapData.fromToken,
+          toToken: swapData.toToken,
+          amount: swapData.amount,
+          userAddress,
+        });
+        
+        const successMessage = `✅ **Swap Successful!**
+
+**Transaction Details:**
+- Swapped: ${result.swap.from.amount} ${result.swap.from.token} → ${result.swap.to.token}
+- Tx Hash: \`${result.transactions.swap}\`
+- [View on Etherscan](${result.explorer})`;
+
+        return new Response(successMessage, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      } catch (error: any) {
+        console.error("[Chat] Swap execution failed:", error);
+        return new Response(`❌ **Swap Failed**\n\n${error.message}`, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      }
+    }
+
+    // Handle bridge confirmation message
+    if (message.startsWith("CONFIRM_BRIDGE:")) {
+      try {
+        const bridgeData = JSON.parse(message.replace("CONFIRM_BRIDGE:", ""));
+        console.log("[Chat] Executing confirmed bridge:", bridgeData);
+        
+        const { bridgeTokens } = require("@/lib/agent-actions");
+        const result = await bridgeTokens({
+          agentId,
+          userAddress,
+          srcChain: bridgeData.srcChain,
+          dstChain: bridgeData.dstChain,
+          amount: bridgeData.amount,
+          tokenAddress: bridgeData.token === "ETH" ? "native" : bridgeData.token,
+        });
+        
+        if (!result.success) {
+          throw new Error(result.error);
+        }
+        
+        const explorer = result.txHash 
+          ? `https://sepolia.etherscan.io/tx/${result.txHash}` 
+          : "";
+        
+        const successMessage = `✅ **Bridge Initiated!**
+
+**Transaction Details:**
+- Bridging: ${result.quote?.srcAmount || bridgeData.amount} ${bridgeData.token}
+- From: ${bridgeData.srcChain} → ${bridgeData.dstChain}
+- Estimated receive: ~${result.quote?.dstAmount || bridgeData.amount} ${bridgeData.token}
+- Est. time: ~${result.quote?.estimatedTime || "5"} min
+- Tx Hash: \`${result.txHash}\`
+${explorer ? `- [View on Explorer](${explorer})` : ""}
+
+Your tokens will arrive on ${bridgeData.dstChain} shortly.`;
+
+        return new Response(successMessage, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      } catch (error: any) {
+        console.error("[Chat] Bridge execution failed:", error);
+        return new Response(`❌ **Bridge Failed**\n\n${error.message}`, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      }
+    }
+
+    // Fetch the agent's PKP wallet address
+    let agentWalletAddress = "";
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || req.nextUrl.origin;
+      const pkpResponse = await fetch(`${baseUrl}/api/agent-pkp?agentTokenId=${agentId}`);
+      if (pkpResponse.ok) {
+        const pkpData = await pkpResponse.json();
+        agentWalletAddress = pkpData.evmAddress || "";
+        console.log(`[Chat] Agent ${agentId} wallet address: ${agentWalletAddress}`);
+      }
+    } catch (err) {
+      console.error("[Chat] Failed to fetch agent PKP wallet:", err);
+    }
+
+    const tools = {
+      swap_tokens: tool({
+        description: "Swap tokens using the agent's wallet. This will show a confirmation to the user first. Supported tokens: ETH, WETH, USDC, DAI.",
+        inputSchema: z.object({
+          fromToken: z.string().describe("The token to swap from"),
+          toToken: z.string().describe("The token to swap to"),
+          amount: z.string().describe("The amount to swap"),
+        }),
+        execute: async ({ fromToken, toToken, amount }: { fromToken: string; toToken: string; amount: string }) => {
+          console.log(`[Chat Tool] swap_tokens called: ${amount} ${fromToken} -> ${toToken}`);
+          const result = `SWAP_CONFIRMATION:${JSON.stringify({ 
+            fromToken, 
+            toToken, 
+            amount,
+            walletAddress: agentWalletAddress,
+            network: "Sepolia"
+          })}`;
+          console.log(`[Chat Tool] swap_tokens returning: ${result}`);
+          return result;
+        },
+      }),
+      
+      bridge_tokens: tool({
+        description: "Bridge tokens across chains using DeBridge. Supported chains: ethereum, sepolia, base, base_sepolia, polygon, arbitrum, optimism. This will show a confirmation to the user first.",
+        inputSchema: z.object({
+          srcChain: z.string().describe("The source chain to bridge from"),
+          dstChain: z.string().describe("The destination chain to bridge to"),
+          amount: z.string().describe("The amount to bridge"),
+          token: z.string().default("ETH").describe("The token to bridge, defaults to ETH"),
+        }),
+        execute: async ({ srcChain, dstChain, amount, token }: { srcChain: string; dstChain: string; amount: string; token: string }) => {
+          console.log(`[Chat Tool] bridge_tokens called: ${amount} ${token} from ${srcChain} to ${dstChain}`);
+          const result = `BRIDGE_CONFIRMATION:${JSON.stringify({ 
+            srcChain, 
+            dstChain, 
+            amount, 
+            token: token || "ETH",
+            walletAddress: agentWalletAddress
+          })}`;
+          console.log(`[Chat Tool] bridge_tokens returning: ${result}`);
+          return result;
+        },
+      }),
+    };
+
     const result = await streamAgentResponse(
       personality,
       finalMessage,
-      chatHistory
+      chatHistory,
+      tools
     );
 
     let fullResponse = "";
@@ -156,24 +298,34 @@ ${message}`;
           if (useMemory) {
             try {
               const timestamp = Date.now();
-              await Promise.all([
-                storeMessage(
+              console.log(`[Chat] Storing messages - User message: "${message.substring(0, 50)}...", Assistant response: "${fullResponse.substring(0, 100)}..."`);
+              
+              // Only store non-empty messages
+              const storagePromises = [];
+              if (message && message.trim().length > 0) {
+                storagePromises.push(storeMessage(
                   agentId,
                   userAddress,
                   "user",
                   message,
                   timestamp,
                   sessionId
-                ),
-                storeMessage(
+                ));
+              }
+              if (fullResponse && fullResponse.trim().length > 0) {
+                storagePromises.push(storeMessage(
                   agentId,
                   userAddress,
                   "assistant",
                   fullResponse,
                   timestamp + 1,
                   sessionId
-                ),
-              ]);
+                ));
+              }
+              
+              if (storagePromises.length > 0) {
+                await Promise.all(storagePromises);
+              }
             } catch (error) {
               console.error("Background vector DB storage failed:", error);
             }
@@ -272,8 +424,24 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // 3. Agent Auto-Pay disabled - now using PKP wallets
-      // TODO: Implement PKP-based auto-pay using /api/agent-wallet/sign
+      // 3. Try PKP Auto-Pay (if agent has funded PKP wallet)
+      try {
+        const { purchaseCreditsWithPKP } = require("@/lib/agent-actions");
+        const autoPay = await purchaseCreditsWithPKP({
+          agentId,
+          userAddress,
+          creditAmount: 1,
+        });
+        
+        if (autoPay.success) {
+          console.log(`[Auto-Pay] Success! Tx: ${autoPay.txHash}`);
+          return coreChatLogic(req, true);
+        } else {
+          console.log(`[Auto-Pay] Failed: ${autoPay.error}`);
+        }
+      } catch (autoPayError: any) {
+        console.log(`[Auto-Pay] Error: ${autoPayError.message}`);
+      }
 
       // 4. Return 402 for AgentCredits
       return NextResponse.json(
