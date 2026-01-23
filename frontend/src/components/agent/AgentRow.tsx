@@ -78,7 +78,7 @@ export default function AgentRow({
           <div className="flex items-center gap-3 flex-shrink-0">
             <div className="text-right">
               <div className="text-sm font-bold text-emerald-300">
-                {formatEther(price)} ETH
+                {formatEther(price)} TCRO
               </div>
             </div>
             <button className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-lime-500 text-black text-sm font-semibold rounded-lg hover:from-emerald-400 hover:to-lime-400 transition-all">

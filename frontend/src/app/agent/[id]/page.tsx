@@ -260,7 +260,7 @@ export default function AgentDetailPage() {
                         Current Price
                       </div>
                       <div className="text-2xl font-bold text-white font-mono">
-                        {formatEther(BigInt(activeListing.price))} ETH
+                        {formatEther(BigInt(activeListing.price))} TCRO
                       </div>
                     </div>
                     <div className="px-3 py-1 bg-white text-black text-xs font-bold uppercase tracking-wider">

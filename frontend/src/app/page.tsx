@@ -192,7 +192,7 @@ export default function Home() {
           </div>
           <div className="p-12 text-center hover:bg-[#111] transition-colors">
             <div className="text-5xl font-mono font-bold mb-2">{stats.totalVolume}</div>
-            <div className="text-xs uppercase tracking-widest text-[#666]">ETH Volume</div>
+            <div className="text-xs uppercase tracking-widest text-[#666]">TCRO Volume</div>
           </div>
           <div className="p-12 text-center hover:bg-[#111] transition-colors">
             <div className="text-5xl font-mono font-bold mb-2">{listedAgents.length}</div>

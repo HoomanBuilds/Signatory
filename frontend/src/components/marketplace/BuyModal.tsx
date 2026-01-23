@@ -57,7 +57,7 @@ export default function BuyModal({
             <div className="glass-panel p-4 rounded-xl border border-emerald-500/20">
               <div className="text-sm text-green-200/60 mb-1">Total Price</div>
               <div className="text-3xl font-bold text-emerald-300">
-                {price} ETH
+                {price} TCRO
               </div>
             </div>
           </div>

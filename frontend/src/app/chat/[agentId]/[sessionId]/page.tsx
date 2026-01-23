@@ -12,7 +12,7 @@ import ChatMessages from "@/components/chat/ChatMessages";
 import ChatInput from "@/components/chat/ChatInput";
 import ChatHistorySlider from "@/components/chat/ChatHistorySlider";
 import EmptyState from "@/components/EmptyState";
-import { Menu, Loader2, Lock } from "lucide-react";
+import { Menu, Loader2, Lock, Trash2, Bot } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import { useAgentPersonality } from "@/hooks/useAgentPersonality";
 import PaymentModal from "@/components/chat/PaymentModal";
@@ -196,7 +196,7 @@ export default function ChatSessionPage() {
 
   return (
     <Layout>
-      <div className="flex h-[calc(100vh-80px)]">
+      <div className="flex h-[calc(100vh-80px)] bg-black">
         <AgentIconBar
           myAgents={myAgents}
           interactedAgents={interactedAgents}
@@ -208,33 +208,33 @@ export default function ChatSessionPage() {
 
         {agentId && selectedAgentData ? (
           <>
-            <AgentInfoPanel
+            {/* Left Sidebar Info Panel */}
+             <AgentInfoPanel
               agent={selectedAgentData}
               personality={personality}
               onClearSession={handleClearMemory}
               isClearing={isClearing}
             />
 
-            <div className="flex-1 flex flex-col relative">
-              {/* Floating Hamburger Button */}
-              <button
-                onClick={() => setIsHistoryOpen(true)}
-                className="absolute top-4 left-4 z-10 p-3 glass-panel border border-emerald-500/30 rounded-xl hover:bg-emerald-500/10 transition-all shadow-lg"
-                title="View chat sessions"
-              >
-                <Menu className="w-6 h-6 text-emerald-300" />
-              </button>
-
-              {/* Floating Credits Display */}
-              <FloatingCredits 
-                agentId={agentId} 
-                isOwner={myAgents.some(a => a.tokenId === agentId)}
+            <div className="flex-1 flex flex-col relative min-w-0">
+              {/* Floating Controls */}
+              <FloatingCredits
+                agentId={agentId || 0}
+                isOwner={myAgents.some((a) => a.tokenId === agentId)}
                 messageCount={messages.length}
               />
+              
+              <button
+                onClick={() => setIsHistoryOpen(true)}
+                className="absolute top-6 left-6 z-20 p-2 bg-black border border-[#333] hover:border-white transition-colors"
+                title="View History"
+              >
+                <Menu className="w-5 h-5 text-white" />
+              </button>
 
               {isLoadingHistory ? (
                 <div className="flex-1 flex items-center justify-center">
-                  <Loader2 className="w-8 h-8 text-emerald-300 animate-spin" />
+                  <Loader2 className="w-8 h-8 text-white animate-spin" />
                 </div>
               ) : (
                 <ChatMessages
@@ -285,12 +285,14 @@ export default function ChatSessionPage() {
             </div>
           </>
         ) : (
-          <div className="flex-1">
-            <EmptyState
-              icon=""
-              title="Select an agent"
-              description="Choose an agent from the left to start chatting"
-            />
+          <div className="flex-1 flex items-center justify-center bg-black">
+             <div className="text-center p-8 border border-[#333] max-w-md">
+                 <div className="w-16 h-16 bg-[#111] border border-[#333] flex items-center justify-center mx-auto mb-4">
+                     <Bot className="w-8 h-8 text-white" />
+                 </div>
+                 <h2 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">Select an Agent</h2>
+                 <p className="text-[#666]">Choose an agent from the sidebar to start exploring.</p>
+             </div>
           </div>
         )}
       </div>

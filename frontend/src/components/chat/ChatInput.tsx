@@ -35,8 +35,8 @@ export default function ChatInput({
   };
 
   return (
-    <div className="glass-panel border-t border-emerald-500/20 p-4">
-      <div className="flex gap-3 items-end">
+    <div className="bg-black border-t border-[#333] p-6">
+      <div className="flex gap-4 items-end max-w-4xl mx-auto">
         <textarea
           ref={textareaRef}
           value={value}
@@ -45,12 +45,12 @@ export default function ChatInput({
           placeholder={isReadOnly ? "This chat is read-only" : `Message ${agentName}...`}
           disabled={isSending || isReadOnly}
           rows={1}
-          className="flex-1 px-4 py-3 glass-panel rounded-xl text-emerald-200 placeholder-green-200/50 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_10px_rgba(52,211,153,0.2)] transition-all border border-emerald-500/20 disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[48px] max-h-[200px] overflow-y-auto scrollbar-hide"
+          className="flex-1 px-4 py-4 bg-[#111] text-white placeholder-[#666] focus:outline-none focus:ring-1 focus:ring-white border border-[#333] disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[56px] max-h-[200px] overflow-y-auto scrollbar-hide font-mono text-sm"
         />
         <button
           onClick={onSend}
           disabled={!value.trim() || isSending || isReadOnly}
-          className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-xl font-semibold hover:from-emerald-600 hover:to-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 h-[48px]"
+          className="px-6 py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-[#ddd] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 h-[56px] border border-white"
         >
           {isReadOnly ? (
             <Lock className="w-5 h-5" />

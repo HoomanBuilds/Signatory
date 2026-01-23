@@ -169,13 +169,13 @@ export default function MintAgentForm() {
   if (!isConnected) {
     return (
       <div className="max-w-2xl mx-auto">
-        <div className="glass-panel p-12 rounded-2xl text-center border border-emerald-500/20">
-          <Sparkles className="w-16 h-16 mx-auto mb-6 text-emerald-300" />
-          <h2 className="text-2xl font-bold text-emerald-200 mb-3">
-            Connect Wallet to Create
+        <div className="border border-[#333] p-12 bg-[#111] text-center">
+          <Sparkles className="w-16 h-16 mx-auto mb-6 text-white" />
+          <h2 className="text-2xl font-bold text-white mb-3 uppercase tracking-wide">
+            Connect Wallet
           </h2>
-          <p className="text-green-200/70">
-            Connect your wallet to start minting AI agents
+          <p className="text-[#666] font-mono">
+           to start minting AI agents
           </p>
         </div>
       </div>
@@ -185,15 +185,15 @@ export default function MintAgentForm() {
   if (isSuccess) {
     return (
       <div className="max-w-2xl mx-auto">
-        <div className="glass-panel p-12 rounded-2xl text-center border border-emerald-500/20">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-emerald-500 to-lime-500 flex items-center justify-center">
+        <div className="border border-[#333] p-12 bg-[#111] text-center">
+          <div className="w-20 h-20 mx-auto mb-6 bg-white flex items-center justify-center">
             <Check className="w-10 h-10 text-black" />
           </div>
-          <h2 className="text-3xl font-bold text-emerald-200 mb-3">
-            Agent Minted Successfully!
+          <h2 className="text-3xl font-black text-white mb-3 uppercase tracking-wide">
+            Agent Minted!
           </h2>
-          <p className="text-green-200/70 mb-8">
-            Your AI agent has been created and is now ready to use
+          <p className="text-[#666] mb-8 font-mono">
+            Your AI agent has been created and is ready.
           </p>
           <button
             onClick={() => {
@@ -204,9 +204,9 @@ export default function MintAgentForm() {
               setAvatarPreview("");
               setBackstory("");
             }}
-            className="px-8 py-4 bg-gradient-to-r from-emerald-500 to-lime-500 text-black font-bold rounded-xl hover:from-emerald-400 hover:to-lime-400 transition-all"
+            className="px-8 py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-[#ccc] transition-all"
           >
-            Create Another Agent
+            Create Another
           </button>
         </div>
       </div>
@@ -215,89 +215,89 @@ export default function MintAgentForm() {
 
   return (
     <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-      <div className="glass-panel p-8 rounded-2xl border border-emerald-500/20 shadow-xl shadow-emerald-500/5">
+      <div className="border border-[#333] bg-[#050505] p-8">
         <Stepper
           initialStep={1}
           onStepChange={(s) => setStep(s)}
           onFinalStepCompleted={handleMint}
           backButtonText={
             <div className="flex items-center gap-2">
-              <ArrowLeft className="w-5 h-5" />
-              Back
+              <ArrowLeft className="w-4 h-4" />
+              BACK
             </div>
           }
           nextButtonText={
             <div className="flex items-center gap-2">
-              Next: Personality
-              <ArrowRight className="w-5 h-5" />
+              NEXT
+              <ArrowRight className="w-4 h-4" />
             </div>
           }
           finishButtonText={
             <div className="flex items-center gap-2">
               {uploading ? (
-                <>Uploading to IPFS...</>
+                <>UPLOADING...</>
               ) : isPending || isConfirming ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                  Minting...
+                  <div className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
+                  MINTING...
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-5 h-5" />
-                  Mint Agent NFT
+                  <Sparkles className="w-4 h-4" />
+                  MINT AGENT (0.01 TCRO)
                 </>
               )}
             </div>
           }
           backButtonProps={{
-            className: "px-6 py-4 glass-panel text-emerald-200 font-bold rounded-xl hover:bg-[#0e1518] transition-all border border-emerald-500/20 flex items-center justify-center gap-2 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/5 disabled:opacity-50 disabled:cursor-not-allowed",
+            className: "px-6 py-4 bg-transparent text-[#666] font-bold uppercase tracking-wider hover:text-white transition-all border border-[#333] hover:border-white disabled:opacity-50 disabled:cursor-not-allowed",
             disabled: uploading || isPending || isConfirming || kbUploading
           }}
           nextButtonProps={{
-            className: "px-6 py-4 bg-gradient-to-r from-emerald-500 to-lime-500 text-black font-bold rounded-xl hover:from-emerald-400 hover:to-lime-400 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/40 hover:-translate-y-0.5",
+            className: "px-6 py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-[#ccc] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2",
             disabled: step === 1 ? (!name || !description || !avatarFile) : (uploading || isPending || isConfirming || kbUploading)
           }}
-          stepCircleContainerClassName="mb-8"
+          stepCircleContainerClassName="mb-12"
         >
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-emerald-200 mb-2">
-                Basic Information
+          <div className="space-y-8">
+            <div className="border-b border-[#333] pb-6">
+              <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-wide">
+                1. Identity
               </h2>
-              <p className="text-green-200/70 text-sm">
-                Define your AI agent's identity
+              <p className="text-[#666] text-sm font-mono">
+                Define the core identity of your AI.
               </p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-emerald-200">
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#888]">
                 Agent Name
               </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Alpha Trader"
-                className="w-full px-4 py-3 glass-panel rounded-xl text-emerald-200 placeholder-green-200/30 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_15px_rgba(52,211,153,0.1)] transition-all border border-emerald-500/20"
+                placeholder="Ex: ALPHA TRADER"
+                className="w-full px-4 py-4 bg-[#111] text-white placeholder-[#444] focus:outline-none focus:ring-1 focus:ring-white border border-[#333] transition-all font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-emerald-200">
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#888]">
                 Description
               </label>
               <textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="An expert trading AI that analyzes market trends..."
+                placeholder="What does this agent do?"
                 rows={3}
-                className="w-full px-4 py-3 glass-panel rounded-xl text-emerald-200 placeholder-green-200/30 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_15px_rgba(52,211,153,0.1)] transition-all border border-emerald-500/20 resize-none"
+                className="w-full px-4 py-4 bg-[#111] text-white placeholder-[#444] focus:outline-none focus:ring-1 focus:ring-white border border-[#333] transition-all font-mono resize-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-emerald-200">
-                Avatar Image
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#888]">
+                Avatar
               </label>
               <div className="relative group">
                 <input
@@ -312,29 +312,26 @@ export default function MintAgentForm() {
                   className="block w-full cursor-pointer"
                 >
                   {avatarPreview ? (
-                    <div className="aspect-square w-full max-w-sm mx-auto glass-panel rounded-xl border-2 border-emerald-500/30 group-hover:border-emerald-500/50 group-hover:shadow-[0_0_20px_rgba(52,211,153,0.2)] transition-all overflow-hidden relative">
+                    <div className="aspect-square w-full max-w-sm mx-auto bg-[#111] border border-[#333] group-hover:border-white transition-all overflow-hidden relative">
                       <img
                         src={avatarPreview}
                         alt="Preview"
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                       />
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <p className="text-white font-medium">Change Image</p>
+                        <p className="text-white font-bold uppercase">Change Image</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="aspect-square w-full max-w-sm mx-auto flex flex-col items-center justify-center glass-panel rounded-xl border-2 border-dashed border-emerald-500/30 group-hover:border-emerald-500/50 group-hover:bg-emerald-500/5 transition-all duration-300">
-                      <div className="w-16 h-16 rounded-full bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                        <Upload className="w-8 h-8 text-emerald-400" />
+                    <div className="aspect-square w-full max-w-sm mx-auto flex flex-col items-center justify-center bg-[#111] border border-dashed border-[#333] group-hover:border-white group-hover:bg-[#1a1a1a] transition-all duration-300">
+                      <div className="w-16 h-16 flex items-center justify-center mb-4">
+                        <Upload className="w-8 h-8 text-[#666] group-hover:text-white transition-colors" />
                       </div>
-                      <p className="text-emerald-200 font-medium mb-1 group-hover:text-emerald-300 transition-colors">
-                        Upload Avatar
+                      <p className="text-white font-bold uppercase tracking-wider mb-1">
+                        Upload Image
                       </p>
-                      <p className="text-green-200/50 text-sm">
-                        PNG, JPG up to 10MB
-                      </p>
-                      <p className="text-green-200/50 text-xs mt-2">
-                        Square images work best
+                      <p className="text-[#666] text-xs font-mono">
+                        Square format
                       </p>
                     </div>
                   )}
@@ -343,145 +340,97 @@ export default function MintAgentForm() {
             </div>
           </div>
 
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-2xl font-bold text-emerald-200 mb-2">
-                Personality Traits
+          <div className="space-y-8">
+            <div className="border-b border-[#333] pb-6">
+              <h2 className="text-2xl font-bold text-white mb-2 uppercase tracking-wide">
+                2. Personality
               </h2>
-              <p className="text-green-200/70 text-sm">
-                Customize your agent's behavior
+              <p className="text-[#666] text-sm font-mono">
+                Shape the behavior and knowledge.
               </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2 text-emerald-200">
+                <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#888]">
                   Tone
                 </label>
                 <select
                   value={tone}
                   onChange={(e) => setTone(e.target.value)}
-                  className="w-full px-4 py-3 glass-panel rounded-xl text-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_15px_rgba(52,211,153,0.1)] transition-all border border-emerald-500/20 cursor-pointer bg-[#0e1518]"
-                  style={{ colorScheme: "dark" }}
+                  className="w-full px-4 py-4 bg-[#111] text-white border border-[#333] focus:outline-none focus:ring-1 focus:ring-white transition-all appearance-none cursor-pointer uppercase text-sm"
                 >
-                  <option
-                    value="friendly"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Friendly
-                  </option>
-                  <option
-                    value="professional"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Professional
-                  </option>
-                  <option
-                    value="energetic"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Energetic
-                  </option>
-                  <option
-                    value="calm"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Calm
-                  </option>
-                  <option
-                    value="humorous"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Humorous
-                  </option>
+                  <option value="friendly">Friendly</option>
+                  <option value="professional">Professional</option>
+                  <option value="energetic">Energetic</option>
+                  <option value="calm">Calm</option>
+                  <option value="humorous">Humorous</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-sm font-medium mb-2 text-emerald-200">
+                <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#888]">
                   Style
                 </label>
                 <select
                   value={style}
                   onChange={(e) => setStyle(e.target.value)}
-                  className="w-full px-4 py-3 glass-panel rounded-xl text-emerald-200 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_15px_rgba(52,211,153,0.1)] transition-all border border-emerald-500/20 cursor-pointer bg-[#0e1518]"
-                  style={{ colorScheme: "dark" }}
+                  className="w-full px-4 py-4 bg-[#111] text-white border border-[#333] focus:outline-none focus:ring-1 focus:ring-white transition-all appearance-none cursor-pointer uppercase text-sm"
                 >
-                  <option
-                    value="conversational"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Conversational
-                  </option>
-                  <option
-                    value="formal"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Formal
-                  </option>
-                  <option
-                    value="casual"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Casual
-                  </option>
-                  <option
-                    value="technical"
-                    className="bg-[#0e1518] text-emerald-200"
-                  >
-                    Technical
-                  </option>
+                  <option value="conversational">Conversational</option>
+                  <option value="formal">Formal</option>
+                  <option value="casual">Casual</option>
+                  <option value="technical">Technical</option>
                 </select>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-emerald-200">
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#888]">
                 Role
               </label>
               <input
                 type="text"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
-                placeholder="assistant, teacher, companion..."
-                className="w-full px-4 py-3 glass-panel rounded-xl text-emerald-200 placeholder-green-200/30 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_15px_rgba(52,211,153,0.1)] transition-all border border-emerald-500/20"
+                placeholder="Ex: ASSISTANT"
+                className="w-full px-4 py-4 bg-[#111] text-white placeholder-[#444] focus:outline-none focus:ring-1 focus:ring-white border border-[#333] transition-all font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-emerald-200">
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#888]">
                 Knowledge Focus
               </label>
               <input
                 type="text"
                 value={knowledgeFocus}
                 onChange={(e) => setKnowledgeFocus(e.target.value)}
-                placeholder="technology, art, science..."
-                className="w-full px-4 py-3 glass-panel rounded-xl text-emerald-200 placeholder-green-200/30 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_15px_rgba(52,211,153,0.1)] transition-all border border-emerald-500/20"
+                placeholder="Ex: CRYPTO, DEFI"
+                className="w-full px-4 py-4 bg-[#111] text-white placeholder-[#444] focus:outline-none focus:ring-1 focus:ring-white border border-[#333] transition-all font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2 text-emerald-200">
+              <label className="block text-xs font-bold uppercase tracking-wider mb-2 text-[#888]">
                 Backstory (Optional)
               </label>
               <textarea
                 value={backstory}
                 onChange={(e) => setBackstory(e.target.value)}
-                placeholder="Tell the story of your AI agent..."
+                placeholder="Origin story..."
                 rows={4}
-                className="w-full px-4 py-3 glass-panel rounded-xl text-emerald-200 placeholder-green-200/30 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_15px_rgba(52,211,153,0.1)] transition-all border border-emerald-500/20 resize-none"
+                className="w-full px-4 py-4 bg-[#111] text-white placeholder-[#444] focus:outline-none focus:ring-1 focus:ring-white border border-[#333] transition-all font-mono resize-none"
               />
             </div>
 
-            <div className="border-t border-emerald-500/20 pt-6 mt-6">
-              <h3 className="text-xl font-bold text-emerald-200 mb-2 flex items-center gap-2">
+            <div className="border-t border-[#333] pt-6 mt-6">
+              <h3 className="text-xl font-bold text-white mb-2 flex items-center gap-2 uppercase tracking-wide">
                 <Upload className="w-5 h-5" />
                 Knowledge Base
               </h3>
-              <p className="text-green-200/70 text-sm mb-4">
-                Upload documents (PDF, TXT, MD) to give your agent specific
-                knowledge.
+              <p className="text-[#666] text-sm mb-4 font-mono">
+                Upload documents to train your agent.
               </p>
 
               <div className="relative group">
@@ -499,15 +448,15 @@ export default function MintAgentForm() {
                   className={`block w-full cursor-pointer ${kbUploading ? "cursor-not-allowed opacity-50" : ""
                     }`}
                 >
-                  <div className="w-full p-6 flex flex-col items-center justify-center glass-panel rounded-xl border-2 border-dashed border-emerald-500/30 group-hover:border-emerald-500/50 group-hover:bg-emerald-500/5 transition-all duration-300">
-                    <div className="w-12 h-12 rounded-full bg-emerald-500/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300">
-                      <Upload className="w-6 h-6 text-emerald-400" />
+                  <div className="w-full p-6 flex flex-col items-center justify-center bg-[#111] border border-dashed border-[#333] group-hover:border-white transition-all duration-300">
+                    <div className="w-12 h-12 flex items-center justify-center mb-3">
+                      <Upload className="w-6 h-6 text-[#666] group-hover:text-white" />
                     </div>
-                    <p className="text-emerald-200 font-medium mb-1 group-hover:text-emerald-300 transition-colors">
-                      {kbUploading ? "Uploading..." : "Upload Documents"}
+                    <p className="text-white font-bold uppercase tracking-wider mb-1">
+                      {kbUploading ? "UPLOADING..." : "UPLOAD DOCS"}
                     </p>
-                    <p className="text-green-200/50 text-xs">
-                      PDF, TXT, MD up to 10MB
+                    <p className="text-[#666] text-xs font-mono">
+                      PDF, TXT, MD
                     </p>
                   </div>
                 </label>
@@ -519,21 +468,21 @@ export default function MintAgentForm() {
                   {kbFiles.map((file, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 glass-panel rounded-lg border border-emerald-500/10"
+                      className="flex items-center justify-between p-3 bg-[#111] border border-[#333]"
                     >
-                      <span className="text-sm text-emerald-200 truncate max-w-[200px]">
+                      <span className="text-sm text-[#ccc] truncate max-w-[200px] font-mono">
                         {file.name}
                       </span>
-                      <span className="text-xs text-green-200/50">
+                      <span className="text-xs text-[#666] font-mono">
                         {(file.size / 1024).toFixed(1)} KB
                       </span>
                     </div>
                   ))}
-                  <div className="flex items-center gap-2 mt-2 text-xs text-emerald-400">
+                  <div className="flex items-center gap-2 mt-2 text-xs text-white font-bold uppercase">
                     <Check className="w-3 h-3" />
                     <span>
                       {kbFiles.length} document{kbFiles.length > 1 ? "s" : ""}{" "}
-                      ready for indexing
+                      ready
                     </span>
                   </div>
                 </div>
@@ -544,8 +493,8 @@ export default function MintAgentForm() {
 
         {/* Error Message */}
         {error && (
-          <div className="mt-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl">
-            <p className="text-red-300 text-sm">{error}</p>
+          <div className="mt-6 p-4 bg-red-900/10 border border-red-900/30">
+            <p className="text-red-500 text-sm font-bold uppercase">{error}</p>
           </div>
         )}
       </div>

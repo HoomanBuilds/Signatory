@@ -81,45 +81,44 @@ export default function MarketplacePage() {
 
   return (
     <Layout>
-      <div className="px-4 sm:px-6 lg:px-8 py-8">
-        <div className="max-w-6xl mx-auto">
+      <div className="min-h-screen bg-black text-white p-4 lg:p-12">
+        <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h1 className="text-4xl md:text-5xl font-bold text-emerald-200 mb-4">
+            <h1 className="text-5xl md:text-7xl font-black text-white mb-4 uppercase tracking-tighter">
               Marketplace
             </h1>
-            <p className="text-xl text-green-200/70 max-w-2xl">
-              Discover, buy, and sell unique AI agent NFTs. Build your squad or
-              trade for profit.
+            <p className="text-xl text-[#666] font-mono max-w-2xl border-l-2 border-white pl-6">
+              Discover and trade unique AI agents. Build your autonomous squad.
             </p>
           </div>
 
           {/* Stats */}
           {stats && Array.isArray(stats) && stats.length === 4 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
-              <div className="glass-panel p-6 rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10">
-                <div className="text-sm text-green-200/60 mb-2">Listed</div>
-                <div className="text-3xl font-bold text-emerald-300">
+            <div className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-[#333] mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
+              <div className="border-r border-b border-[#333] p-6 hover:bg-[#111] transition-colors">
+                <div className="text-[10px] text-[#666] uppercase tracking-wider mb-2">Listed</div>
+                <div className="text-3xl font-bold text-white font-mono">
                   {listedAgents.length}
                 </div>
               </div>
-              <div className="glass-panel p-6 rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10">
-                <div className="text-sm text-green-200/60 mb-2">
-                  Total Sales
+              <div className="border-r border-b border-[#333] p-6 hover:bg-[#111] transition-colors">
+                <div className="text-[10px] text-[#666] uppercase tracking-wider mb-2">
+                  Sales
                 </div>
-                <div className="text-3xl font-bold text-emerald-300">
+                <div className="text-3xl font-bold text-white font-mono">
                   {Number(stats[1])}
                 </div>
               </div>
-              <div className="glass-panel p-6 rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10">
-                <div className="text-sm text-green-200/60 mb-2">Volume</div>
-                <div className="text-3xl font-bold text-emerald-300">
-                  {formatEther(stats[2] as bigint)} ETH
+              <div className="border-r border-b border-[#333] p-6 hover:bg-[#111] transition-colors">
+                <div className="text-[10px] text-[#666] uppercase tracking-wider mb-2">Volume</div>
+                <div className="text-3xl font-bold text-white font-mono">
+                  {formatEther(stats[2] as bigint)} TCRO
                 </div>
               </div>
-              <div className="glass-panel p-6 rounded-xl border border-emerald-500/20 hover:border-emerald-500/40 hover:bg-emerald-500/5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10">
-                <div className="text-sm text-green-200/60 mb-2">Fee</div>
-                <div className="text-3xl font-bold text-emerald-300">
+              <div className="border-r border-b border-[#333] p-6 hover:bg-[#111] transition-colors">
+                <div className="text-[10px] text-[#666] uppercase tracking-wider mb-2">Fee</div>
+                <div className="text-3xl font-bold text-white font-mono">
                   {Number(stats[3]) / 100}%
                 </div>
               </div>
@@ -127,30 +126,26 @@ export default function MarketplacePage() {
           ) : null}
 
           {/* Search */}
-          <div className="relative mb-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-            <Search className="absolute left-5 top-1/2 transform -translate-y-1/2 w-5 h-5 text-emerald-400/50" />
+          <div className="relative mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
+            <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#666]" />
             <input
               type="text"
-              placeholder="Search by agent name..."
+              placeholder="SEARCH AGENTS..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-14 pr-6 py-4 glass-panel rounded-2xl text-emerald-200 placeholder-green-200/30 focus:outline-none focus:ring-2 focus:ring-emerald-400/50 focus:shadow-[0_0_20px_rgba(52,211,153,0.1)] transition-all border border-emerald-500/20 text-lg"
+              className="w-full pl-16 pr-6 py-6 bg-black text-white placeholder-[#333] focus:outline-none focus:ring-0 border-b border-[#333] focus:border-white transition-all text-xl font-bold uppercase tracking-wider"
             />
           </div>
 
           {/* Results count */}
-          <div className="mb-6 text-green-200/70">
-            Showing{" "}
-            <span className="text-emerald-300 font-semibold">
-              {filteredListings.length}
-            </span>{" "}
-            listings
+          <div className="mb-6 text-[#666] font-mono text-sm uppercase tracking-wide">
+            Showing <span className="text-white font-bold">{filteredListings.length}</span> listings
           </div>
 
           {/* Loading state */}
           {isLoadingListings ? (
-            <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 text-emerald-300 animate-spin" />
+            <div className="flex items-center justify-center py-20 border border-[#333] border-dashed">
+              <Loader2 className="w-8 h-8 text-white animate-spin" />
             </div>
           ) : filteredListings.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -168,13 +163,13 @@ export default function MarketplacePage() {
               ))}
             </div>
           ) : (
-            <div className="glass-panel p-12 rounded-2xl text-center border border-emerald-500/20">
-              <h3 className="text-2xl font-bold text-emerald-200 mb-2">
+            <div className="p-20 text-center border border-[#333] border-dashed">
+              <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">
                 No listings found
               </h3>
-              <p className="text-green-200/70">
+              <p className="text-[#666] font-mono">
                 {searchQuery
-                  ? "Try adjusting your search"
+                  ? "Try adjusting your search criteria"
                   : "Be the first to list an agent!"}
               </p>
             </div>

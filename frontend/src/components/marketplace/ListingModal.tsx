@@ -131,7 +131,7 @@ export default function ListingModal({ isOpen, onClose, onListingSuccess, tokenI
                         placeholder="0.00"
                         className="w-full bg-black/40 border border-white/10 rounded-lg py-3 pl-4 pr-12 text-white placeholder-white/30 focus:outline-none focus:border-emerald-500/50 transition-colors"
                     />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-white/50 font-medium">ETH</div>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-white/50 font-medium">TCRO</div>
                  </div>
                  
                  <button 

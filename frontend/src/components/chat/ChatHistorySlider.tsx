@@ -31,32 +31,32 @@ export default function ChatHistorySlider({
   return (
     <>
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 z-40" onClick={onClose} />
+      <div className="absolute inset-0 bg-black/70 z-40 backdrop-blur-sm" onClick={onClose} />
 
       {/* Slider */}
-      <div className="absolute left-0 top-0 h-full w-80 glass-panel border-r border-emerald-500/20 z-50 overflow-y-auto">
+      <div className="absolute left-0 top-0 h-full w-80 bg-black border-r border-[#333] z-50 overflow-y-auto animate-in slide-in-from-left duration-300">
         {/* Header */}
-        <div className="sticky top-0 glass-panel border-b border-emerald-500/20 p-4 flex items-center justify-between">
+        <div className="sticky top-0 bg-black border-b border-[#333] p-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <MessageSquare className="w-5 h-5 text-emerald-300" />
-            <h3 className="font-bold text-emerald-200">Chat Sessions</h3>
+            <MessageSquare className="w-5 h-5 text-white" />
+            <h3 className="font-bold text-white uppercase tracking-wide">History</h3>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-emerald-500/10 rounded-lg transition-all"
+            className="p-2 hover:bg-[#111] border border-transparent hover:border-[#333] transition-all"
           >
-            <X className="w-5 h-5 text-green-200/70" />
+            <X className="w-5 h-5 text-[#666]" />
           </button>
         </div>
 
         {/* New Chat Button */}
-        <div className="p-3 border-b border-emerald-500/20">
+        <div className="p-4 border-b border-[#333]">
           <button
             onClick={() => {
               onNewChat();
               onClose();
             }}
-            className="w-full px-4 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white rounded-lg font-semibold hover:from-emerald-600 hover:to-green-700 transition-all flex items-center justify-center gap-2"
+            className="w-full px-4 py-3 bg-white text-black font-bold uppercase tracking-wider hover:bg-[#e5e5e5] transition-all flex items-center justify-center gap-2 border border-white"
           >
             <Plus className="w-4 h-4" />
             New Chat
@@ -64,13 +64,13 @@ export default function ChatHistorySlider({
         </div>
 
         {/* Sessions List */}
-        <div className="p-3">
+        <div className="p-4">
           {sessions.length === 0 ? (
-            <div className="text-center py-12">
-              <MessageSquare className="w-12 h-12 text-emerald-300/30 mx-auto mb-3" />
-              <p className="text-green-200/50 text-sm">No chat sessions yet</p>
-              <p className="text-green-200/30 text-xs mt-1">
-                Start a new conversation
+            <div className="text-center py-12 border border-dashed border-[#333]">
+              <MessageSquare className="w-12 h-12 text-[#333] mx-auto mb-3" />
+              <p className="text-[#666] text-sm font-bold uppercase tracking-wide">No history</p>
+              <p className="text-[#444] text-xs mt-1">
+                Start a conversation
               </p>
             </div>
           ) : (
@@ -78,10 +78,10 @@ export default function ChatHistorySlider({
               {sessions.map((session) => (
                 <div
                   key={session.sessionId}
-                  className={`group relative p-3 rounded-lg transition-all cursor-pointer ${
+                  className={`group relative p-4 transition-all cursor-pointer border ${
                     currentSessionId === session.sessionId
-                      ? "bg-emerald-500/20 border-2 border-emerald-500/50"
-                      : "glass-panel border border-emerald-500/10 hover:border-emerald-500/30"
+                      ? "bg-[#111] border-white"
+                      : "bg-black border-[#333] hover:border-[#666]"
                   }`}
                   onClick={() => {
                     onSelectSession(session.sessionId);
@@ -90,16 +90,16 @@ export default function ChatHistorySlider({
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-semibold text-emerald-300">
-                          {session.messageCount} messages
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className="text-[10px] font-bold text-white uppercase tracking-wider bg-[#222] px-1.5 py-0.5">
+                          {session.messageCount} msgs
                         </span>
-                        <span className="text-xs text-green-200/40">
+                        <span className="text-[10px] text-[#666] font-mono">
                           {new Date(session.timestamp).toLocaleDateString()}
                         </span>
                       </div>
-                      <p className="text-sm text-green-100 line-clamp-2">
-                        {session.lastMessage}
+                      <p className="text-sm text-[#ccc] line-clamp-2 font-mono leading-relaxed">
+                        {session.lastMessage || "No messages yet"}
                       </p>
                     </div>
                     {onDeleteSession && (
@@ -114,10 +114,10 @@ export default function ChatHistorySlider({
                             onDeleteSession(session.sessionId);
                           }
                         }}
-                        className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-500/20 rounded transition-all"
+                        className="opacity-0 group-hover:opacity-100 p-1.5 hover:bg-red-900/20 text-[#444] hover:text-red-500 rounded transition-all"
                         title="Delete session"
                       >
-                        <Trash2 className="w-4 h-4 text-red-400" />
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     )}
                   </div>

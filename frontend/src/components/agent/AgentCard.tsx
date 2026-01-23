@@ -37,7 +37,7 @@ export default function AgentCard({
         )}
         {isListed && price && (
           <div className="absolute top-0 right-0 px-2 py-1 bg-white text-black text-xs font-bold">
-            {price} ETH
+            {price} TCRO
           </div>
         )}
       </div>

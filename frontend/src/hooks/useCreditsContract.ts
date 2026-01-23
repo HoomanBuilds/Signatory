@@ -69,8 +69,15 @@ export function useCreditsContract() {
         publicClient.readContract({
           address: addresses.AgentCredits as `0x${string}`,
           abi: AgentCreditsAbi,
-          functionName: "plans",
+          functionName: "getPlan",
           args: [planId],
+        }),
+      planCount: () =>
+        publicClient.readContract({
+          address: addresses.AgentCredits as `0x${string}`,
+          abi: AgentCreditsAbi,
+          functionName: "planCount",
+          args: [],
         }),
     };
   };
@@ -105,20 +112,29 @@ export function useCreditsContract() {
   };
 
   /**
-   * Get all active credit plans
+   * Get all active credit plans with correct plan IDs
    */
   const getActivePlans = async () => {
     try {
       const contract = getContract();
-      const plans = (await contract.getActivePlans()) as any[];
+      const count = (await contract.planCount()) as bigint;
+      const activePlans = [];
 
-      return plans.map((plan: any, index: number) => ({
-        id: index,
-        credits: plan.credits,
-        price: plan.price,
-        discountPercent: plan.discountPercent,
-        active: plan.active,
-      }));
+      // Iterate through all plans to get actual IDs
+      for (let i = 0; i < Number(count); i++) {
+        const plan = (await contract.getPlan(i)) as any;
+        if (plan.active) {
+          activePlans.push({
+            id: i, // Use actual plan ID from contract
+            credits: plan.credits,
+            price: plan.price,
+            discountPercent: plan.discountPercent,
+            active: plan.active,
+          });
+        }
+      }
+
+      return activePlans;
     } catch (err: any) {
       console.error("Error getting plans:", err);
       throw err;

@@ -157,7 +157,7 @@ export function CreditsManager() {
           Buy Credits
         </h3>
         <p className="text-sm text-[#666] mb-4">
-          Price: {formatEther(creditPrice)} ETH per credit
+          Price: {formatEther(creditPrice)} TCRO per credit
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[10, 25, 50, 100].map((amount) => (
@@ -201,7 +201,7 @@ export function CreditsManager() {
                 </div>
                 <div className="text-center mb-6">
                   <p className="text-xl font-bold text-white font-mono">
-                    {formatEther(plan.price)} ETH
+                    {formatEther(plan.price)} TCRO
                   </p>
                 </div>
                 <button

@@ -81,6 +81,7 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
   const [tokens, setTokens] = useState<Array<{ symbol: string; balance: string; name: string }>>([]);
   const [isLoadingBalance, setIsLoadingBalance] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -153,6 +154,11 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
       setTimeout(() => setCopied(false), 2000);
     }
   };
+
+  // Only show wallet to owner
+  if (!isOwner) {
+    return null;
+  }
 
   if (isLoading) {
     return (
@@ -297,7 +303,7 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
                 {isLoadingBalance ? (
                   <Loader2 className="w-5 h-5 animate-spin text-white" />
                 ) : (
-                  <>{balance ? `${parseFloat(balance).toFixed(6)}` : "—"} {selectedConfig?.name === "Cronos" ? "CRO" : "ETH"}</>
+                  <>{balance ? `${parseFloat(balance).toFixed(6)}` : "—"} {selectedConfig?.name?.includes("Cronos") ? "TCRO" : "ETH"}</>
                 )}
               </div>
               <button
@@ -323,29 +329,61 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
           </div>
 
           {/* Actions for Owner */}
-          {isOwner && (
-            <div className="flex gap-4">
-              <a
-                href={selectedConfig?.explorer ? `${selectedConfig.explorer}${selectedAddress}` : "#"}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-transparent border border-[#333] text-white text-sm font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
-              >
-                <ExternalLink className="w-4 h-4" />
-                View
-              </a>
-              <button
-                className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white text-black text-sm font-bold uppercase tracking-wider hover:bg-[#ddd] transition-colors"
-                onClick={() => {
-                  // TODO: Implement withdraw modal
-                  alert("Withdraw coming soon!");
-                }}
-              >
+          <div className="flex gap-4">
+            <a
+              href={selectedConfig?.explorer ? `${selectedConfig.explorer}${selectedAddress}` : "#"}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-transparent border border-[#333] text-white text-sm font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
+            >
+              <ExternalLink className="w-4 h-4" />
+              View
+            </a>
+            <button
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white text-black text-sm font-bold uppercase tracking-wider hover:bg-[#ddd] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isWithdrawing || !balance || parseFloat(balance) === 0}
+              onClick={async () => {
+                if (!balance || parseFloat(balance) === 0) {
+                  alert("No balance to withdraw");
+                  return;
+                }
+
+                if (!confirm(`Withdraw all funds (${parseFloat(balance).toFixed(6)} ${selectedConfig?.name?.includes("Cronos") ? "TCRO" : "ETH"}) to your wallet?`)) {
+                  return;
+                }
+
+                setIsWithdrawing(true);
+                try {
+                  const response = await fetch("/api/agent-wallet/withdraw", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ tokenId }),
+                  });
+
+                  const data = await response.json();
+
+                  if (!response.ok) {
+                    throw new Error(data.error || "Withdrawal failed");
+                  }
+
+                  alert(`Successfully withdrew ${data.amount} ${selectedConfig?.name?.includes("Cronos") ? "TCRO" : "ETH"}!\nTx: ${data.txHash}`);
+                  fetchBalance(); // Refresh balance after withdrawal
+                } catch (error: any) {
+                  alert(`Withdrawal failed: ${error.message}`);
+                  console.error("Withdraw error:", error);
+                } finally {
+                  setIsWithdrawing(false);
+                }
+              }}
+            >
+              {isWithdrawing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
                 <ArrowUpRight className="w-4 h-4" />
-                Withdraw
-              </button>
-            </div>
-          )}
+              )}
+              {isWithdrawing ? "Withdrawing..." : "Withdraw"}
+            </button>
+          </div>
         </div>
       )}
 
