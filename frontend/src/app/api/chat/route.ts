@@ -17,7 +17,7 @@ import { executeAgentSwap } from "@/lib/agent-actions";
 
 // Get NFT contract address for session credits
 const CHAIN_ID = process.env.NEXT_PUBLIC_CHAIN_ID || "11155111";
-const CHAIN_ID_STRING = CHAIN_ID as "31337" | "11155111";
+const CHAIN_ID_STRING = CHAIN_ID as "31337" | "11155111" | "338" | "97";
 const NFT_CONTRACT_ADDRESS = contractAddresses[CHAIN_ID_STRING]?.AgentNFT;
 
 // Configuration
@@ -205,6 +205,94 @@ Your tokens will arrive on ${bridgeData.dstChain} shortly.`;
       }
     }
 
+    // Handle Four.meme confirmation messages
+    if (message.startsWith("CONFIRM_MEME_CREATE:")) {
+      try {
+        const data = JSON.parse(message.replace("CONFIRM_MEME_CREATE:", ""));
+        console.log("[Chat] Executing confirmed meme token creation:", data);
+        const { createMemeToken } = await import("@/lib/fourmeme");
+        const chainAddrs = contractAddresses[CHAIN_ID_STRING];
+        const result = await createMemeToken({
+          ...data,
+          backendPrivateKey: process.env.BACKEND_PRIVATE_KEY!,
+          agentTokenId: agentId,
+          agentNFTContract: chainAddrs?.AgentNFT,
+          callerAddress: userAddress,
+          pkpPublicKey: data.pkpPublicKey,
+          pkpAddress: data.pkpAddress,
+          verificationChainId: parseInt(CHAIN_ID),
+          verificationRpcUrl: process.env.BSC_TESTNET_RPC_URL || "https://data-seed-prebsc-1-s1.binance.org:8545",
+        });
+        return new Response(
+          `✅ **Meme Token Created!**\n\n- Token: ${data.name} ($${data.ticker})\n- Address: \`${result.tokenAddress || "pending"}\`\n- Tx: \`${result.txHash}\`\n- [View on BscScan](https://bscscan.com/tx/${result.txHash})`,
+          { headers: { "Content-Type": "text/plain" } }
+        );
+      } catch (error: any) {
+        console.error("[Chat] Meme token creation failed:", error);
+        return new Response(`❌ **Token Creation Failed**\n\n${error.message}`, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      }
+    }
+
+    if (message.startsWith("CONFIRM_MEME_BUY:")) {
+      try {
+        const data = JSON.parse(message.replace("CONFIRM_MEME_BUY:", ""));
+        console.log("[Chat] Executing confirmed meme buy:", data);
+        const { buyMemeToken } = await import("@/lib/fourmeme");
+        const chainAddrs = contractAddresses[CHAIN_ID_STRING];
+        const result = await buyMemeToken({
+          ...data,
+          backendPrivateKey: process.env.BACKEND_PRIVATE_KEY!,
+          agentTokenId: agentId,
+          agentNFTContract: chainAddrs?.AgentNFT,
+          callerAddress: userAddress,
+          pkpPublicKey: data.pkpPublicKey,
+          pkpAddress: data.pkpAddress,
+          verificationChainId: parseInt(CHAIN_ID),
+          verificationRpcUrl: process.env.BSC_TESTNET_RPC_URL || "https://data-seed-prebsc-1-s1.binance.org:8545",
+        });
+        return new Response(
+          `✅ **Buy Successful!**\n\n- Spent: ${data.amountBNB} BNB\n- Estimated tokens: ${result.estimatedTokens || "N/A"}\n- Tx: \`${result.txHash}\`\n- [View on BscScan](https://bscscan.com/tx/${result.txHash})`,
+          { headers: { "Content-Type": "text/plain" } }
+        );
+      } catch (error: any) {
+        console.error("[Chat] Meme buy failed:", error);
+        return new Response(`❌ **Buy Failed**\n\n${error.message}`, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      }
+    }
+
+    if (message.startsWith("CONFIRM_MEME_SELL:")) {
+      try {
+        const data = JSON.parse(message.replace("CONFIRM_MEME_SELL:", ""));
+        console.log("[Chat] Executing confirmed meme sell:", data);
+        const { sellMemeToken } = await import("@/lib/fourmeme");
+        const chainAddrs = contractAddresses[CHAIN_ID_STRING];
+        const result = await sellMemeToken({
+          ...data,
+          backendPrivateKey: process.env.BACKEND_PRIVATE_KEY!,
+          agentTokenId: agentId,
+          agentNFTContract: chainAddrs?.AgentNFT,
+          callerAddress: userAddress,
+          pkpPublicKey: data.pkpPublicKey,
+          pkpAddress: data.pkpAddress,
+          verificationChainId: parseInt(CHAIN_ID),
+          verificationRpcUrl: process.env.BSC_TESTNET_RPC_URL || "https://data-seed-prebsc-1-s1.binance.org:8545",
+        });
+        return new Response(
+          `✅ **Sell Successful!**\n\n- Sold: ${data.tokenAmount} tokens\n- Estimated BNB: ${result.estimatedBNB || "N/A"}\n- Tx: \`${result.txHash}\`\n- [View on BscScan](https://bscscan.com/tx/${result.txHash})`,
+          { headers: { "Content-Type": "text/plain" } }
+        );
+      } catch (error: any) {
+        console.error("[Chat] Meme sell failed:", error);
+        return new Response(`❌ **Sell Failed**\n\n${error.message}`, {
+          headers: { "Content-Type": "text/plain" },
+        });
+      }
+    }
+
     // Fetch the agent's PKP wallet address
     let agentWalletAddress = "";
     try {
@@ -251,15 +339,87 @@ Your tokens will arrive on ${bridgeData.dstChain} shortly.`;
         }),
         execute: async ({ srcChain, dstChain, amount, token }: { srcChain: string; dstChain: string; amount: string; token: string }) => {
           console.log(`[Chat Tool] bridge_tokens called: ${amount} ${token} from ${srcChain} to ${dstChain}`);
-          const result = `BRIDGE_CONFIRMATION:${JSON.stringify({ 
-            srcChain, 
-            dstChain, 
-            amount, 
+          const result = `BRIDGE_CONFIRMATION:${JSON.stringify({
+            srcChain,
+            dstChain,
+            amount,
             token: token || "ETH",
             walletAddress: agentWalletAddress
           })}`;
           console.log(`[Chat Tool] bridge_tokens returning: ${result}`);
           return result;
+        },
+      }),
+
+      // Four.meme tools
+      create_meme_token: tool({
+        description: "Create a new meme token on Four.meme (BSC). If no image URL is provided, an AI-generated image will be created automatically.",
+        inputSchema: z.object({
+          name: z.string().describe("Token name (e.g., 'DogeCoin 2.0')"),
+          ticker: z.string().describe("Token ticker/symbol (e.g., 'DOGE2')"),
+          description: z.string().describe("Brief description of the token"),
+          imageUrl: z.string().optional().describe("Optional image URL for the token logo"),
+        }),
+        execute: async ({ name, ticker, description, imageUrl }: { name: string; ticker: string; description: string; imageUrl?: string }) => {
+          console.log(`[Chat Tool] create_meme_token called: ${name} ($${ticker})`);
+          return `MEME_CREATE_CONFIRMATION:${JSON.stringify({ name, ticker, description, imageUrl, walletAddress: agentWalletAddress })}`;
+        },
+      }),
+      buy_meme_token: tool({
+        description: "Buy a meme token on Four.meme's bonding curve using BNB",
+        inputSchema: z.object({
+          tokenAddress: z.string().describe("The token contract address on BSC"),
+          amountBNB: z.string().describe("Amount of BNB to spend (e.g., '0.1')"),
+        }),
+        execute: async ({ tokenAddress, amountBNB }: { tokenAddress: string; amountBNB: string }) => {
+          console.log(`[Chat Tool] buy_meme_token called: ${amountBNB} BNB for ${tokenAddress}`);
+          return `MEME_BUY_CONFIRMATION:${JSON.stringify({ tokenAddress, amountBNB, walletAddress: agentWalletAddress })}`;
+        },
+      }),
+      sell_meme_token: tool({
+        description: "Sell a meme token on Four.meme's bonding curve for BNB",
+        inputSchema: z.object({
+          tokenAddress: z.string().describe("The token contract address on BSC"),
+          tokenAmount: z.string().describe("Amount of tokens to sell"),
+        }),
+        execute: async ({ tokenAddress, tokenAmount }: { tokenAddress: string; tokenAmount: string }) => {
+          console.log(`[Chat Tool] sell_meme_token called: sell ${tokenAmount} of ${tokenAddress}`);
+          return `MEME_SELL_CONFIRMATION:${JSON.stringify({ tokenAddress, tokenAmount, walletAddress: agentWalletAddress })}`;
+        },
+      }),
+      get_trending_meme_tokens: tool({
+        description: "Get trending meme tokens on Four.meme by volume. Use when user asks about popular, trending, or hot meme tokens.",
+        inputSchema: z.object({}),
+        execute: async () => {
+          console.log("[Chat Tool] get_trending_meme_tokens called");
+          const { getTrendingTokens } = await import("@/lib/fourmeme");
+          const tokens = await getTrendingTokens();
+          return JSON.stringify(tokens);
+        },
+      }),
+      get_meme_token_info: tool({
+        description: "Get detailed info about a Four.meme token including price, bonding curve progress, and liquidity status",
+        inputSchema: z.object({
+          tokenAddress: z.string().describe("The token contract address on BSC"),
+        }),
+        execute: async ({ tokenAddress }: { tokenAddress: string }) => {
+          console.log(`[Chat Tool] get_meme_token_info called: ${tokenAddress}`);
+          const { getTokenInfo } = await import("@/lib/fourmeme");
+          const info = await getTokenInfo(tokenAddress);
+          return JSON.stringify(info);
+        },
+      }),
+      get_meme_token_balance: tool({
+        description: "Check the agent's balance of a specific meme token on BSC",
+        inputSchema: z.object({
+          tokenAddress: z.string().describe("The token contract address on BSC"),
+        }),
+        execute: async ({ tokenAddress }: { tokenAddress: string }) => {
+          console.log(`[Chat Tool] get_meme_token_balance called: ${tokenAddress}`);
+          if (!agentWalletAddress) return JSON.stringify({ error: "Agent wallet not found" });
+          const { getMemeTokenBalance } = await import("@/lib/fourmeme");
+          const balance = await getMemeTokenBalance(tokenAddress, agentWalletAddress);
+          return JSON.stringify(balance);
         },
       }),
     };

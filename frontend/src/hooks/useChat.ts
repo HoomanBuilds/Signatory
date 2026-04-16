@@ -126,6 +126,26 @@ export function useChat(
     walletAddress?: string;
   } | null>(null);
   const [isBridging, setIsBridging] = useState(false);
+  const [pendingMemeCreate, setPendingMemeCreate] = useState<{
+    name: string;
+    ticker: string;
+    description: string;
+    imageUrl?: string;
+    walletAddress?: string;
+  } | null>(null);
+  const [isMemeCreating, setIsMemeCreating] = useState(false);
+  const [pendingMemeBuy, setPendingMemeBuy] = useState<{
+    tokenAddress: string;
+    amountBNB: string;
+    walletAddress?: string;
+  } | null>(null);
+  const [isMemeBuying, setIsMemeBuying] = useState(false);
+  const [pendingMemeSell, setPendingMemeSell] = useState<{
+    tokenAddress: string;
+    tokenAmount: string;
+    walletAddress?: string;
+  } | null>(null);
+  const [isMemeSelling, setIsMemeSelling] = useState(false);
 
 
   const confirmPayment = useCallback(async () => {
@@ -391,6 +411,69 @@ export function useChat(
         }
       }
 
+      // Check for meme token create confirmation
+      if (fullText.includes("MEME_CREATE_CONFIRMATION:")) {
+        const match = fullText.match(/MEME_CREATE_CONFIRMATION:(\{.*?\})/);
+        if (match) {
+          try {
+            const data = JSON.parse(match[1]);
+            setPendingMemeCreate(data);
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                ...newMessages[newMessages.length - 1],
+                content: `I'm ready to create **${data.name}** ($${data.ticker}) on Four.meme. Creation fee: 0.01 BNB. Please confirm below.`,
+              };
+              return newMessages;
+            });
+          } catch (e) {
+            console.error("Failed to parse meme create confirmation:", e);
+          }
+        }
+      }
+
+      // Check for meme token buy confirmation
+      if (fullText.includes("MEME_BUY_CONFIRMATION:")) {
+        const match = fullText.match(/MEME_BUY_CONFIRMATION:(\{.*?\})/);
+        if (match) {
+          try {
+            const data = JSON.parse(match[1]);
+            setPendingMemeBuy(data);
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                ...newMessages[newMessages.length - 1],
+                content: `I'm ready to buy meme tokens for **${data.amountBNB} BNB** on Four.meme. Please confirm below.`,
+              };
+              return newMessages;
+            });
+          } catch (e) {
+            console.error("Failed to parse meme buy confirmation:", e);
+          }
+        }
+      }
+
+      // Check for meme token sell confirmation
+      if (fullText.includes("MEME_SELL_CONFIRMATION:")) {
+        const match = fullText.match(/MEME_SELL_CONFIRMATION:(\{.*?\})/);
+        if (match) {
+          try {
+            const data = JSON.parse(match[1]);
+            setPendingMemeSell(data);
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                ...newMessages[newMessages.length - 1],
+                content: `I'm ready to sell **${data.tokenAmount}** tokens on Four.meme. Please confirm below.`,
+              };
+              return newMessages;
+            });
+          } catch (e) {
+            console.error("Failed to parse meme sell confirmation:", e);
+          }
+        }
+      }
+
       if (address) {
         const sessionsResponse = await fetch(
           `/api/chat/sessions?agentId=${agentId}&userAddress=${address}`
@@ -596,6 +679,171 @@ export function useChat(
     }]);
   }, []);
 
+  // Meme create confirmation flow
+  const confirmMemeCreate = useCallback(async () => {
+    if (!pendingMemeCreate || !agentId || !address || !tokenURI || !currentSessionId) return;
+
+    setIsMemeCreating(true);
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          agentId,
+          tokenURI,
+          message: `CONFIRM_MEME_CREATE:${JSON.stringify(pendingMemeCreate)}`,
+          useMemory: true,
+          sessionId: currentSessionId,
+          personality,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Token creation failed");
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("No response body");
+
+      const assistantMessage: Message = { role: "assistant", content: "", timestamp: Date.now() };
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      let fullText = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = { ...newMessages[newMessages.length - 1], content: fullText };
+          return newMessages;
+        });
+      }
+    } catch (error: any) {
+      console.error("Meme create error:", error);
+      setMessages((prev) => [...prev, { role: "assistant", content: `Token creation failed: ${error.message}`, timestamp: Date.now() }]);
+    } finally {
+      setIsMemeCreating(false);
+      setPendingMemeCreate(null);
+    }
+  }, [pendingMemeCreate, agentId, address, tokenURI, currentSessionId, personality]);
+
+  const cancelMemeCreate = useCallback(() => {
+    setPendingMemeCreate(null);
+    setMessages((prev) => [...prev, { role: "assistant", content: "Token creation cancelled.", timestamp: Date.now() }]);
+  }, []);
+
+  // Meme buy confirmation flow
+  const confirmMemeBuy = useCallback(async () => {
+    if (!pendingMemeBuy || !agentId || !address || !tokenURI || !currentSessionId) return;
+
+    setIsMemeBuying(true);
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          agentId,
+          tokenURI,
+          message: `CONFIRM_MEME_BUY:${JSON.stringify(pendingMemeBuy)}`,
+          useMemory: true,
+          sessionId: currentSessionId,
+          personality,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Buy failed");
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("No response body");
+
+      const assistantMessage: Message = { role: "assistant", content: "", timestamp: Date.now() };
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      let fullText = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = { ...newMessages[newMessages.length - 1], content: fullText };
+          return newMessages;
+        });
+      }
+    } catch (error: any) {
+      console.error("Meme buy error:", error);
+      setMessages((prev) => [...prev, { role: "assistant", content: `Buy failed: ${error.message}`, timestamp: Date.now() }]);
+    } finally {
+      setIsMemeBuying(false);
+      setPendingMemeBuy(null);
+    }
+  }, [pendingMemeBuy, agentId, address, tokenURI, currentSessionId, personality]);
+
+  const cancelMemeBuy = useCallback(() => {
+    setPendingMemeBuy(null);
+    setMessages((prev) => [...prev, { role: "assistant", content: "Buy cancelled.", timestamp: Date.now() }]);
+  }, []);
+
+  // Meme sell confirmation flow
+  const confirmMemeSell = useCallback(async () => {
+    if (!pendingMemeSell || !agentId || !address || !tokenURI || !currentSessionId) return;
+
+    setIsMemeSelling(true);
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          userAddress: address,
+          agentId,
+          tokenURI,
+          message: `CONFIRM_MEME_SELL:${JSON.stringify(pendingMemeSell)}`,
+          useMemory: true,
+          sessionId: currentSessionId,
+          personality,
+        }),
+      });
+
+      if (!response.ok) throw new Error("Sell failed");
+
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+      if (!reader) throw new Error("No response body");
+
+      const assistantMessage: Message = { role: "assistant", content: "", timestamp: Date.now() };
+      setMessages((prev) => [...prev, assistantMessage]);
+
+      let fullText = "";
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        fullText += chunk;
+        setMessages((prev) => {
+          const newMessages = [...prev];
+          newMessages[newMessages.length - 1] = { ...newMessages[newMessages.length - 1], content: fullText };
+          return newMessages;
+        });
+      }
+    } catch (error: any) {
+      console.error("Meme sell error:", error);
+      setMessages((prev) => [...prev, { role: "assistant", content: `Sell failed: ${error.message}`, timestamp: Date.now() }]);
+    } finally {
+      setIsMemeSelling(false);
+      setPendingMemeSell(null);
+    }
+  }, [pendingMemeSell, agentId, address, tokenURI, currentSessionId, personality]);
+
+  const cancelMemeSell = useCallback(() => {
+    setPendingMemeSell(null);
+    setMessages((prev) => [...prev, { role: "assistant", content: "Sell cancelled.", timestamp: Date.now() }]);
+  }, []);
+
   return {
     messages,
     sessions,
@@ -623,5 +871,17 @@ export function useChat(
     isBridging,
     confirmBridge,
     cancelBridge,
+    pendingMemeCreate,
+    isMemeCreating,
+    confirmMemeCreate,
+    cancelMemeCreate,
+    pendingMemeBuy,
+    isMemeBuying,
+    confirmMemeBuy,
+    cancelMemeBuy,
+    pendingMemeSell,
+    isMemeSelling,
+    confirmMemeSell,
+    cancelMemeSell,
   };
 }

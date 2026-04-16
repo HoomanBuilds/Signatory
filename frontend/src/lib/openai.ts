@@ -2,6 +2,42 @@ import { openai } from "@ai-sdk/openai";
 import { generateText, streamText } from "ai";
 
 /**
+ * Generate a meme token logo image using DALL-E 3 (raw API call)
+ */
+export async function generateMemeTokenImage(
+  tokenName: string,
+  description: string
+): Promise<Buffer> {
+  const prompt = `Create a fun, memorable crypto meme token logo for "${tokenName}". ${description}. Style: bold, colorful, circular logo suitable for a cryptocurrency token. No text in the image.`;
+
+  const res = await fetch("https://api.openai.com/v1/images/generations", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "dall-e-3",
+      prompt,
+      n: 1,
+      size: "1024x1024",
+      response_format: "b64_json",
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.text();
+    throw new Error(`DALL-E image generation failed: ${res.status} - ${err}`);
+  }
+
+  const data = await res.json();
+  const b64 = data.data?.[0]?.b64_json;
+  if (!b64) throw new Error("DALL-E returned no image data");
+
+  return Buffer.from(b64, "base64");
+}
+
+/**
  * Build personality-injected system prompt from agent metadata
  */
 export function buildPersonalityPrompt(personality: any): string {
@@ -32,8 +68,28 @@ You have access to blockchain tools. When users request financial operations, yo
    - Call this tool IMMEDIATELY when user requests a bridge - do NOT ask for confirmation first
    - The tool will return a confirmation prompt for the user
 
+3. **create_meme_token**: Use this when the user wants to create/launch a new meme token on Four.meme
+   - Call this tool IMMEDIATELY - the tool handles confirmation
+   - AI will auto-generate a token image if the user doesn't provide one
+
+4. **buy_meme_token**: Use this when the user wants to buy a meme token on Four.meme's bonding curve
+   - Call this tool IMMEDIATELY with the token address and BNB amount
+
+5. **sell_meme_token**: Use this when the user wants to sell a meme token on Four.meme
+   - Call this tool IMMEDIATELY with the token address and amount
+
+6. **get_trending_meme_tokens**: Use this when the user asks about trending, popular, or hot meme tokens on Four.meme
+
+7. **get_meme_token_info**: Use this to check a token's price, bonding curve progress, or liquidity status
+
+8. **get_meme_token_balance**: Use this to check how many tokens the agent holds
+
 When a user says things like "swap", "exchange", "trade", "convert" tokens - USE THE swap_tokens TOOL.
 When a user says things like "bridge", "transfer to another chain", "move to Base/Polygon/etc" - USE THE bridge_tokens TOOL.
+When a user says things like "create meme token", "launch token", "deploy token" - USE THE create_meme_token TOOL.
+When a user says things like "buy meme", "buy token on four.meme" - USE THE buy_meme_token TOOL.
+When a user says things like "sell meme", "sell token" - USE THE sell_meme_token TOOL.
+When a user says things like "trending", "popular tokens", "hot memes" - USE THE get_trending_meme_tokens TOOL.
 
 DO NOT ask "would you like to proceed?" - just call the tool directly. The tool handles confirmation.
 

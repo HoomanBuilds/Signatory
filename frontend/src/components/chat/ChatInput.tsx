@@ -35,22 +35,24 @@ export default function ChatInput({
   };
 
   return (
-    <div className="bg-black border-t border-[#333] p-6">
-      <div className="flex gap-4 items-end max-w-4xl mx-auto">
-        <textarea
-          ref={textareaRef}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          onKeyDown={handleKeyPress}
-          placeholder={isReadOnly ? "This chat is read-only" : `Message ${agentName}...`}
-          disabled={isSending || isReadOnly}
-          rows={1}
-          className="flex-1 px-4 py-4 bg-[#111] text-white placeholder-[#666] focus:outline-none focus:ring-1 focus:ring-white border border-[#333] disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[56px] max-h-[200px] overflow-y-auto scrollbar-hide font-mono text-sm"
-        />
+    <div className="bg-background border-t border-border p-6">
+      <div className="flex gap-3 items-end max-w-4xl mx-auto">
+        <div className="flex-1 relative">
+          <textarea
+            ref={textareaRef}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder={isReadOnly ? "This chat is read-only" : `Message ${agentName}...`}
+            disabled={isSending || isReadOnly}
+            rows={1}
+            className="w-full px-4 py-4 bg-secondary text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-neon/50 border border-border focus:border-neon/30 disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[56px] max-h-[200px] overflow-y-auto scrollbar-hide text-sm transition-all"
+          />
+        </div>
         <button
           onClick={onSend}
           disabled={!value.trim() || isSending || isReadOnly}
-          className="px-6 py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-[#ddd] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 h-[56px] border border-white"
+          className="px-6 py-4 bg-primary text-primary-foreground font-bold uppercase tracking-wider hover:bg-foreground/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2 h-[56px] border border-primary"
         >
           {isReadOnly ? (
             <Lock className="w-5 h-5" />

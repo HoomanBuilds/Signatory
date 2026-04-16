@@ -3,6 +3,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import SwapConfirmationCard from "./SwapConfirmationCard";
 import BridgeConfirmationCard from "./BridgeConfirmationCard";
+import MemeCreateConfirmationCard from "./MemeCreateConfirmationCard";
+import MemeBuySellConfirmationCard from "./MemeBuySellConfirmationCard";
 
 interface ChatMessagesProps {
   messages: Message[];
@@ -28,6 +30,32 @@ interface ChatMessagesProps {
   isBridging?: boolean;
   onConfirmBridge?: () => void;
   onCancelBridge?: () => void;
+  pendingMemeCreate?: {
+    name: string;
+    ticker: string;
+    description: string;
+    imageUrl?: string;
+    walletAddress?: string;
+  } | null;
+  isMemeCreating?: boolean;
+  onConfirmMemeCreate?: () => void;
+  onCancelMemeCreate?: () => void;
+  pendingMemeBuy?: {
+    tokenAddress: string;
+    amountBNB: string;
+    walletAddress?: string;
+  } | null;
+  isMemeBuying?: boolean;
+  onConfirmMemeBuy?: () => void;
+  onCancelMemeBuy?: () => void;
+  pendingMemeSell?: {
+    tokenAddress: string;
+    tokenAmount: string;
+    walletAddress?: string;
+  } | null;
+  isMemeSelling?: boolean;
+  onConfirmMemeSell?: () => void;
+  onCancelMemeSell?: () => void;
 }
 
 export default function ChatMessages({
@@ -42,6 +70,18 @@ export default function ChatMessages({
   isBridging = false,
   onConfirmBridge,
   onCancelBridge,
+  pendingMemeCreate = null,
+  isMemeCreating = false,
+  onConfirmMemeCreate,
+  onCancelMemeCreate,
+  pendingMemeBuy = null,
+  isMemeBuying = false,
+  onConfirmMemeBuy,
+  onCancelMemeBuy,
+  pendingMemeSell = null,
+  isMemeSelling = false,
+  onConfirmMemeSell,
+  onCancelMemeSell,
 }: ChatMessagesProps) {
   if (messages.length === 0 && !isThinking) {
     return (
@@ -208,7 +248,53 @@ export default function ChatMessages({
           />
         </div>
       )}
-      
+
+      {/* Meme Create Confirmation Card */}
+      {pendingMemeCreate && onConfirmMemeCreate && onCancelMemeCreate && (
+        <div className="flex justify-start">
+          <MemeCreateConfirmationCard
+            name={pendingMemeCreate.name}
+            ticker={pendingMemeCreate.ticker}
+            description={pendingMemeCreate.description}
+            imageUrl={pendingMemeCreate.imageUrl}
+            walletAddress={pendingMemeCreate.walletAddress}
+            onConfirm={onConfirmMemeCreate}
+            onCancel={onCancelMemeCreate}
+            isLoading={isMemeCreating}
+          />
+        </div>
+      )}
+
+      {/* Meme Buy Confirmation Card */}
+      {pendingMemeBuy && onConfirmMemeBuy && onCancelMemeBuy && (
+        <div className="flex justify-start">
+          <MemeBuySellConfirmationCard
+            type="buy"
+            tokenAddress={pendingMemeBuy.tokenAddress}
+            amount={pendingMemeBuy.amountBNB}
+            walletAddress={pendingMemeBuy.walletAddress}
+            onConfirm={onConfirmMemeBuy}
+            onCancel={onCancelMemeBuy}
+            isLoading={isMemeBuying}
+          />
+        </div>
+      )}
+
+      {/* Meme Sell Confirmation Card */}
+      {pendingMemeSell && onConfirmMemeSell && onCancelMemeSell && (
+        <div className="flex justify-start">
+          <MemeBuySellConfirmationCard
+            type="sell"
+            tokenAddress={pendingMemeSell.tokenAddress}
+            amount={pendingMemeSell.tokenAmount}
+            walletAddress={pendingMemeSell.walletAddress}
+            onConfirm={onConfirmMemeSell}
+            onCancel={onCancelMemeSell}
+            isLoading={isMemeSelling}
+          />
+        </div>
+      )}
+
       {isThinking && (
         <div className="flex justify-start">
           <div className="border border-[#333] bg-[#111] p-4 flex items-center space-x-2">
