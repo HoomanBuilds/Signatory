@@ -24,6 +24,16 @@ const NETWORKS = {
     chainId: 11155111,
     rpcUrl: "https://eth-sepolia.g.alchemy.com/v2/A_0usON465b2gUAMboNs3",
   },
+  bsc_testnet: {
+    name: "bsc-testnet",
+    chainId: 97,
+    rpcUrl: "https://data-seed-prebsc-1-s1.binance.org:8545",
+  },
+  bsc_mainnet: {
+    name: "bsc-mainnet",
+    chainId: 56,
+    rpcUrl: "https://bsc-dataseed.binance.org",
+  },
 };
 
 /**
@@ -73,5 +83,27 @@ export function getSepoliaProvider(): ethers.providers.JsonRpcProvider {
   return createProvider(rpcUrl, {
     name: NETWORKS.sepolia.name,
     chainId: NETWORKS.sepolia.chainId,
+  });
+}
+
+/**
+ * Create BSC Testnet provider
+ */
+export function getBscTestnetProvider(): ethers.providers.StaticJsonRpcProvider {
+  const rpcUrl = process.env.BSC_TESTNET_RPC_URL || NETWORKS.bsc_testnet.rpcUrl;
+  return createProvider(rpcUrl, {
+    name: NETWORKS.bsc_testnet.name,
+    chainId: NETWORKS.bsc_testnet.chainId,
+  });
+}
+
+/**
+ * Create BSC Mainnet provider
+ */
+export function getBscMainnetProvider(): ethers.providers.StaticJsonRpcProvider {
+  const rpcUrl = process.env.BSC_MAINNET_RPC_URL || NETWORKS.bsc_mainnet.rpcUrl;
+  return createProvider(rpcUrl, {
+    name: NETWORKS.bsc_mainnet.name,
+    chainId: NETWORKS.bsc_mainnet.chainId,
   });
 }

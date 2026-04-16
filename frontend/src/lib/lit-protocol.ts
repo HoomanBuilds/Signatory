@@ -150,7 +150,9 @@ export async function executeAgentSign(
   callerAddress: string,
   pkpPublicKey: string,
   toSign: Uint8Array,
-  chain: string = "cronos"
+  chain: string = "cronos",
+  verificationChainId: number = 338,
+  verificationRpcUrl: string = "https://evm-t3.cronos.org"
 ): Promise<{ signature: string; recid: number }> {
   console.log(`[Lit] Executing agent sign for token ${agentTokenId}`);
   console.log(`[Lit] Caller: ${callerAddress}`);
@@ -168,7 +170,8 @@ export async function executeAgentSign(
       toSign: Array.from(toSign),
       publicKey: pkpPublicKey,
       chain,
-      chainId: 338, // Cronos Testnet
+      chainId: verificationChainId,
+      verificationRpcUrl,
     },
   });
 
@@ -205,7 +208,9 @@ export async function signAgentTransaction(
     maxFeePerGas?: string;
     maxPriorityFeePerGas?: string;
   },
-  chain: string = "cronos"
+  chain: string = "cronos",
+  verificationChainId: number = 338,
+  verificationRpcUrl: string = "https://evm-t3.cronos.org"
 ): Promise<string> {
   console.log(`[Lit] Signing transaction for agent ${agentTokenId}`);
 
@@ -230,7 +235,9 @@ export async function signAgentTransaction(
     callerAddress,
     pkpPublicKey,
     toSign,
-    chain
+    chain,
+    verificationChainId,
+    verificationRpcUrl
   );
 
   console.log(`[Lit] Raw signature: ${signature}`);

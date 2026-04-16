@@ -31,8 +31,8 @@ const go = async () => {
 
   console.log('Call data:', callData);
 
-  // Cronos Testnet RPC URL
-  const rpcUrl = 'https://evm-t3.cronos.org';
+  // RPC URL for ownership verification (passed via jsParams, defaults to Cronos Testnet)
+  const rpcUrl = verificationRpcUrl || 'https://evm-t3.cronos.org';
 
   // Make direct RPC call using fetch
   const response = await fetch(rpcUrl, {
