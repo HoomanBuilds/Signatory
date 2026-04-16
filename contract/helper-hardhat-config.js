@@ -15,6 +15,14 @@ const networkConfig = {
         name: "cronos",
         blockConfirmations: 6,
     },
+    97: {
+        name: "bscTestnet",
+        blockConfirmations: 3,
+    },
+    56: {
+        name: "bsc",
+        blockConfirmations: 5,
+    },
 }
 
 const developmentChains = ["hardhat", "localhost"]
