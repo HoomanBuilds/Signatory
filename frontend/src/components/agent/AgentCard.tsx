@@ -24,9 +24,9 @@ export default function AgentCard({
   return (
     <Link
       href={`/agent/${tokenId}`}
-      className="block bg-black border border-[#333] hover:border-white transition-colors duration-200 group relative"
+      className="block bg-background border border-border hover:border-foreground/30 transition-all duration-300 group relative"
     >
-      <div className="aspect-square bg-[#111] border-b border-[#333] flex items-center justify-center overflow-hidden relative">
+      <div className="aspect-square bg-secondary border-b border-border flex items-center justify-center overflow-hidden relative">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -37,19 +37,19 @@ export default function AgentCard({
             loading="lazy"
           />
         ) : (
-          <Bot className="w-12 h-12 text-[#333]" />
+          <Bot className="w-12 h-12 text-muted-foreground/30" />
         )}
         {isListed && price && (
-          <div className="absolute top-0 right-0 px-2 py-1 bg-white text-black text-xs font-bold z-10">
+          <div className="absolute top-0 right-0 px-2 py-1 bg-primary text-primary-foreground text-xs font-bold z-10">
             {price} TCRO
           </div>
         )}
       </div>
       <div className="p-4">
-        <h3 className="text-sm font-bold text-white mb-1 truncate group-hover:underline decoration-1 underline-offset-4">
+        <h3 className="text-sm font-bold text-foreground mb-1 truncate group-hover:text-neon transition-colors">
           {name}
         </h3>
-        <span className="inline-block text-[#666] text-xs uppercase tracking-wider">
+        <span className="inline-block text-muted-foreground text-xs uppercase tracking-wider">
           Level {level}
         </span>
       </div>

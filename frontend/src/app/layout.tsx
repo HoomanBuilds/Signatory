@@ -10,7 +10,7 @@ import {
   type AuthenticationStatus,
 } from "@rainbow-me/rainbowkit";
 import { WagmiProvider } from "wagmi";
-import { hardhat, sepolia, type Chain } from "wagmi/chains";
+import { hardhat, sepolia, bscTestnet, type Chain } from "wagmi/chains";
 import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
 import { CHAIN_ID } from "@/lib/config";
 import { createSiweMessage } from "viem/siwe";
@@ -46,6 +46,8 @@ const getSelectedChain = () => {
       return sepolia;
     case 338:
       return cronosTestnet;
+    case 97:
+      return bscTestnet;
     default:
       return hardhat;
   }
@@ -141,6 +143,14 @@ export default function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className="antialiased">
         <WagmiProvider config={config}>
           <QueryClientProvider client={queryClient}>

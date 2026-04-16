@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import { useMarketplaceStats, useBuyAgent } from "@/hooks/useMarketplaceContract";
 import { formatEther, parseEther } from "viem";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 interface ListedAgent {
   tokenId: number;
@@ -29,21 +30,17 @@ export default function MarketplacePage() {
   const { data: stats } = useMarketplaceStats();
   const { buyAgent, isPending: isBuying, isConfirming: isBuyConfirming, isSuccess: isBuySuccess } = useBuyAgent();
 
-  // Fetch marketplace listings
   useEffect(() => {
     async function fetchListings() {
       setIsLoadingListings(true);
-
       try {
         const response = await fetch("/api/marketplace-listing", {
           cache: "no-store",
         });
-
         if (!response.ok) {
           setIsLoadingListings(false);
           return;
         }
-
         const listings = await response.json();
         setListedAgents(listings);
       } catch (error) {
@@ -52,11 +49,9 @@ export default function MarketplacePage() {
         setIsLoadingListings(false);
       }
     }
-
     fetchListings();
   }, []);
 
-  // Handle successful purchase
   useEffect(() => {
     if (isBuySuccess && selectedAgent) {
       setIsBuyModalOpen(false);
@@ -74,110 +69,120 @@ export default function MarketplacePage() {
     buyAgent(selectedAgent.tokenId, parseEther(selectedAgent.price));
   };
 
-  // Filter listings based on search
   const filteredListings = listedAgents.filter((agent) =>
     agent.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <Layout>
-      <div className="min-h-screen bg-black text-white p-4 lg:p-12">
+      <div className="min-h-screen bg-background text-foreground p-4 lg:p-12">
         <div className="max-w-7xl mx-auto">
           {/* Header */}
-          <div className="mb-12 animate-in fade-in slide-in-from-bottom-4 duration-700">
-            <h1 className="text-5xl md:text-7xl font-black text-white mb-4 uppercase tracking-tighter">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-12"
+          >
+            <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2 block">
+              Trade
+            </span>
+            <h1 className="text-5xl md:text-7xl font-extrabold text-foreground mb-4 uppercase tracking-tighter">
               Marketplace
             </h1>
-            <p className="text-xl text-[#666] font-mono max-w-2xl border-l-2 border-white pl-6">
+            <p className="text-lg text-muted-foreground max-w-2xl border-l-2 border-neon/30 pl-6">
               Discover and trade unique AI agents. Build your autonomous squad.
             </p>
-          </div>
+          </motion.div>
 
           {/* Stats */}
           {stats && Array.isArray(stats) && stats.length === 4 ? (
-            <div className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-[#333] mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-100">
-              <div className="border-r border-b border-[#333] p-6 hover:bg-[#111] transition-colors">
-                <div className="text-[10px] text-[#666] uppercase tracking-wider mb-2">Listed</div>
-                <div className="text-3xl font-bold text-white font-mono">
-                  {listedAgents.length}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-border mb-12"
+            >
+              {[
+                { label: "Listed", value: listedAgents.length },
+                { label: "Sales", value: Number(stats[1]) },
+                { label: "Volume", value: `${formatEther(stats[2] as bigint)} TCRO` },
+                { label: "Fee", value: `${Number(stats[3]) / 100}%` },
+              ].map((stat) => (
+                <div key={stat.label} className="border-r border-b border-border p-6 hover:bg-secondary/50 transition-colors">
+                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">{stat.label}</div>
+                  <div className="text-2xl font-bold text-foreground font-mono">
+                    {stat.value}
+                  </div>
                 </div>
-              </div>
-              <div className="border-r border-b border-[#333] p-6 hover:bg-[#111] transition-colors">
-                <div className="text-[10px] text-[#666] uppercase tracking-wider mb-2">
-                  Sales
-                </div>
-                <div className="text-3xl font-bold text-white font-mono">
-                  {Number(stats[1])}
-                </div>
-              </div>
-              <div className="border-r border-b border-[#333] p-6 hover:bg-[#111] transition-colors">
-                <div className="text-[10px] text-[#666] uppercase tracking-wider mb-2">Volume</div>
-                <div className="text-3xl font-bold text-white font-mono">
-                  {formatEther(stats[2] as bigint)} TCRO
-                </div>
-              </div>
-              <div className="border-r border-b border-[#333] p-6 hover:bg-[#111] transition-colors">
-                <div className="text-[10px] text-[#666] uppercase tracking-wider mb-2">Fee</div>
-                <div className="text-3xl font-bold text-white font-mono">
-                  {Number(stats[3]) / 100}%
-                </div>
-              </div>
-            </div>
+              ))}
+            </motion.div>
           ) : null}
 
           {/* Search */}
-          <div className="relative mb-12 animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-            <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#666]" />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
+            className="relative mb-12"
+          >
+            <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
             <input
               type="text"
               placeholder="SEARCH AGENTS..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-16 pr-6 py-6 bg-black text-white placeholder-[#333] focus:outline-none focus:ring-0 border-b border-[#333] focus:border-white transition-all text-xl font-bold uppercase tracking-wider"
+              className="w-full pl-16 pr-6 py-5 bg-background text-foreground placeholder-muted-foreground/30 focus:outline-none focus:ring-0 border-b border-border focus:border-neon/30 transition-all text-lg font-bold uppercase tracking-wider"
             />
-          </div>
+          </motion.div>
 
           {/* Results count */}
-          <div className="mb-6 text-[#666] font-mono text-sm uppercase tracking-wide">
-            Showing <span className="text-white font-bold">{filteredListings.length}</span> listings
+          <div className="mb-6 text-muted-foreground text-sm uppercase tracking-wide">
+            Showing <span className="text-foreground font-bold">{filteredListings.length}</span> listings
           </div>
 
-          {/* Loading state */}
+          {/* Grid */}
           {isLoadingListings ? (
-            <div className="flex items-center justify-center py-20 border border-[#333] border-dashed">
-              <Loader2 className="w-8 h-8 text-white animate-spin" />
+            <div className="flex items-center justify-center py-20 border border-dashed border-border">
+              <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
             </div>
           ) : filteredListings.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {filteredListings.map((agent) => (
-                <AgentCardLarge
+              {filteredListings.map((agent, i) => (
+                <motion.div
                   key={agent.tokenId}
-                  tokenId={agent.tokenId}
-                  name={agent.name}
-                  level={agent.level}
-                  imageUrl={agent.imageUrl}
-                  price={agent.price}
-                  href={`/agent/${agent.tokenId}`}
-                  onBuyClick={() => handleBuyClick(agent)}
-                />
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.05, duration: 0.4 }}
+                >
+                  <AgentCardLarge
+                    tokenId={agent.tokenId}
+                    name={agent.name}
+                    level={agent.level}
+                    imageUrl={agent.imageUrl}
+                    price={agent.price}
+                    href={`/agent/${agent.tokenId}`}
+                    onBuyClick={() => handleBuyClick(agent)}
+                  />
+                </motion.div>
               ))}
             </div>
           ) : (
-            <div className="p-20 text-center border border-[#333] border-dashed">
-              <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">
+            <div className="p-20 text-center border border-dashed border-border">
+              <h3 className="text-xl font-bold text-foreground mb-2 uppercase tracking-wide">
                 No listings found
               </h3>
-              <p className="text-[#666] font-mono">
+              <p className="text-muted-foreground text-sm">
                 {searchQuery
                   ? "Try adjusting your search criteria"
-                  : "Be the first to list an agent!"}
+                  : "Be the first to list an agent"}
               </p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Buy Confirmation Modal */}
+      {/* Buy Modal */}
       {selectedAgent && (
         <BuyModal
           isOpen={isBuyModalOpen}

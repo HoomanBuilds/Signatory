@@ -113,6 +113,18 @@ export default function ChatSessionPage() {
     isBridging,
     confirmBridge,
     cancelBridge,
+    pendingMemeCreate,
+    isMemeCreating,
+    confirmMemeCreate,
+    cancelMemeCreate,
+    pendingMemeBuy,
+    isMemeBuying,
+    confirmMemeBuy,
+    cancelMemeBuy,
+    pendingMemeSell,
+    isMemeSelling,
+    confirmMemeSell,
+    cancelMemeSell,
   } = useChat(
     agentId,
     selectedAgentData?.name,
@@ -249,6 +261,18 @@ export default function ChatSessionPage() {
                   isBridging={isBridging}
                   onConfirmBridge={confirmBridge}
                   onCancelBridge={cancelBridge}
+                  pendingMemeCreate={pendingMemeCreate}
+                  isMemeCreating={isMemeCreating}
+                  onConfirmMemeCreate={confirmMemeCreate}
+                  onCancelMemeCreate={cancelMemeCreate}
+                  pendingMemeBuy={pendingMemeBuy}
+                  isMemeBuying={isMemeBuying}
+                  onConfirmMemeBuy={confirmMemeBuy}
+                  onCancelMemeBuy={cancelMemeBuy}
+                  pendingMemeSell={pendingMemeSell}
+                  isMemeSelling={isMemeSelling}
+                  onConfirmMemeSell={confirmMemeSell}
+                  onCancelMemeSell={cancelMemeSell}
                 />
               )}
 
