@@ -84,9 +84,9 @@ export function CreditsManager() {
 
   if (!address) {
     return (
-      <div className="bg-black p-8 border border-[#333] text-center">
-        <Coins className="w-12 h-12 mx-auto mb-3 text-[#666]" />
-        <p className="text-[#888]">
+      <div className="bg-background p-8 border border-ink-08 text-center">
+        <Coins className="w-12 h-12 mx-auto mb-3 text-ink-40" />
+        <p className="text-ink-40">
           Please connect your wallet to manage credits
         </p>
       </div>
@@ -95,8 +95,8 @@ export function CreditsManager() {
 
   if (loadingData) {
     return (
-      <div className="bg-black p-8 border border-[#333] text-center">
-        <Loader2 className="w-8 h-8 mx-auto text-white animate-spin" />
+      <div className="bg-background p-8 border border-ink-08 text-center">
+        <Loader2 className="w-8 h-8 mx-auto text-ink animate-spin" />
       </div>
     );
   }
@@ -104,38 +104,38 @@ export function CreditsManager() {
   return (
     <div className="space-y-6">
       {/* Balance Display */}
-      <div className="bg-[#111] p-8 border border-[#333]">
+      <div className="bg-surface-2 p-8 border border-ink-08">
         <div className="text-center">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Coins className="w-6 h-6 text-white" />
-            <h2 className="text-xl font-bold text-white uppercase tracking-tight">
+            <Coins className="w-6 h-6 text-sigil" />
+            <h2 className="text-xl font-display font-bold text-ink uppercase tracking-tight">
               Your Credits
             </h2>
           </div>
-          <p className="text-6xl font-bold text-white mb-2">{balance}</p>
-          <p className="text-[#666] text-sm uppercase tracking-wide">1 credit = 1 chat message</p>
+          <p className="text-6xl font-bold text-ink font-mono mb-2">{balance}</p>
+          <p className="text-ink-40 text-sm uppercase tracking-wide">1 credit = 1 chat message</p>
         </div>
       </div>
 
       {/* Free Tier Banner */}
       {canClaimFreeTier && (
-        <div className="bg-white p-6 border-2 border-white">
+        <div className="bg-sigil/10 p-6 border-2 border-sigil">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-black flex items-center justify-center shrink-0">
-              <Gift className="w-6 h-6 text-white" />
+            <div className="w-12 h-12 bg-sigil flex items-center justify-center shrink-0">
+              <Gift className="w-6 h-6 text-background" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-bold text-black mb-2 uppercase tracking-wide">
+              <h3 className="text-lg font-bold text-ink mb-2 uppercase tracking-wide">
                 Claim Your Free Credits!
               </h3>
-              <p className="text-black/70 mb-4">
+              <p className="text-ink-60 mb-4">
                 Get {freeTierAmount.toString()} free credits to start chatting
                 with your AI agents. One-time offer!
               </p>
               <button
                 onClick={handleClaimFreeTier}
                 disabled={processing}
-                className="px-6 py-3 bg-black text-white font-bold uppercase tracking-wider hover:bg-[#222] transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                className="btn-primary px-6 py-3 font-bold uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
                 {processing ? (
                   <>
@@ -152,11 +152,11 @@ export function CreditsManager() {
       )}
 
       {/* Buy Individual Credits */}
-      <div className="bg-black p-6 border border-[#333]">
-        <h3 className="text-lg font-bold text-white mb-2 uppercase tracking-wide">
+      <div className="bg-background p-6 border border-ink-08">
+        <h3 className="text-lg font-bold text-ink mb-2 uppercase tracking-wide">
           Buy Credits
         </h3>
-        <p className="text-sm text-[#666] mb-4">
+        <p className="text-sm text-ink-40 mb-4 font-mono">
           Price: {formatEther(creditPrice)} TCRO per credit
         </p>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -165,7 +165,7 @@ export function CreditsManager() {
               key={amount}
               onClick={() => handleBuyCredits(amount)}
               disabled={processing}
-              className="bg-[#111] border border-[#333] text-white py-4 px-4 font-bold uppercase tracking-wider hover:bg-white hover:text-black hover:border-white disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+              className="bg-surface-2 border border-ink-08 text-ink py-4 px-4 font-bold uppercase tracking-wider hover:bg-sigil hover:text-background hover:border-sigil disabled:opacity-50 disabled:cursor-not-allowed transition-all"
             >
               {amount} Credits
             </button>
@@ -175,10 +175,10 @@ export function CreditsManager() {
 
       {/* Credit Plans */}
       {plans.length > 0 && (
-        <div className="bg-black p-6 border border-[#333]">
+        <div className="bg-background p-6 border border-ink-08">
           <div className="flex items-center gap-2 mb-4">
-            <Sparkles className="w-5 h-5 text-white" />
-            <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+            <Sparkles className="w-5 h-5 text-sigil" />
+            <h3 className="text-lg font-bold text-ink uppercase tracking-wide">
               Credit Plans (Best Value)
             </h3>
           </div>
@@ -186,28 +186,28 @@ export function CreditsManager() {
             {plans.map((plan) => (
               <div
                 key={plan.id}
-                className="bg-[#111] border border-[#333] p-6 hover:border-white transition-all relative group"
+                className="bg-surface-2 border border-ink-08 p-6 hover:border-signal transition-all relative group"
               >
                 {Number(plan.discountPercent) > 0 && (
-                  <div className="absolute top-0 right-0 bg-white text-black text-xs font-bold px-3 py-1">
+                  <div className="absolute top-0 right-0 bg-sigil text-background text-xs font-bold px-3 py-1">
                     {plan.discountPercent.toString()}% OFF
                   </div>
                 )}
                 <div className="text-center mb-6">
-                  <p className="text-4xl font-bold text-white mb-1">
+                  <p className="text-4xl font-bold text-ink mb-1">
                     {plan.credits.toString()}
                   </p>
-                  <p className="text-xs text-[#666] uppercase tracking-wider">Credits</p>
+                  <p className="text-xs text-ink-40 uppercase tracking-wider">Credits</p>
                 </div>
                 <div className="text-center mb-6">
-                  <p className="text-xl font-bold text-white font-mono">
+                  <p className="text-xl font-bold text-ink font-mono">
                     {formatEther(plan.price)} TCRO
                   </p>
                 </div>
                 <button
                   onClick={() => handleBuyPlan(plan.id)}
                   disabled={processing}
-                  className="w-full bg-white text-black py-3 px-4 font-bold uppercase tracking-wider hover:bg-[#ddd] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+                  className="btn-primary w-full py-3 px-4 font-bold uppercase tracking-wider disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {processing ? "Processing..." : "Buy Plan"}
                 </button>
