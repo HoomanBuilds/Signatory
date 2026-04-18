@@ -34,44 +34,44 @@ export default function MemeBuySellConfirmationCard({
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="w-full max-w-sm"
     >
-      <div className="relative overflow-hidden border border-[#333] bg-black">
+      <div className="relative overflow-hidden border border-ink-08 bg-surface-1">
         {/* Header */}
-        <div className="relative px-5 py-4 border-b border-[#333]">
+        <div className="relative px-5 py-4 border-b border-ink-08">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#111] border border-[#333] flex items-center justify-center">
+            <div className="w-10 h-10 bg-surface-2 border border-ink-08 flex items-center justify-center">
               {isBuy ? (
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z" />
                 </svg>
               ) : (
-                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               )}
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wide">
+              <h3 className="text-lg font-bold text-ink uppercase tracking-wide">
                 {isBuy ? "Buy Meme Token" : "Sell Meme Token"}
               </h3>
-              <p className="text-xs text-[#666] font-mono">Four.meme · BSC Mainnet</p>
+              <p className="text-xs text-ink-40 font-mono">Four.meme · BSC Mainnet</p>
             </div>
           </div>
         </div>
 
         {/* Wallet */}
         {truncatedAddress && (
-          <div className="relative px-5 py-3 border-b border-[#333] bg-[#111]">
+          <div className="relative px-5 py-3 border-b border-ink-08 bg-surface-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-[#666] uppercase tracking-wider">Agent Wallet</span>
+              <span className="text-xs text-ink-40 uppercase tracking-wider">Agent Wallet</span>
               <div className="flex items-center gap-2">
-                <code className="text-xs font-mono text-white bg-black px-2 py-1 border border-[#333]">
+                <code className="text-xs font-mono text-ink bg-background px-2 py-1 border border-ink-08">
                   {truncatedAddress}
                 </code>
                 <a
                   href={`https://bscscan.com/address/${walletAddress}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white hover:text-[#ccc] transition-colors"
+                  className="text-ink hover:text-ink-40 transition-colors"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -88,55 +88,55 @@ export default function MemeBuySellConfirmationCard({
             {isBuy ? (
               <>
                 {/* Spending BNB */}
-                <div className="flex-1 text-center p-4 bg-[#111] border border-[#333]">
-                  <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">Spend</p>
-                  <p className="text-2xl font-bold text-white font-mono">{amount}</p>
-                  <p className="text-sm font-medium text-[#888]">BNB</p>
+                <div className="flex-1 text-center p-4 bg-surface-2 border border-ink-08">
+                  <p className="text-[10px] text-ink-40 uppercase tracking-wider mb-1">Spend</p>
+                  <p className="text-2xl font-bold text-ink font-mono">{amount}</p>
+                  <p className="text-sm font-medium text-ink-40">BNB</p>
                 </div>
                 {/* Arrow */}
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-white flex items-center justify-center">
-                    <svg className="w-5 h-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-10 h-10 bg-sigil flex items-center justify-center">
+                    <svg className="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </div>
                 </div>
                 {/* Receiving Token */}
-                <div className="flex-1 text-center p-4 bg-[#111] border border-[#333]">
-                  <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">Receive</p>
-                  <p className="text-2xl font-bold text-white font-mono">~</p>
-                  <p className="text-xs font-mono text-[#888] truncate">{truncatedToken}</p>
+                <div className="flex-1 text-center p-4 bg-surface-2 border border-ink-08">
+                  <p className="text-[10px] text-ink-40 uppercase tracking-wider mb-1">Receive</p>
+                  <p className="text-2xl font-bold text-ink font-mono">~</p>
+                  <p className="text-xs font-mono text-ink-40 truncate">{truncatedToken}</p>
                 </div>
               </>
             ) : (
               <>
                 {/* Selling Token */}
-                <div className="flex-1 text-center p-4 bg-[#111] border border-[#333]">
-                  <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">Sell</p>
-                  <p className="text-2xl font-bold text-white font-mono">{amount}</p>
-                  <p className="text-xs font-mono text-[#888] truncate">{truncatedToken}</p>
+                <div className="flex-1 text-center p-4 bg-surface-2 border border-ink-08">
+                  <p className="text-[10px] text-ink-40 uppercase tracking-wider mb-1">Sell</p>
+                  <p className="text-2xl font-bold text-ink font-mono">{amount}</p>
+                  <p className="text-xs font-mono text-ink-40 truncate">{truncatedToken}</p>
                 </div>
                 {/* Arrow */}
                 <div className="flex-shrink-0">
-                  <div className="w-10 h-10 bg-white flex items-center justify-center">
-                    <svg className="w-5 h-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-10 h-10 bg-sigil flex items-center justify-center">
+                    <svg className="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                     </svg>
                   </div>
                 </div>
                 {/* Receiving BNB */}
-                <div className="flex-1 text-center p-4 bg-[#111] border border-[#333]">
-                  <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">Receive</p>
-                  <p className="text-2xl font-bold text-white font-mono">~</p>
-                  <p className="text-sm font-medium text-[#888]">BNB</p>
+                <div className="flex-1 text-center p-4 bg-surface-2 border border-ink-08">
+                  <p className="text-[10px] text-ink-40 uppercase tracking-wider mb-1">Receive</p>
+                  <p className="text-2xl font-bold text-ink font-mono">~</p>
+                  <p className="text-sm font-medium text-ink-40">BNB</p>
                 </div>
               </>
             )}
           </div>
 
           {/* Token Address */}
-          <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#666] font-mono">
-            <div className="w-2 h-2 bg-white" />
+          <div className="mt-4 flex items-center justify-center gap-2 text-xs text-ink-40 font-mono">
+            <div className="w-2 h-2 bg-signal" />
             <span className="uppercase">BSC Mainnet · Bonding Curve</span>
           </div>
         </div>
@@ -146,14 +146,14 @@ export default function MemeBuySellConfirmationCard({
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="flex-1 py-3 px-4 border border-[#333] bg-transparent text-[#888] font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-[#111] hover:border-white hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-3 px-4 border border-ink-08 bg-transparent text-ink-40 font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:border-signal hover:text-ink disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className="flex-1 py-3 px-4 bg-white text-black font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-[#ccc] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 py-3 px-4 bg-sigil text-background font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-sigil-hover disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>

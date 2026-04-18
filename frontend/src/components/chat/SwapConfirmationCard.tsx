@@ -35,37 +35,37 @@ export default function SwapConfirmationCard({
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="w-full max-w-sm"
     >
-      <div className="relative overflow-hidden border border-[#333] bg-black">
-        
+      <div className="relative overflow-hidden border border-ink-08 bg-surface-1">
+
         {/* Header */}
-        <div className="relative px-5 py-4 border-b border-[#333]">
+        <div className="relative px-5 py-4 border-b border-ink-08">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#111] border border-[#333] flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-10 h-10 bg-surface-2 border border-ink-08 flex items-center justify-center">
+              <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wide">Confirm Swap</h3>
-              <p className="text-xs text-[#666] font-mono">Review transaction details</p>
+              <h3 className="text-lg font-bold text-ink uppercase tracking-wide">Confirm Swap</h3>
+              <p className="text-xs text-ink-40 font-mono">Review transaction details</p>
             </div>
           </div>
         </div>
 
         {/* Wallet Address Section */}
         {truncatedAddress && (
-          <div className="relative px-5 py-3 border-b border-[#333] bg-[#111]">
+          <div className="relative px-5 py-3 border-b border-ink-08 bg-surface-2">
             <div className="flex items-center justify-between">
-              <span className="text-xs text-[#666] uppercase tracking-wider">Agent Wallet</span>
+              <span className="text-xs text-ink-40 uppercase tracking-wider">Agent Wallet</span>
               <div className="flex items-center gap-2">
-                <code className="text-xs font-mono text-white bg-black px-2 py-1 border border-[#333]">
+                <code className="text-xs font-mono text-ink bg-background px-2 py-1 border border-ink-08">
                   {truncatedAddress}
                 </code>
                 <a
                   href={`https://sepolia.etherscan.io/address/${walletAddress}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white hover:text-[#ccc] transition-colors"
+                  className="text-ink hover:text-ink-40 transition-colors"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -80,32 +80,32 @@ export default function SwapConfirmationCard({
         <div className="relative px-5 py-5">
           <div className="flex items-center justify-between gap-4">
             {/* From Token */}
-            <div className="flex-1 text-center p-4 bg-[#111] border border-[#333]">
-              <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">From</p>
-              <p className="text-2xl font-bold text-white font-mono">{amount}</p>
-              <p className="text-sm font-medium text-[#888]">{fromToken}</p>
+            <div className="flex-1 text-center p-4 bg-surface-2 border border-ink-08">
+              <p className="text-[10px] text-ink-40 uppercase tracking-wider mb-1">From</p>
+              <p className="text-2xl font-bold text-ink font-mono">{amount}</p>
+              <p className="text-sm font-medium text-ink-40">{fromToken}</p>
             </div>
 
             {/* Arrow */}
             <div className="flex-shrink-0">
-              <div className="w-10 h-10 bg-white flex items-center justify-center">
-                <svg className="w-5 h-5 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-10 h-10 bg-sigil flex items-center justify-center">
+                <svg className="w-5 h-5 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </div>
             </div>
 
             {/* To Token */}
-            <div className="flex-1 text-center p-4 bg-[#111] border border-[#333]">
-              <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">To</p>
-              <p className="text-2xl font-bold text-white font-mono">~</p>
-              <p className="text-sm font-medium text-[#888]">{toToken}</p>
+            <div className="flex-1 text-center p-4 bg-surface-2 border border-ink-08">
+              <p className="text-[10px] text-ink-40 uppercase tracking-wider mb-1">To</p>
+              <p className="text-2xl font-bold text-ink font-mono">~</p>
+              <p className="text-sm font-medium text-ink-40">{toToken}</p>
             </div>
           </div>
 
           {/* Network Info */}
-          <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#666] font-mono">
-            <div className="w-2 h-2 bg-white" />
+          <div className="mt-4 flex items-center justify-center gap-2 text-xs text-ink-40 font-mono">
+            <div className="w-2 h-2 bg-signal" />
             <span className="uppercase">{network} Testnet • Uniswap V3</span>
           </div>
         </div>
@@ -115,14 +115,14 @@ export default function SwapConfirmationCard({
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="flex-1 py-3 px-4 border border-[#333] bg-transparent text-[#888] font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-[#111] hover:border-white hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-3 px-4 border border-ink-08 bg-transparent text-ink-40 font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:border-signal hover:text-ink disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className="flex-1 py-3 px-4 bg-white text-black font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-[#ccc] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 py-3 px-4 bg-sigil text-background font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-sigil-hover disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>

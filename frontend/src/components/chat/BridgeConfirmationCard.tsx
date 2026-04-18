@@ -35,19 +35,19 @@ export default function BridgeConfirmationCard({
       transition={{ duration: 0.3, ease: "easeOut" }}
       className="w-full max-w-sm"
     >
-      <div className="relative overflow-hidden border border-[#333] bg-black">
-        
+      <div className="relative overflow-hidden border border-ink-08 bg-surface-1">
+
         {/* Header */}
-        <div className="relative px-5 py-4 border-b border-[#333]">
+        <div className="relative px-5 py-4 border-b border-ink-08">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-[#111] border border-[#333] flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="w-10 h-10 bg-surface-2 border border-ink-08 flex items-center justify-center">
+              <svg className="w-5 h-5 text-ink" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-white uppercase tracking-wide">Confirm Bridge</h3>
-              <p className="text-xs text-[#666] font-mono">Cross-chain transfer via DeBridge</p>
+              <h3 className="text-lg font-bold text-ink uppercase tracking-wide">Confirm Bridge</h3>
+              <p className="text-xs text-ink-40 font-mono">Cross-chain transfer via DeBridge</p>
             </div>
           </div>
         </div>
@@ -57,58 +57,58 @@ export default function BridgeConfirmationCard({
           {/* Chain Flow */}
           <div className="flex items-center justify-between gap-2 mb-4">
             {/* Source Chain */}
-            <div className="flex-1 text-center p-3 bg-[#111] border border-[#333]">
-              <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">From</p>
-              <p className="text-sm font-bold text-white uppercase">{srcChain.replace("_", " ")}</p>
+            <div className="flex-1 text-center p-3 bg-surface-2 border border-ink-08">
+              <p className="text-[10px] text-ink-40 uppercase tracking-wider mb-1">From</p>
+              <p className="text-sm font-bold text-ink uppercase">{srcChain.replace("_", " ")}</p>
             </div>
 
             {/* Arrow */}
             <div className="flex-shrink-0 px-2">
-              <div className="w-8 h-8 bg-white flex items-center justify-center">
-                <svg className="w-4 h-4 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <div className="w-8 h-8 bg-sigil flex items-center justify-center">
+                <svg className="w-4 h-4 text-background" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </div>
             </div>
 
             {/* Destination Chain */}
-            <div className="flex-1 text-center p-3 bg-[#111] border border-[#333]">
-              <p className="text-[10px] text-[#666] uppercase tracking-wider mb-1">To</p>
-              <p className="text-sm font-bold text-white uppercase">{dstChain.replace("_", " ")}</p>
+            <div className="flex-1 text-center p-3 bg-surface-2 border border-ink-08">
+              <p className="text-[10px] text-ink-40 uppercase tracking-wider mb-1">To</p>
+              <p className="text-sm font-bold text-ink uppercase">{dstChain.replace("_", " ")}</p>
             </div>
           </div>
 
           {/* Amount */}
-          <div className="text-center p-4 bg-[#111] border border-[#333] mb-4">
-            <p className="text-3xl font-bold text-white font-mono">{amount}</p>
-            <p className="text-sm font-medium text-[#888] uppercase">{token}</p>
+          <div className="text-center p-4 bg-surface-2 border border-ink-08 mb-4">
+            <p className="text-3xl font-bold text-ink font-mono">{amount}</p>
+            <p className="text-sm font-medium text-ink-40 uppercase">{token}</p>
           </div>
 
           {/* Details */}
-          <div className="space-y-2 text-sm border border-[#333] p-3">
+          <div className="space-y-2 text-sm border border-ink-08 p-3">
             {estimatedReceive && (
-              <div className="flex justify-between text-[#888]">
+              <div className="flex justify-between text-ink-40">
                 <span className="uppercase text-xs tracking-wider">You'll receive</span>
-                <span className="font-mono text-white">~{estimatedReceive} {token}</span>
+                <span className="font-mono text-ink">~{estimatedReceive} {token}</span>
               </div>
             )}
             {fee && (
-              <div className="flex justify-between text-[#888]">
+              <div className="flex justify-between text-ink-40">
                 <span className="uppercase text-xs tracking-wider">Bridge fee</span>
-                <span className="font-mono text-white">{fee} {token}</span>
+                <span className="font-mono text-ink">{fee} {token}</span>
               </div>
             )}
             {estimatedTime && (
-              <div className="flex justify-between text-[#888]">
+              <div className="flex justify-between text-ink-40">
                 <span className="uppercase text-xs tracking-wider">Est. time</span>
-                <span className="font-mono text-white">~{estimatedTime} min</span>
+                <span className="font-mono text-ink">~{estimatedTime} min</span>
               </div>
             )}
           </div>
 
           {/* Network Info */}
-          <div className="mt-4 flex items-center justify-center gap-2 text-xs text-[#666] font-mono">
-            <div className="w-2 h-2 bg-white" />
+          <div className="mt-4 flex items-center justify-center gap-2 text-xs text-ink-40 font-mono">
+            <div className="w-2 h-2 bg-signal" />
             <span className="uppercase">Powered by DeBridge</span>
           </div>
         </div>
@@ -118,14 +118,14 @@ export default function BridgeConfirmationCard({
           <button
             onClick={onCancel}
             disabled={isLoading}
-            className="flex-1 py-3 px-4 border border-[#333] bg-transparent text-[#888] font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-[#111] hover:border-white hover:text-white disabled:opacity-50 disabled:cursor-not-allowed"
+            className="flex-1 py-3 px-4 border border-ink-08 bg-transparent text-ink-40 font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:border-signal hover:text-ink disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={isLoading}
-            className="flex-1 py-3 px-4 bg-white text-black font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-[#ccc] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="flex-1 py-3 px-4 bg-sigil text-background font-bold text-sm uppercase tracking-wider transition-all duration-200 hover:bg-sigil-hover disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             {isLoading ? (
               <>
