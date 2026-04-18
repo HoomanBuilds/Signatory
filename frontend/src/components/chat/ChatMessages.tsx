@@ -85,12 +85,12 @@ export default function ChatMessages({
 }: ChatMessagesProps) {
   if (messages.length === 0 && !isThinking) {
     return (
-      <div className="flex items-center justify-center h-full bg-black">
-        <div className="text-center p-8 border border-[#333] bg-[#111]">
-          <h3 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">
+      <div className="flex items-center justify-center h-full bg-background">
+        <div className="text-center p-8 border border-ink-08 bg-surface-2">
+          <h3 className="text-xl font-bold text-ink mb-2 uppercase tracking-wide">
             Start a conversation
           </h3>
-          <p className="text-[#666] font-mono text-sm">
+          <p className="text-ink-40 font-mono text-sm">
             Send a message to chat with {agentName}
           </p>
         </div>
@@ -99,7 +99,7 @@ export default function ChatMessages({
   }
 
   return (
-    <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide bg-black">
+    <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide bg-background">
       {messages.map((message, index) => (
         <div
           key={index}
@@ -108,12 +108,12 @@ export default function ChatMessages({
         >
           <div
             className={`max-w-[75%] p-4 text-sm leading-relaxed animate-in fade-in slide-in-from-bottom-2 duration-300 ${message.role === "user"
-              ? "bg-white text-black font-medium border border-white"
-              : "bg-[#111] text-[#ddd] border border-[#333]"
+              ? "bg-surface-3 border border-ink-08 text-ink font-medium"
+              : "bg-surface-2 text-ink-60 border border-ink-08"
               }`}
           >
             {/* Role Label for clarity in stark theme */}
-            <div className={`text-[10px] uppercase tracking-wider font-bold mb-2 ${message.role === "user" ? "text-black/50" : "text-[#666]"}`}>
+            <div className={`text-[10px] uppercase tracking-wider font-bold mb-2 ${message.role === "user" ? "text-ink-40" : "text-ink-40"}`}>
                 {message.role === "user" ? "You" : agentName}
             </div>
 
@@ -125,13 +125,13 @@ export default function ChatMessages({
                   code: ({ node, inline, className, children, ...props }: any) => {
                     const match = /language-(\w+)/.exec(className || "");
                     return !inline && match ? (
-                      <div className="my-3 border border-[#333]">
-                        <div className="flex items-center justify-between px-3 py-1 bg-[#222] border-b border-[#333]">
-                          <span className="text-xs text-[#888] font-mono uppercase">
+                      <div className="my-3 border border-ink-08">
+                        <div className="flex items-center justify-between px-3 py-1 bg-surface-3 border-b border-ink-08">
+                          <span className="text-xs text-ink-40 font-mono uppercase">
                             {match[1]}
                           </span>
                         </div>
-                        <div className="p-3 bg-black overflow-x-auto">
+                        <div className="p-3 bg-surface-1 overflow-x-auto">
                           <code className={`${className} text-sm font-mono`} {...props}>
                             {children}
                           </code>
@@ -139,7 +139,7 @@ export default function ChatMessages({
                       </div>
                     ) : (
                       <code
-                        className={`font-mono text-xs px-1 py-0.5 ${message.role === "user" ? "bg-black/10 text-black" : "bg-[#222] text-[#aaa]"}`}
+                        className={`font-mono text-xs px-1 py-0.5 ${message.role === "user" ? "bg-background/10 text-ink" : "bg-surface-3 text-ink-60"}`}
                         {...props}
                       >
                         {children}
@@ -157,7 +157,7 @@ export default function ChatMessages({
                     </ol>
                   ),
                   li: ({ children }: any) => (
-                    <li className="pl-1 marker:text-[#666]">{children}</li>
+                    <li className="pl-1 marker:text-ink-40">{children}</li>
                   ),
                   a: ({ href, children }: any) => (
                     <a
@@ -170,34 +170,34 @@ export default function ChatMessages({
                     </a>
                   ),
                   blockquote: ({ children }: any) => (
-                    <blockquote className={`border-l-2 pl-3 italic my-2 ${message.role === "user" ? "border-black/20 text-black/60" : "border-[#333] text-[#666]"}`}>
+                    <blockquote className={`border-l-2 pl-3 italic my-2 ${message.role === "user" ? "border-ink-08 text-ink-60" : "border-ink-08 text-ink-40"}`}>
                       {children}
                     </blockquote>
                   ),
                   table: ({ children }: any) => (
-                    <div className="overflow-x-auto my-4 border border-[#333]">
-                      <table className="min-w-full divide-y divide-[#333]">
+                    <div className="overflow-x-auto my-4 border border-ink-08">
+                      <table className="min-w-full divide-y divide-ink-08">
                         {children}
                       </table>
                     </div>
                   ),
                   thead: ({ children }: any) => (
-                    <thead className="bg-[#111]">
+                    <thead className="bg-surface-2">
                       {children}
                     </thead>
                   ),
                   tbody: ({ children }: any) => (
-                    <tbody className="divide-y divide-[#333] bg-transparent">
+                    <tbody className="divide-y divide-ink-08 bg-transparent">
                       {children}
                     </tbody>
                   ),
                   tr: ({ children }: any) => (
-                    <tr className="hover:bg-[#111] transition-colors">
+                    <tr className="hover:bg-surface-2 transition-colors">
                       {children}
                     </tr>
                   ),
                   th: ({ children }: any) => (
-                    <th className="px-4 py-2 text-left text-xs font-bold uppercase tracking-wider text-[#666]">
+                    <th className="px-4 py-2 text-left text-xs font-bold uppercase tracking-wider text-ink-40">
                       {children}
                     </th>
                   ),
@@ -211,7 +211,7 @@ export default function ChatMessages({
                 {message.content}
               </ReactMarkdown>
             </div>
-            <p className={`text-[10px] mt-2 text-right ${message.role === "user" ? "text-black/40" : "text-[#444]"}`}>
+            <p className={`text-[10px] mt-2 text-right ${message.role === "user" ? "text-ink-24" : "text-ink-24"}`}>
               {new Date(message.timestamp).toLocaleTimeString()}
             </p>
           </div>
@@ -297,11 +297,11 @@ export default function ChatMessages({
 
       {isThinking && (
         <div className="flex justify-start">
-          <div className="border border-[#333] bg-[#111] p-4 flex items-center space-x-2">
-            <span className="text-xs text-[#666] uppercase tracking-wider font-bold mr-2">Thinking</span>
-            <div className="w-1.5 h-1.5 bg-white animate-bounce [animation-delay:-0.3s]"></div>
-            <div className="w-1.5 h-1.5 bg-white animate-bounce [animation-delay:-0.15s]"></div>
-            <div className="w-1.5 h-1.5 bg-white animate-bounce"></div>
+          <div className="border border-ink-08 bg-surface-2 p-4 flex items-center space-x-2">
+            <span className="text-xs text-ink-40 uppercase tracking-wider font-bold mr-2">Thinking</span>
+            <div className="w-1.5 h-1.5 bg-signal animate-bounce [animation-delay:-0.3s]"></div>
+            <div className="w-1.5 h-1.5 bg-signal animate-bounce [animation-delay:-0.15s]"></div>
+            <div className="w-1.5 h-1.5 bg-signal animate-bounce"></div>
           </div>
         </div>
       )}

@@ -1,4 +1,4 @@
-import { Send, Loader2, Lock } from "lucide-react";
+import { Send, Lock } from "lucide-react";
 import { useRef, useEffect } from "react";
 
 interface ChatInputProps {
@@ -35,7 +35,7 @@ export default function ChatInput({
   };
 
   return (
-    <div className="bg-background border-t border-border p-6">
+    <div className="bg-background border-t border-ink-08 p-6">
       <div className="flex gap-3 items-end max-w-4xl mx-auto">
         <div className="flex-1 relative">
           <textarea
@@ -46,13 +46,13 @@ export default function ChatInput({
             placeholder={isReadOnly ? "This chat is read-only" : `Message ${agentName}...`}
             disabled={isSending || isReadOnly}
             rows={1}
-            className="w-full px-4 py-4 bg-secondary text-foreground placeholder-muted-foreground focus:outline-none focus:ring-1 focus:ring-neon/50 border border-border focus:border-neon/30 disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[56px] max-h-[200px] overflow-y-auto scrollbar-hide text-sm transition-all"
+            className="input-brand w-full px-4 py-4 disabled:opacity-50 disabled:cursor-not-allowed resize-none min-h-[56px] max-h-[200px] overflow-y-auto scrollbar-hide text-sm transition-all"
           />
         </div>
         <button
           onClick={onSend}
           disabled={!value.trim() || isSending || isReadOnly}
-          className="px-6 py-4 bg-primary text-primary-foreground font-bold uppercase tracking-wider hover:bg-foreground/90 transition-all disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2 h-[56px] border border-primary"
+          className="btn-primary px-6 py-4 font-bold uppercase tracking-wider disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-2 h-[56px]"
         >
           {isReadOnly ? (
             <Lock className="w-5 h-5" />

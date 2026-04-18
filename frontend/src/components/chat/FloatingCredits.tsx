@@ -74,8 +74,8 @@ export default function FloatingCredits({ agentId, isOwner, messageCount = 0 }: 
 
   if (isInitialLoad) {
     return (
-      <div className="absolute top-6 right-6 z-20 p-3 bg-black border border-[#333]">
-        <Loader2 className="w-4 h-4 text-white animate-spin" />
+      <div className="absolute top-6 right-6 z-20 p-3 bg-background border border-ink-08">
+        <Loader2 className="w-4 h-4 text-ink animate-spin" />
       </div>
     );
   }
@@ -84,11 +84,11 @@ export default function FloatingCredits({ agentId, isOwner, messageCount = 0 }: 
     return (
       <div className="absolute top-6 right-6 z-20 flex gap-2">
         <div 
-          className="flex items-center gap-2 px-3 py-2 bg-black border border-[#333] hover:border-white transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-background border border-ink-08 hover:border-signal transition-colors"
           title="Your Credits Balance"
         >
-          <Coins className="w-4 h-4 text-white" />
-          <span className="text-sm font-bold text-white font-mono">
+          <Coins className="w-4 h-4 text-ink" />
+          <span className="text-sm font-bold text-ink font-mono">
             {userCredits ?? 0} CREDITS
           </span>
         </div>
@@ -96,11 +96,11 @@ export default function FloatingCredits({ agentId, isOwner, messageCount = 0 }: 
         {/* Show Agent Funds badge if user has no credits but agent has funds */}
         {userCredits === 0 && (agentBalance || 0) >= 0.00015 && (
           <div 
-            className="flex items-center gap-2 px-3 py-2 bg-black border border-[#333] hover:border-white transition-colors"
+            className="flex items-center gap-2 px-3 py-2 bg-background border border-ink-08 hover:border-signal transition-colors"
             title="Agent paying from its own wallet"
           >
-            <Wallet className="w-4 h-4 text-white" />
-            <span className="text-sm font-bold text-white font-mono uppercase">
+            <Wallet className="w-4 h-4 text-ink" />
+            <span className="text-sm font-bold text-ink font-mono uppercase">
               AGENT FUNDS
             </span>
           </div>
@@ -111,11 +111,11 @@ export default function FloatingCredits({ agentId, isOwner, messageCount = 0 }: 
 
   return (
     <div 
-      className="absolute top-6 right-6 z-20 flex items-center gap-2 px-3 py-2 bg-black border border-[#333] hover:border-white transition-colors"
+      className="absolute top-6 right-6 z-20 flex items-center gap-2 px-3 py-2 bg-background border border-ink-08 hover:border-signal transition-colors"
       title="Session Credits for this Agent"
     >
-      <Coins className="w-4 h-4 text-white" />
-      <span className="text-sm font-bold text-white font-mono">
+      <Coins className="w-4 h-4 text-ink" />
+      <span className="text-sm font-bold text-ink font-mono">
         {sessionCredits ?? 0} CREDITS
       </span>
     </div>

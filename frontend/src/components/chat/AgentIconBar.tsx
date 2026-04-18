@@ -32,8 +32,8 @@ export default function AgentIconBar({
         onClick={() => onSelectAgent(agent.tokenId)}
         className={`w-full aspect-square relative group transition-all duration-200 border ${
           isSelected
-            ? "bg-white border-white"
-            : "bg-[#111] border-[#333] hover:border-[#666]"
+            ? "bg-signal border-signal"
+            : "bg-surface-2 border-ink-08 hover:border-signal"
         }`}
         title={isLocked ? "Private Agent (Read Only)" : agent.name}
       >
@@ -48,12 +48,12 @@ export default function AgentIconBar({
         
         {/* Selection Indicator (Active Border is enough, but maybe a small dot?) */}
         {isSelected && (
-           <div className="absolute right-0 top-0 bottom-0 w-1 bg-black" />
+           <div className="absolute right-0 top-0 bottom-0 w-1 bg-background" />
         )}
 
         {isLocked && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-            <Lock className="w-4 h-4 text-[#666]" />
+          <div className="absolute inset-0 flex items-center justify-center bg-background/80 backdrop-blur-sm">
+            <Lock className="w-4 h-4 text-ink-40" />
           </div>
         )}
       </button>
@@ -66,18 +66,18 @@ export default function AgentIconBar({
   );
 
   return (
-    <div className="w-20 bg-black border-r border-[#333] overflow-y-auto flex flex-col items-center py-4 gap-4 flex-shrink-0">
+    <div className="w-20 bg-background border-r border-ink-08 overflow-y-auto flex flex-col items-center py-4 gap-4 flex-shrink-0">
       {isLoading ? (
-        <Loader2 className="w-6 h-6 text-white animate-spin mt-4" />
+        <Loader2 className="w-6 h-6 text-ink animate-spin mt-4" />
       ) : (
         <>
           {/* My Agents Section */}
           <div className="w-full px-2 space-y-2">
-            <div className="text-[10px] text-[#666] font-bold text-center uppercase tracking-wider mb-2">
+            <div className="text-[10px] text-ink-40 font-bold text-center uppercase tracking-wider mb-2">
               Mine
             </div>
             {myAgents.length === 0 ? (
-               <div className="text-center py-2 text-xs text-[#444] border border-dashed border-[#333]">Time to create!</div>
+               <div className="text-center py-2 text-xs text-ink-24 border border-dashed border-ink-08">Time to create!</div>
             ) : (
               myAgents.map((agent) => renderAgentButton(agent, true))
             )}
@@ -85,13 +85,13 @@ export default function AgentIconBar({
 
           {/* Divider */}
           {uniqueInteracted.length > 0 && (
-            <div className="w-12 h-px bg-[#333] my-2" />
+            <div className="w-12 h-px bg-ink-08 my-2" />
           )}
 
           {/* Recent Chats Section */}
           {uniqueInteracted.length > 0 && (
             <div className="w-full px-2 space-y-2">
-              <div className="text-[10px] text-[#666] font-bold text-center uppercase tracking-wider mb-2">
+              <div className="text-[10px] text-ink-40 font-bold text-center uppercase tracking-wider mb-2">
                 Recent
               </div>
               {uniqueInteracted.map((agent) => renderAgentButton(agent, false))}
