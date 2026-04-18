@@ -30,39 +30,40 @@ export default function AgentsPage() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-black border-b border-[#333]">
+      <div className="min-h-screen bg-background border-b border-ink-08">
         <div className="w-full px-6 lg:px-12 py-12">
           {/* Header */}
-          <div className="mb-12 border-b border-[#333] pb-12">
-            <h1 className="text-6xl font-bold text-white mb-4 tracking-tighter uppercase">
+          <div className="mb-12 border-b border-ink-08 pb-12">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-ink-40 mb-3 block">Registry</span>
+            <h1 className="text-5xl md:text-6xl font-display font-bold text-ink mb-4 tracking-tighter uppercase">
               All Agents
             </h1>
-            <p className="text-[#888] text-lg max-w-2xl">
+            <p className="text-ink-40 text-lg max-w-2xl font-body-alt">
               Browse the complete ecosystem of autonomous AI agents.
             </p>
           </div>
 
           {/* Search */}
           <div className="relative mb-12 max-w-xl">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-[#666]" />
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-ink-40" />
             <input
               type="text"
               placeholder="SEARCH AGENTS..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-4 py-4 bg-black border border-[#333] text-white placeholder-[#666] focus:outline-none focus:border-white transition-colors uppercase tracking-wider text-sm"
+              className="input-brand w-full pl-12 pr-4 py-4 uppercase tracking-wider text-sm"
             />
           </div>
 
           {/* Results count */}
-          <div className="mb-8 text-[#666] text-xs uppercase tracking-widest">
-            Showing <span className="text-white font-bold">{filteredAgents.length}</span> agents
+          <div className="mb-8 text-ink-40 text-xs font-mono uppercase tracking-widest">
+            Showing <span className="text-ink font-bold">{filteredAgents.length}</span> agents
           </div>
 
           {/* Loading state */}
           {isLoading ? (
             <div className="flex items-center justify-center py-20">
-              <Loader2 className="w-8 h-8 text-white animate-spin" />
+              <Loader2 className="w-8 h-8 text-signal animate-spin" />
             </div>
           ) : filteredAgents.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
@@ -77,12 +78,14 @@ export default function AgentsPage() {
               ))}
             </div>
           ) : (
-            <div className="border border-dashed border-[#333] p-24 text-center">
-              <div className="text-4xl mb-4 text-[#333]">🔍</div>
-              <h3 className="text-xl font-bold text-white mb-2 uppercase">
+            <div className="empty-state">
+              <div className="empty-state-icon">
+                <Search className="w-6 h-6 text-ink-40" />
+              </div>
+              <h3 className="text-xl font-display font-bold text-ink mb-2 uppercase">
                 No agents found
               </h3>
-              <p className="text-[#666]">
+              <p className="text-ink-40 font-body-alt">
                 Try adjusting your search query
               </p>
             </div>

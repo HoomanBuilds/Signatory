@@ -84,13 +84,13 @@ export default function MarketplacePage() {
             transition={{ duration: 0.5 }}
             className="mb-12"
           >
-            <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2 block">
-              Trade
+            <span className="text-[10px] font-mono uppercase tracking-widest text-ink-40 mb-3 block">
+              Exchange Floor
             </span>
-            <h1 className="text-5xl md:text-7xl font-extrabold text-foreground mb-4 uppercase tracking-tighter">
+            <h1 className="text-5xl md:text-7xl font-display font-extrabold text-ink mb-4 uppercase tracking-tighter">
               Marketplace
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl border-l-2 border-neon/30 pl-6">
+            <p className="text-lg text-ink-40 max-w-2xl border-l-2 border-signal/30 pl-6 font-body-alt">
               Discover and trade unique AI agents. Build your autonomous squad.
             </p>
           </motion.div>
@@ -101,7 +101,7 @@ export default function MarketplacePage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.5 }}
-              className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-border mb-12"
+              className="grid grid-cols-2 md:grid-cols-4 border-t border-l border-ink-08 mb-12"
             >
               {[
                 { label: "Listed", value: listedAgents.length },
@@ -109,9 +109,9 @@ export default function MarketplacePage() {
                 { label: "Volume", value: `${formatEther(stats[2] as bigint)} TCRO` },
                 { label: "Fee", value: `${Number(stats[3]) / 100}%` },
               ].map((stat) => (
-                <div key={stat.label} className="border-r border-b border-border p-6 hover:bg-secondary/50 transition-colors">
-                  <div className="text-[10px] text-muted-foreground uppercase tracking-wider mb-2">{stat.label}</div>
-                  <div className="text-2xl font-bold text-foreground font-mono">
+                <div key={stat.label} className="border-r border-b border-ink-08 p-6 hover:bg-surface-2 transition-colors">
+                  <div className="text-[10px] text-ink-40 uppercase tracking-wider mb-2 font-mono">{stat.label}</div>
+                  <div className="text-2xl font-bold text-ink font-mono">
                     {stat.value}
                   </div>
                 </div>
@@ -126,25 +126,25 @@ export default function MarketplacePage() {
             transition={{ delay: 0.2, duration: 0.5 }}
             className="relative mb-12"
           >
-            <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+            <Search className="absolute left-6 top-1/2 transform -translate-y-1/2 w-5 h-5 text-ink-40" />
             <input
               type="text"
               placeholder="SEARCH AGENTS..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-16 pr-6 py-5 bg-background text-foreground placeholder-muted-foreground/30 focus:outline-none focus:ring-0 border-b border-border focus:border-neon/30 transition-all text-lg font-bold uppercase tracking-wider"
+              className="w-full pl-16 pr-6 py-5 bg-background text-ink placeholder-ink-24 focus:outline-none focus:ring-0 border-b border-ink-08 focus:border-signal/30 transition-all text-lg font-bold uppercase tracking-wider"
             />
           </motion.div>
 
           {/* Results count */}
-          <div className="mb-6 text-muted-foreground text-sm uppercase tracking-wide">
-            Showing <span className="text-foreground font-bold">{filteredListings.length}</span> listings
+          <div className="mb-6 text-ink-40 text-sm font-mono uppercase tracking-wide">
+            Showing <span className="text-ink font-bold">{filteredListings.length}</span> listings
           </div>
 
           {/* Grid */}
           {isLoadingListings ? (
-            <div className="flex items-center justify-center py-20 border border-dashed border-border">
-              <Loader2 className="w-6 h-6 text-muted-foreground animate-spin" />
+            <div className="flex items-center justify-center py-20 border border-dashed border-ink-08">
+              <Loader2 className="w-6 h-6 text-signal animate-spin" />
             </div>
           ) : filteredListings.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -168,11 +168,11 @@ export default function MarketplacePage() {
               ))}
             </div>
           ) : (
-            <div className="p-20 text-center border border-dashed border-border">
-              <h3 className="text-xl font-bold text-foreground mb-2 uppercase tracking-wide">
+            <div className="empty-state">
+              <h3 className="text-xl font-display font-bold text-ink mb-2 uppercase tracking-wide">
                 No listings found
               </h3>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-ink-40 text-sm font-body-alt">
                 {searchQuery
                   ? "Try adjusting your search criteria"
                   : "Be the first to list an agent"}

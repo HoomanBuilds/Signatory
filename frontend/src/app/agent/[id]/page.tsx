@@ -180,8 +180,8 @@ export default function AgentDetailPage() {
   if (isLoading) {
     return (
       <Layout>
-        <div className="min-h-screen bg-black flex items-center justify-center">
-          <Loader2 className="w-8 h-8 text-white animate-spin" />
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <Loader2 className="w-8 h-8 text-signal animate-spin" />
         </div>
       </Layout>
     );
@@ -190,18 +190,20 @@ export default function AgentDetailPage() {
   if (error || !agent) {
     return (
       <Layout>
-        <div className="min-h-screen bg-black flex items-center justify-center px-4">
-          <div className="border border-[#333] p-12 text-center max-w-md bg-[#050505]">
-            <Bot className="w-16 h-16 mx-auto mb-6 text-[#333]" />
-            <h2 className="text-2xl font-bold text-white mb-3 uppercase tracking-wide">
+        <div className="min-h-screen bg-background flex items-center justify-center px-4">
+          <div className="empty-state max-w-md">
+            <div className="empty-state-icon">
+              <Bot className="w-8 h-8 text-ink-40" />
+            </div>
+            <h2 className="text-2xl font-display font-bold text-ink mb-3 uppercase tracking-wide">
               Agent Not Found
             </h2>
-            <p className="text-[#666] mb-6">
+            <p className="text-ink-40 mb-6 font-body-alt">
               {error || "This agent doesn't exist"}
             </p>
             <button
               onClick={() => router.push("/")}
-              className="px-6 py-3 bg-white text-black font-bold hover:bg-gray-200 transition-all uppercase tracking-wider"
+              className="btn-primary px-6 py-3 font-bold uppercase tracking-wider"
             >
               Go Home
             </button>
@@ -220,13 +222,14 @@ export default function AgentDetailPage() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-black border-b border-[#333]">
+      <div className="min-h-screen bg-background border-b border-ink-08">
         <div className="w-full px-6 lg:px-12 py-12">
           <div className="mb-8">
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-2 uppercase tracking-tight">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-ink-40 mb-3 block">Artifact #{agent.tokenId}</span>
+            <h1 className="text-4xl lg:text-5xl font-display font-bold text-ink mb-2 uppercase tracking-tight">
               {agent.name}
             </h1>
-            <p className="text-[#666] font-mono">ID: #{agent.tokenId}</p>
+            <p className="text-ink-40 font-mono text-sm">Token ID: #{agent.tokenId}</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
@@ -244,7 +247,7 @@ export default function AgentDetailPage() {
               {(isOwner || isPublic) && (
                 <button
                   onClick={handleChatClick}
-                  className="w-full py-4 mt-6 bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+                  className="btn-primary w-full py-4 mt-6 font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                 >
                   <Bot className="w-5 h-5" />
                   Chat with {agent.name}
@@ -253,34 +256,34 @@ export default function AgentDetailPage() {
 
               {/* Marketplace Actions */}
               {activeListing?.active ? (
-                <div className="bg-[#111] p-6 border border-[#333] mt-6">
+                <div className="bg-surface-2 p-6 border border-ink-08 mt-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
-                      <div className="text-xs text-[#666] uppercase tracking-wider mb-1">
+                      <div className="text-xs text-ink-40 uppercase tracking-wider mb-1 font-mono">
                         Current Price
                       </div>
-                      <div className="text-2xl font-bold text-white font-mono">
+                      <div className="text-2xl font-bold text-sigil font-mono">
                         {formatEther(BigInt(activeListing.price))} TCRO
                       </div>
                     </div>
-                    <div className="px-3 py-1 bg-white text-black text-xs font-bold uppercase tracking-wider">
+                    <div className="px-3 py-1 bg-signal text-background text-xs font-bold uppercase tracking-wider">
                       Listed
                     </div>
                   </div>
-                  
+
                   {isOwner ? (
-                    <button 
+                    <button
                         onClick={handleCancelListing}
                         disabled={isCancelling}
-                        className="w-full py-4 bg-transparent border border-red-500/50 text-red-500 font-bold uppercase tracking-wider hover:bg-red-500/10 transition-all flex items-center justify-center gap-2"
+                        className="w-full py-4 bg-transparent border border-danger/50 text-danger font-bold uppercase tracking-wider hover:bg-danger/10 transition-all flex items-center justify-center gap-2"
                     >
                         {isCancelling ? <Loader2 className="w-5 h-5 animate-spin" /> : "Cancel Listing"}
                     </button>
                   ) : (
-                    <button 
+                    <button
                         onClick={handleBuy}
                         disabled={isBuying}
-                        className="w-full py-4 bg-white text-black font-bold uppercase tracking-wider hover:bg-gray-200 transition-all flex items-center justify-center gap-2"
+                        className="btn-primary w-full py-4 font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                     >
                         {isBuying ? <Loader2 className="w-5 h-5 animate-spin" /> : "Buy Now"}
                     </button>
@@ -288,9 +291,9 @@ export default function AgentDetailPage() {
                 </div>
               ) : isOwner ? (
                 <div className="mt-6">
-                    <button 
+                    <button
                         onClick={() => setIsListingModalOpen(true)}
-                        className="w-full py-4 bg-transparent border border-[#333] text-white font-bold uppercase tracking-wider hover:border-white transition-all flex items-center justify-center gap-2"
+                        className="btn-secondary w-full py-4 font-bold uppercase tracking-wider flex items-center justify-center gap-2"
                     >
                         <Tag className="w-5 h-5" />
                         List for Sale
