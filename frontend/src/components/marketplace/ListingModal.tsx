@@ -60,59 +60,59 @@ export default function ListingModal({ isOpen, onClose, onListingSuccess, tokenI
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-[#0a0a0a] border border-emerald-500/20 rounded-2xl shadow-2xl shadow-emerald-500/10 overflow-hidden animate-in zoom-in-95 duration-200">
-        
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020203]/85 backdrop-blur-[8px] animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md bg-surface-2 border border-ink-08 overflow-hidden animate-in zoom-in-95 duration-200">
+
         {/* Header */}
-        <div className="p-6 border-b border-white/5 flex items-center justify-between">
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
-            <Tag className="w-5 h-5 text-emerald-400" />
+        <div className="p-6 border-b border-ink-08 flex items-center justify-between">
+          <h2 className="text-xl font-bold text-ink flex items-center gap-2">
+            <Tag className="w-5 h-5 text-signal" />
             List Agent for Sale
           </h2>
-          <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
+          <button onClick={onClose} className="text-ink-40 hover:text-ink transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Body */}
         <div className="p-6 space-y-6">
-            <div className="text-sm text-white/60">
-                You are about to list <span className="text-emerald-300 font-semibold">{agentName}</span> on the marketplace.
+            <div className="text-sm text-ink-40">
+                You are about to list <span className="text-signal font-semibold">{agentName}</span> on the marketplace.
             </div>
 
             {/* Error Display */}
             {listingError && (
-                <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-sm">
+                <div className="p-4 bg-danger/10 border border-danger/30 text-danger text-sm">
                     Transaction failed: {(listingError as any)?.message || (listingError as any)?.shortMessage || "Unknown error"}
                 </div>
             )}
 
             {/* Already Listed Warning */}
             {Boolean(isAlreadyListed) && (
-                <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl text-yellow-400 text-sm">
+                <div className="p-4 bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 text-sm">
                     ⚠️ This agent is already listed on the marketplace. You cannot list it again.
                 </div>
             )}
 
             {/* 1: Approve */}
-            <div className={`p-4 rounded-xl border transition-all ${isApproved ? 'bg-emerald-500/10 border-emerald-500/30' : 'bg-white/5 border-white/10'}`}>
+            <div className={`p-4 border transition-all ${isApproved ? 'bg-signal/10 border-signal/30' : 'bg-surface-2 border-ink-08'}`}>
                 <div className="flex items-center justify-between mb-2">
-                    <div className="font-medium text-white">1. Approve Marketplace</div>
-                    {isApproved ? <Check className="w-5 h-5 text-emerald-400" /> : null}
+                    <div className="font-medium text-ink">1. Approve Marketplace</div>
+                    {isApproved ? <Check className="w-5 h-5 text-signal" /> : null}
                 </div>
-                <div className="text-xs text-white/50 mb-3">
+                <div className="text-xs text-ink-40 mb-3">
                     Allow the marketplace to transfer this NFT when it sells.
                 </div>
                 {isApprovalLoading ? (
-                    <div className="flex items-center justify-center py-2 text-white/50">
+                    <div className="flex items-center justify-center py-2 text-ink-40">
                         <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         Checking approval...
                     </div>
                 ) : !isApproved && (
-                    <button 
+                    <button
                         onClick={handleApprove}
                         disabled={isApproving || isApproveConfirming}
-                        className="w-full py-2 bg-white/10 hover:bg-white/20 text-white rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+                        className="w-full py-2 bg-ink-08 hover:bg-signal/10 text-ink text-sm font-medium transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
                     >
                         {(isApproving || isApproveConfirming) && <Loader2 className="w-4 h-4 animate-spin" />}
                         {isApproving ? "Confirm in Wallet..." : isApproveConfirming ? "Approving..." : "Approve"}
@@ -121,23 +121,23 @@ export default function ListingModal({ isOpen, onClose, onListingSuccess, tokenI
             </div>
 
             {/* 2: Set Price & List */}
-            <div className={`p-4 rounded-xl border transition-all ${!isApproved ? 'opacity-50 pointer-events-none' : ''} bg-white/5 border-white/10`}>
-                 <div className="font-medium text-white mb-2">2. Set Price & List</div>
+            <div className={`p-4 border transition-all ${!isApproved ? 'opacity-50 pointer-events-none' : ''} bg-surface-2 border-ink-08`}>
+                 <div className="font-medium text-ink mb-2">2. Set Price & List</div>
                  <div className="relative mb-4">
-                    <input 
-                        type="number" 
+                    <input
+                        type="number"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
                         placeholder="0.00"
-                        className="w-full bg-black/40 border border-white/10 rounded-lg py-3 pl-4 pr-12 text-white placeholder-white/30 focus:outline-none focus:border-emerald-500/50 transition-colors"
+                        className="w-full bg-surface-1 border border-ink-08 py-3 pl-4 pr-12 text-ink font-mono placeholder-ink-24 focus:outline-none focus:border-signal/50 transition-colors"
                     />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-white/50 font-medium">TCRO</div>
+                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-ink-40 font-medium">TCRO</div>
                  </div>
-                 
-                 <button 
+
+                 <button
                     onClick={handleList}
                     disabled={isListing || isListingConfirming || !price || Boolean(isAlreadyListed) || !isApproved}
-                    className="w-full py-3 bg-gradient-to-r from-emerald-500 to-lime-500 text-black font-bold rounded-xl hover:from-emerald-400 hover:to-lime-400 transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="btn-primary w-full py-3 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                  >
                     {isListing ? (
                         <>

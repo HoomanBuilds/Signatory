@@ -25,19 +25,19 @@ export default function PaymentModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-[#0e1518] border border-emerald-500/30 rounded-2xl shadow-2xl shadow-emerald-500/10 overflow-hidden animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#020203]/85 backdrop-blur-[8px] animate-in fade-in duration-200">
+      <div className="relative w-full max-w-md bg-surface-2 border border-ink-08 overflow-hidden animate-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="p-6 border-b border-emerald-500/10 bg-emerald-500/5">
+        <div className="p-6 border-b border-ink-08 bg-signal/5">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-bold text-emerald-200 flex items-center gap-2">
-              <Coins className="w-5 h-5 text-emerald-400" />
+            <h3 className="text-xl font-bold text-ink flex items-center gap-2">
+              <Coins className="w-5 h-5 text-signal" />
               {type === "revenue-share" ? "Session Expired" : "Insufficient Credits"}
             </h3>
             <button
               onClick={onClose}
               disabled={isProcessing}
-              className="p-1 rounded-lg hover:bg-emerald-500/10 text-emerald-400/60 hover:text-emerald-300 transition-colors"
+              className="p-1 hover:bg-signal/10 text-ink-40 hover:text-ink transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -46,7 +46,7 @@ export default function PaymentModal({
 
         {/* Body */}
         <div className="p-6 space-y-6">
-          <p className="text-green-200/70">
+          <p className="text-ink-40">
             {description || "You don't have enough credits to send this message. You can pay directly for this single message or buy a credit package."}
           </p>
 
@@ -55,25 +55,25 @@ export default function PaymentModal({
             <button
               onClick={onConfirm}
               disabled={isProcessing}
-              className="group relative flex items-center justify-between p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all active:scale-[0.98]"
+              className="group relative flex items-center justify-between p-4 border border-ink-08 bg-surface-2 hover:bg-surface-3 transition-all active:scale-[0.98]"
             >
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-300">
+                <div className="p-2 bg-signal/20 text-signal">
                   <CreditCard className="w-5 h-5" />
                 </div>
                 <div className="text-left">
-                  <div className="font-bold text-emerald-200">
+                  <div className="font-bold text-ink">
                     {type === "revenue-share" ? "Buy Session Pack" : "Pay for Message"}
                   </div>
-                  <div className="text-xs text-green-200/50">
+                  <div className="text-xs text-ink-40">
                     {type === "revenue-share" ? "50 Messages" : "One-time payment"}
                   </div>
                 </div>
               </div>
               <div className="text-right">
-                <div className="font-bold text-emerald-300">{cost} {currency}</div>
+                <div className="font-bold text-sigil font-mono">{cost} {currency}</div>
                 {isProcessing && (
-                  <Loader2 className="w-4 h-4 animate-spin text-emerald-400 ml-auto mt-1" />
+                  <Loader2 className="w-4 h-4 animate-spin text-signal ml-auto mt-1" />
                 )}
               </div>
             </button>
@@ -82,18 +82,18 @@ export default function PaymentModal({
             {type === "credit-purchase" && (
               <Link
                 href="/profile"
-                className="group flex items-center justify-between p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/5 hover:bg-emerald-500/10 transition-all active:scale-[0.98]"
+                className="group flex items-center justify-between p-4 border border-ink-08 bg-surface-2 hover:bg-surface-3 transition-all active:scale-[0.98]"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-300">
+                  <div className="p-2 bg-signal/20 text-signal">
                     <Coins className="w-5 h-5" />
                   </div>
                   <div className="text-left">
-                    <div className="font-bold text-emerald-200">Buy Credits</div>
-                    <div className="text-xs text-green-200/50">Save with packages</div>
+                    <div className="font-bold text-ink">Buy Credits</div>
+                    <div className="text-xs text-ink-40">Save with packages</div>
                   </div>
                 </div>
-                <div className="text-emerald-400 text-sm font-bold group-hover:translate-x-1 transition-transform">
+                <div className="text-signal text-sm font-bold group-hover:translate-x-1 transition-transform">
                   Go to Profile →
                 </div>
               </Link>
