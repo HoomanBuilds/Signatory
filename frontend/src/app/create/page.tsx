@@ -15,13 +15,13 @@ export default function CreatePage() {
             transition={{ duration: 0.5 }}
             className="mb-12 text-center"
           >
-            <span className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground mb-2 block">
-              Deploy
+            <span className="text-[10px] font-mono uppercase tracking-widest text-ink-40 mb-3 block">
+              The Ritual
             </span>
-            <h1 className="text-4xl md:text-6xl font-extrabold text-foreground mb-4 uppercase tracking-tighter">
+            <h1 className="text-4xl md:text-6xl font-display font-extrabold text-ink mb-4 uppercase tracking-tighter">
               Create Agent
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-lg text-ink-40 max-w-2xl mx-auto font-body-alt">
               Mint a unique AI entity with custom personality traits and knowledge.
             </p>
           </motion.div>

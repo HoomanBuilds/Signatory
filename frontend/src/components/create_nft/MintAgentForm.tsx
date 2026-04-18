@@ -158,12 +158,12 @@ export default function MintAgentForm() {
   if (!isConnected) {
     return (
       <div className="max-w-2xl mx-auto">
-        <div className="border border-border p-12 bg-secondary text-center">
-          <Sparkles className="w-16 h-16 mx-auto mb-6 text-foreground" />
-          <h2 className="text-2xl font-bold text-foreground mb-3 uppercase tracking-wide">
+        <div className="border border-ink-08 p-12 bg-surface-2 text-center">
+          <Sparkles className="w-16 h-16 mx-auto mb-6 text-ink" />
+          <h2 className="text-2xl font-bold text-ink mb-3 uppercase tracking-wide">
             Connect Wallet
           </h2>
-          <p className="text-muted-foreground">
+          <p className="text-ink-40">
            to start minting AI agents
           </p>
         </div>
@@ -174,14 +174,14 @@ export default function MintAgentForm() {
   if (isSuccess) {
     return (
       <div className="max-w-2xl mx-auto">
-        <div className="border border-border p-12 bg-secondary text-center">
+        <div className="border border-ink-08 p-12 bg-surface-2 text-center">
           <div className="w-20 h-20 mx-auto mb-6 bg-primary flex items-center justify-center">
             <Check className="w-10 h-10 text-primary-foreground" />
           </div>
-          <h2 className="text-3xl font-extrabold text-foreground mb-3 uppercase tracking-wide">
+          <h2 className="text-3xl font-extrabold text-ink mb-3 uppercase tracking-wide">
             Agent Minted!
           </h2>
-          <p className="text-muted-foreground mb-8">
+          <p className="text-ink-40 mb-8">
             Your AI agent has been created and is ready.
           </p>
           <button
@@ -193,7 +193,7 @@ export default function MintAgentForm() {
               setAvatarPreview("");
               setBackstory("");
             }}
-            className="px-8 py-4 bg-primary text-primary-foreground font-bold uppercase tracking-wider hover:bg-foreground/90 transition-all"
+            className="px-8 py-4 bg-sigil text-background font-bold uppercase tracking-wider hover:bg-sigil-hover transition-all"
           >
             Create Another
           </button>
@@ -202,12 +202,12 @@ export default function MintAgentForm() {
     );
   }
 
-  const inputClasses = "w-full px-4 py-4 bg-secondary text-foreground placeholder-muted-foreground/40 focus:outline-none focus:ring-1 focus:ring-neon/50 border border-border focus:border-neon/30 transition-all font-mono";
-  const labelClasses = "block text-xs font-bold uppercase tracking-wider mb-2 text-muted-foreground";
+  const inputClasses = "input-brand w-full px-4 py-4 font-mono";
+  const labelClasses = "input-label";
 
   return (
     <div className="max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-8 duration-1000 delay-200">
-      <div className="border border-border bg-card p-8">
+      <div className="border border-ink-08 bg-surface-1 p-8">
         <Stepper
           initialStep={1}
           onStepChange={(s) => setStep(s)}
@@ -230,7 +230,7 @@ export default function MintAgentForm() {
                 <>UPLOADING...</>
               ) : isPending || isConfirming ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin"></div>
                   MINTING...
                 </>
               ) : (
@@ -242,22 +242,22 @@ export default function MintAgentForm() {
             </div>
           }
           backButtonProps={{
-            className: "px-6 py-4 bg-transparent text-muted-foreground font-bold uppercase tracking-wider hover:text-foreground transition-all border border-border hover:border-foreground disabled:opacity-50 disabled:cursor-not-allowed",
+            className: "px-6 py-4 bg-transparent text-ink-40 font-bold uppercase tracking-wider hover:text-ink transition-all border border-border hover:border-foreground disabled:opacity-50 disabled:cursor-not-allowed",
             disabled: uploading || isPending || isConfirming || kbUploading
           }}
           nextButtonProps={{
-            className: "px-6 py-4 bg-primary text-primary-foreground font-bold uppercase tracking-wider hover:bg-foreground/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2",
+            className: "px-6 py-4 bg-sigil text-background font-bold uppercase tracking-wider hover:bg-sigil-hover transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2",
             disabled: step === 1 ? (!name || !description || !avatarFile) : (uploading || isPending || isConfirming || kbUploading)
           }}
           stepCircleContainerClassName="mb-12"
         >
           {/* Step 1: Identity */}
           <div className="space-y-8">
-            <div className="border-b border-border pb-6">
-              <h2 className="text-2xl font-bold text-foreground mb-2 uppercase tracking-wide">
+            <div className="border-b border-ink-08 pb-6">
+              <h2 className="text-2xl font-bold text-ink mb-2 uppercase tracking-wide">
                 1. Identity
               </h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-ink-40 text-sm">
                 Define the core identity of your AI.
               </p>
             </div>
@@ -296,25 +296,25 @@ export default function MintAgentForm() {
                 />
                 <label htmlFor="avatar-upload" className="block w-full cursor-pointer">
                   {avatarPreview ? (
-                    <div className="aspect-square w-full max-w-sm mx-auto bg-secondary border border-border group-hover:border-foreground/30 transition-all overflow-hidden relative">
+                    <div className="aspect-square w-full max-w-sm mx-auto bg-surface-2 border border-ink-08 group-hover:border-signal/30 transition-all overflow-hidden relative">
                       <img
                         src={avatarPreview}
                         alt="Preview"
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                       />
-                      <div className="absolute inset-0 bg-background/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <p className="text-foreground font-bold uppercase">Change Image</p>
+                      <div className="absolute inset-0 bg-surface-1/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <p className="text-ink font-bold uppercase">Change Image</p>
                       </div>
                     </div>
                   ) : (
-                    <div className="aspect-square w-full max-w-sm mx-auto flex flex-col items-center justify-center bg-secondary border border-dashed border-border group-hover:border-foreground/30 transition-all duration-300">
+                    <div className="aspect-square w-full max-w-sm mx-auto flex flex-col items-center justify-center bg-surface-2 border border-dashed border-ink-08 group-hover:border-signal/30 transition-all duration-300">
                       <div className="w-16 h-16 flex items-center justify-center mb-4">
-                        <Upload className="w-8 h-8 text-muted-foreground group-hover:text-foreground transition-colors" />
+                        <Upload className="w-8 h-8 text-ink-40 group-hover:text-ink transition-colors" />
                       </div>
-                      <p className="text-foreground font-bold uppercase tracking-wider mb-1">
+                      <p className="text-ink font-bold uppercase tracking-wider mb-1">
                         Upload Image
                       </p>
-                      <p className="text-muted-foreground text-xs">
+                      <p className="text-ink-40 text-xs">
                         Square format
                       </p>
                     </div>
@@ -326,11 +326,11 @@ export default function MintAgentForm() {
 
           {/* Step 2: Personality */}
           <div className="space-y-8">
-            <div className="border-b border-border pb-6">
-              <h2 className="text-2xl font-bold text-foreground mb-2 uppercase tracking-wide">
+            <div className="border-b border-ink-08 pb-6">
+              <h2 className="text-2xl font-bold text-ink mb-2 uppercase tracking-wide">
                 2. Personality
               </h2>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-ink-40 text-sm">
                 Shape the behavior and knowledge.
               </p>
             </div>
@@ -400,11 +400,11 @@ export default function MintAgentForm() {
             </div>
 
             <div className="border-t border-border pt-6 mt-6">
-              <h3 className="text-xl font-bold text-foreground mb-2 flex items-center gap-2 uppercase tracking-wide">
+              <h3 className="text-xl font-bold text-ink mb-2 flex items-center gap-2 uppercase tracking-wide">
                 <Upload className="w-5 h-5" />
                 Knowledge Base
               </h3>
-              <p className="text-muted-foreground text-sm mb-4">
+              <p className="text-ink-40 text-sm mb-4">
                 Upload documents to train your agent.
               </p>
 
@@ -422,14 +422,14 @@ export default function MintAgentForm() {
                   htmlFor="kb-upload"
                   className={`block w-full cursor-pointer ${kbUploading ? "cursor-not-allowed opacity-50" : ""}`}
                 >
-                  <div className="w-full p-6 flex flex-col items-center justify-center bg-secondary border border-dashed border-border group-hover:border-foreground/30 transition-all duration-300">
+                  <div className="w-full p-6 flex flex-col items-center justify-center bg-surface-2 border border-dashed border-ink-08 group-hover:border-signal/30 transition-all duration-300">
                     <div className="w-12 h-12 flex items-center justify-center mb-3">
-                      <Upload className="w-6 h-6 text-muted-foreground group-hover:text-foreground" />
+                      <Upload className="w-6 h-6 text-ink-40 group-hover:text-ink" />
                     </div>
-                    <p className="text-foreground font-bold uppercase tracking-wider mb-1">
+                    <p className="text-ink font-bold uppercase tracking-wider mb-1">
                       {kbUploading ? "UPLOADING..." : "UPLOAD DOCS"}
                     </p>
-                    <p className="text-muted-foreground text-xs">
+                    <p className="text-ink-40 text-xs">
                       PDF, TXT, MD
                     </p>
                   </div>
@@ -441,17 +441,17 @@ export default function MintAgentForm() {
                   {kbFiles.map((file, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between p-3 bg-secondary border border-border"
+                      className="flex items-center justify-between p-3 bg-surface-2 border border-ink-08"
                     >
-                      <span className="text-sm text-foreground/80 truncate max-w-[200px] font-mono">
+                      <span className="text-sm text-ink-60 truncate max-w-[200px] font-mono">
                         {file.name}
                       </span>
-                      <span className="text-xs text-muted-foreground font-mono">
+                      <span className="text-xs text-ink-40 font-mono">
                         {(file.size / 1024).toFixed(1)} KB
                       </span>
                     </div>
                   ))}
-                  <div className="flex items-center gap-2 mt-2 text-xs text-foreground font-bold uppercase">
+                  <div className="flex items-center gap-2 mt-2 text-xs text-ink font-bold uppercase">
                     <Check className="w-3 h-3" />
                     <span>
                       {kbFiles.length} document{kbFiles.length > 1 ? "s" : ""}{" "}
@@ -465,8 +465,8 @@ export default function MintAgentForm() {
         </Stepper>
 
         {error && (
-          <div className="mt-6 p-4 bg-destructive/10 border border-destructive/30">
-            <p className="text-destructive text-sm font-bold uppercase">{error}</p>
+          <div className="mt-6 p-4 bg-danger/10 border border-danger/30">
+            <p className="text-danger text-sm font-bold uppercase">{error}</p>
           </div>
         )}
       </div>

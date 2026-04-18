@@ -68,10 +68,10 @@ export default function Stepper({
               <div
                 className={`relative flex items-center justify-center w-8 h-8 font-bold border transition-all duration-300 ${
                   isActive
-                    ? "bg-white text-black border-white scale-110"
+                    ? "bg-signal text-background border-signal scale-110"
                     : isCompleted
-                    ? "bg-[#111] text-white border-white"
-                    : "bg-black text-[#666] border-[#333]"
+                    ? "bg-surface-2 text-ink border-signal"
+                    : "bg-background text-ink-40 border-ink-08"
                 }`}
               >
                 {isCompleted ? (
@@ -83,10 +83,10 @@ export default function Stepper({
               
               {/* Connector Line */}
               {stepNumber < totalSteps && (
-                <div 
+                <div
                   className={`h-px w-12 sm:w-24 mx-2 transition-all duration-300 ${
-                    stepNumber < currentStep ? "bg-white" : "bg-[#333]"
-                  }`} 
+                    stepNumber < currentStep ? "bg-signal" : "bg-ink-08"
+                  }`}
                 />
               )}
             </div>
@@ -100,7 +100,7 @@ export default function Stepper({
       </div>
 
       {/* Navigation */}
-      <div className="flex justify-between pt-6 border-t border-[#333]">
+      <div className="flex justify-between pt-6 border-t border-ink-08">
         <button
           onClick={handleBack}
           disabled={currentStep === 1 || backButtonProps.disabled}
