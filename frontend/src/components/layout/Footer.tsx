@@ -4,58 +4,63 @@ import Link from "next/link";
 
 export default function Footer() {
   return (
-    <footer className="mt-20 border-t border-border bg-background w-full">
-      <div className="w-full px-6 lg:px-12 py-12">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <div className="flex flex-col items-center md:items-start gap-2">
-            <div className="flex items-center gap-2">
-              <div className="w-6 h-6 flex items-center justify-center">
-                <img
-                  src="/favicon.png"
-                  alt="SIGNATORY"
-                  className="w-6 h-6 object-contain brightness-0 invert"
-                />
+    <footer className="mt-0 border-t border-off-white/10 bg-muted w-full">
+      <div className="w-full px-6 lg:px-16 py-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row justify-between gap-12 mb-16">
+            {/* Brand */}
+            <div className="flex flex-col gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-7 h-7 flex items-center justify-center">
+                  <img
+                    src="/favicon.png"
+                    alt="SIGNATORY"
+                    className="w-7 h-7 object-contain brightness-0 invert"
+                  />
+                </div>
+                <span className="font-display text-2xl md:text-3xl text-off-white">
+                  Signatory
+                </span>
               </div>
-              <span className="text-sm font-bold text-foreground uppercase tracking-[0.2em]">
-                Signatory
-              </span>
+              <p className="font-body-alt text-sm text-off-white/30 max-w-xs">
+                Agents don&apos;t act. They sign.
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground font-mono">
-              Agents don't act. They sign.
-            </p>
+
+            {/* Links */}
+            <nav className="grid grid-cols-2 gap-x-16 gap-y-4">
+              {[
+                { label: "Browse Agents", href: "/agents" },
+                { label: "Create Agent", href: "/create" },
+                { label: "Marketplace", href: "/marketplace" },
+                { label: "Profile", href: "/profile" },
+              ].map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="font-label text-xs uppercase tracking-[0.2em] text-off-white/30 hover:text-gold transition-colors duration-300"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </nav>
           </div>
 
-          <nav className="flex items-center gap-8 text-xs uppercase tracking-wider font-medium">
-            <Link
-              href="/agents"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Browse
-            </Link>
-            <Link
-              href="/marketplace"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Marketplace
-            </Link>
-            <Link
-              href="/create"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Create
-            </Link>
-            <Link
-              href="/profile"
-              className="text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Profile
-            </Link>
-          </nav>
-        </div>
+          <div className="line-separator" />
 
-        <div className="mt-8 pt-8 border-t border-border text-center md:text-left text-[10px] text-muted-foreground/50 uppercase tracking-widest">
-          &copy; {new Date().getFullYear()} Signatory Protocol. All rights
-          reserved.
+          <div className="mt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <span className="font-label text-[9px] text-off-white/20 uppercase tracking-[0.3em]">
+              &copy; {new Date().getFullYear()} Signatory Protocol
+            </span>
+            <div className="flex items-center gap-8">
+              <a href="https://github.com/goat-sdk" target="_blank" rel="noopener noreferrer" className="opacity-30 hover:opacity-60 transition-opacity">
+                <img src="/goat.png" alt="GOAT SDK" className="h-5 w-auto object-contain grayscale" />
+              </a>
+              <a href="https://www.litprotocol.com/" target="_blank" rel="noopener noreferrer" className="opacity-30 hover:opacity-60 transition-opacity">
+                <img src="/lit.svg" alt="Lit Protocol" className="h-4 w-auto object-contain grayscale" />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </footer>
