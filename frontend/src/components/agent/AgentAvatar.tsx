@@ -28,7 +28,7 @@ export default function AgentAvatar({
 
   return (
     <div
-      className={`${sizeClasses[size]} shrink-0 rounded-lg overflow-hidden bg-gradient-to-br from-emerald-500/20 to-lime-500/20 border border-emerald-500/30 flex items-center justify-center ${className}`}
+      className={`${sizeClasses[size]} shrink-0 overflow-hidden bg-surface-2 border border-ink-08 flex items-center justify-center ${className}`}
     >
       {imageUrl ? (
         <img
@@ -37,7 +37,7 @@ export default function AgentAvatar({
           className="w-full h-full object-cover"
         />
       ) : (
-        <Bot className={`${iconSizes[size]} text-emerald-300/50`} />
+        <Bot className={`${iconSizes[size]} text-ink-40`} />
       )}
     </div>
   );

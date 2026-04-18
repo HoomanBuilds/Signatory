@@ -19,8 +19,8 @@ export default function AgentImage({
   tokenId,
 }: AgentImageProps) {
   return (
-    <div className="bg-black p-4 border border-[#333]">
-      <div className="w-full max-w-sm mx-auto aspect-square bg-[#111] mb-6 flex items-center justify-center border border-[#333] overflow-hidden relative">
+    <div className="bg-background p-4 border border-ink-08">
+      <div className="corner-ticks w-full max-w-sm mx-auto aspect-square bg-surface-2 mb-6 flex items-center justify-center border border-ink-08 overflow-hidden relative">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -31,23 +31,23 @@ export default function AgentImage({
             priority
           />
         ) : (
-          <Bot className="w-20 h-20 text-[#333]" />
+          <Bot className="w-20 h-20 text-ink-24" />
         )}
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-3 gap-0 border border-[#333] divide-x divide-[#333]">
+      <div className="grid grid-cols-3 gap-0 border border-ink-08 divide-x divide-ink-08">
         <div className="p-4 text-center">
-          <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Level</div>
-          <div className="text-xl font-bold text-white font-mono">{level}</div>
+          <div className="text-xs text-ink-40 uppercase tracking-wider mb-1">Level</div>
+          <div className="text-xl font-bold text-ink font-mono">{level}</div>
         </div>
         <div className="p-4 text-center">
-          <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Chats</div>
-          <div className="text-xl font-bold text-white font-mono">{chatCount}</div>
+          <div className="text-xs text-ink-40 uppercase tracking-wider mb-1">Chats</div>
+          <div className="text-xl font-bold text-ink font-mono">{chatCount}</div>
         </div>
         <div className="p-4 text-center">
-          <div className="text-xs text-[#666] uppercase tracking-wider mb-1">ID</div>
-          <div className="text-xl font-bold text-white font-mono">#{tokenId}</div>
+          <div className="text-xs text-ink-40 uppercase tracking-wider mb-1">ID</div>
+          <div className="text-xl font-bold text-ink font-mono">#{tokenId}</div>
         </div>
       </div>
     </div>

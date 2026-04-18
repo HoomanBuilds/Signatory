@@ -64,23 +64,23 @@ export default function AgentDetails({
   const isUpdating = isPending || isConfirming;
 
   return (
-    <div className="bg-black p-6 mb-6 border border-[#333]">
-      <h2 className="text-xl font-bold text-white mb-6 uppercase tracking-tight">Details</h2>
+    <div className="bg-background p-6 mb-6 border border-ink-08">
+      <h2 className="text-xl font-bold text-ink mb-6 uppercase tracking-tight">Details</h2>
       <div className="space-y-6">
         {/* Public/Private Toggle (Owner Only) */}
         {isOwner && (
-          <div className="flex items-center justify-between p-4 bg-[#111] border border-[#333]">
+          <div className="flex items-center justify-between p-4 bg-surface-2 border border-ink-08">
             <div className="flex items-center gap-3">
               {isPublic ? (
-                <Globe className="w-5 h-5 text-white" />
+                <Globe className="w-5 h-5 text-ink" />
               ) : (
-                <Lock className="w-5 h-5 text-[#888]" />
+                <Lock className="w-5 h-5 text-ink-40" />
               )}
               <div>
-                <div className="text-sm font-bold text-white uppercase tracking-wide">
+                <div className="text-sm font-bold text-ink uppercase tracking-wide">
                   {isPublic ? "Public Chat" : "Private Chat"}
                 </div>
-                <div className="text-xs text-[#666] mt-1">
+                <div className="text-xs text-ink-40 mt-1">
                   {isUpdating ? (
                     <span className="flex items-center gap-1">
                       <Loader2 className="w-3 h-3 animate-spin" />
@@ -95,28 +95,28 @@ export default function AgentDetails({
               onClick={handleToggle}
               disabled={isUpdating}
               className={`relative inline-flex h-6 w-11 items-center transition-colors focus:outline-none ${
-                isPublic ? "bg-white" : "bg-[#333]"
+                isPublic ? "bg-signal" : "bg-ink-40"
               } ${isUpdating ? "opacity-50 cursor-not-allowed" : ""}`}
             >
               <span
                 className={`${
-                  isPublic ? "translate-x-6 bg-black" : "translate-x-1 bg-[#666]"
+                  isPublic ? "translate-x-6 bg-background" : "translate-x-1 bg-ink-40"
                 } inline-block h-4 w-4 transform transition-transform`}
               />
             </button>
           </div>
         )}
 
-        <div className="flex items-center gap-4 py-2 border-b border-[#222]">
-          <div className="w-10 h-10 bg-[#111] flex items-center justify-center flex-shrink-0 border border-[#333]">
-            <UserCircle className="w-5 h-5 text-white" />
+        <div className="flex items-center gap-4 py-2 border-b border-ink-08">
+          <div className="w-10 h-10 bg-surface-2 flex items-center justify-center flex-shrink-0 border border-ink-08">
+            <UserCircle className="w-5 h-5 text-ink" />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Creator</div>
-            <div className="text-white font-mono text-sm truncate">
+            <div className="text-xs text-ink-40 uppercase tracking-wider mb-1">Creator</div>
+            <div className="text-ink font-mono text-sm truncate">
               {creator.slice(0, 6)}...{creator.slice(-4)}
               {isCreator && (
-                <span className="ml-2 px-2 py-0.5 bg-[#333] text-white text-xs uppercase">
+                <span className="ml-2 px-2 py-0.5 bg-signal/20 text-signal text-xs uppercase">
                   You
                 </span>
               )}
@@ -124,37 +124,37 @@ export default function AgentDetails({
           </div>
         </div>
 
-        <div className="flex items-center gap-4 py-2 border-b border-[#222]">
-          <div className="w-10 h-10 bg-[#111] flex items-center justify-center flex-shrink-0 border border-[#333]">
-            <Calendar className="w-5 h-5 text-white" />
+        <div className="flex items-center gap-4 py-2 border-b border-ink-08">
+          <div className="w-10 h-10 bg-surface-2 flex items-center justify-center flex-shrink-0 border border-ink-08">
+            <Calendar className="w-5 h-5 text-ink" />
           </div>
           <div className="flex-1">
-            <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Created</div>
-            <div className="text-white text-sm font-mono">
+            <div className="text-xs text-ink-40 uppercase tracking-wider mb-1">Created</div>
+            <div className="text-ink text-sm font-mono">
               {new Date(createdAt * 1000).toLocaleDateString()}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 py-2 border-b border-[#222]">
-          <div className="w-10 h-10 bg-[#111] flex items-center justify-center flex-shrink-0 border border-[#333]">
-            <MessageCircle className="w-5 h-5 text-white" />
+        <div className="flex items-center gap-4 py-2 border-b border-ink-08">
+          <div className="w-10 h-10 bg-surface-2 flex items-center justify-center flex-shrink-0 border border-ink-08">
+            <MessageCircle className="w-5 h-5 text-ink" />
           </div>
           <div className="flex-1">
-            <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Total Chats</div>
-            <div className="text-white text-sm font-mono">
+            <div className="text-xs text-ink-40 uppercase tracking-wider mb-1">Total Chats</div>
+            <div className="text-ink text-sm font-mono">
               {chatCount.toLocaleString()}
             </div>
           </div>
         </div>
 
-        <div className="flex items-center gap-4 py-2 border-b border-[#222]">
-          <div className="w-10 h-10 bg-[#111] flex items-center justify-center flex-shrink-0 border border-[#333]">
-            <Zap className="w-5 h-5 text-white" />
+        <div className="flex items-center gap-4 py-2 border-b border-ink-08">
+          <div className="w-10 h-10 bg-surface-2 flex items-center justify-center flex-shrink-0 border border-ink-08">
+            <Zap className="w-5 h-5 text-ink" />
           </div>
           <div className="flex-1">
-            <div className="text-xs text-[#666] uppercase tracking-wider mb-1">Level</div>
-            <div className="text-white text-sm font-mono">Level {level}</div>
+            <div className="text-xs text-ink-40 uppercase tracking-wider mb-1">Level</div>
+            <div className="text-ink text-sm font-mono">Level {level}</div>
           </div>
         </div>
       </div>

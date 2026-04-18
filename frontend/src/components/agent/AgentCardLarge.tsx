@@ -50,7 +50,7 @@ export default function AgentCardLarge({
       {/* Info */}
       <div className="space-y-3">
         <div>
-          <h3 className="text-lg font-bold text-foreground truncate uppercase tracking-wide group-hover:text-neon transition-colors">
+          <h3 className="text-lg font-bold text-foreground truncate uppercase tracking-wide group-hover:text-signal transition-colors">
             {name}
           </h3>
           <p className="text-xs text-muted-foreground font-mono">#{tokenId}</p>

@@ -162,10 +162,10 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
 
   if (isLoading) {
     return (
-      <div className="bg-black p-6 border border-[#333] mb-6">
+      <div className="bg-background p-6 border border-ink-08 mb-6">
         <div className="flex items-center gap-3">
-          <Loader2 className="w-5 h-5 text-white animate-spin" />
-          <span className="text-[#666] text-sm">Loading wallet...</span>
+          <Loader2 className="w-5 h-5 text-ink animate-spin" />
+          <span className="text-ink-40 text-sm">Loading wallet...</span>
         </div>
       </div>
     );
@@ -173,10 +173,10 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
 
   if (!pkpInfo?.hasPKP) {
     return (
-      <div className="bg-black p-6 border border-[#333] mb-6">
+      <div className="bg-background p-6 border border-ink-08 mb-6">
         <div className="flex items-center gap-3">
-          <Wallet className="w-5 h-5 text-[#666]" />
-          <span className="text-[#666] text-sm">
+          <Wallet className="w-5 h-5 text-ink-40" />
+          <span className="text-ink-40 text-sm">
             No wallet assigned to this agent
           </span>
         </div>
@@ -191,17 +191,17 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
   const SelectedIcon = selectedConfig?.Icon;
 
   return (
-    <div className="bg-black p-6 border border-[#333] mb-6">
+    <div className="bg-background p-6 border border-ink-08 mb-6">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-white flex items-center gap-2 uppercase tracking-tight">
-          <Wallet className="w-5 h-5 text-white" />
+        <h3 className="text-lg font-bold text-ink flex items-center gap-2 uppercase tracking-tight">
+          <Wallet className="w-5 h-5 text-ink" />
           Agent Wallet
         </h3>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1.5 px-3 py-1 bg-[#111] border border-[#333]">
-            <Shield className="w-3 h-3 text-white" />
-            <span className="text-xs text-white uppercase tracking-wider">Lit PKP</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 bg-surface-2 border border-ink-08">
+            <Shield className="w-3 h-3 text-ink" />
+            <span className="text-xs text-ink uppercase tracking-wider">Lit PKP</span>
           </div>
         </div>
       </div>
@@ -210,22 +210,22 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
       <div className="relative mb-6" ref={dropdownRef}>
         <button
           onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-          className="w-full flex items-center justify-between p-4 bg-[#111] border border-[#333] hover:border-white transition-colors"
+          className="w-full flex items-center justify-between p-4 bg-surface-2 border border-ink-08 hover:border-signal transition-colors"
         >
           <div className="flex items-center gap-3">
             {SelectedIcon && (
-              <div className="w-8 h-8 bg-white/5 border border-white/10 p-1.5 flex items-center justify-center">
+              <div className="w-8 h-8 bg-surface-3 border border-ink-08 p-1.5 flex items-center justify-center">
                 <SelectedIcon size={20} variant="branded" />
               </div>
             )}
-            <span className="font-bold text-white uppercase tracking-wide">{selectedConfig?.name || selectedChain}</span>
+            <span className="font-bold text-ink uppercase tracking-wide">{selectedConfig?.name || selectedChain}</span>
           </div>
-          <ChevronDown className={`w-5 h-5 text-white transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
+          <ChevronDown className={`w-5 h-5 text-ink transition-transform ${isDropdownOpen ? "rotate-180" : ""}`} />
         </button>
 
         {/* Dropdown Menu */}
         {isDropdownOpen && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-black border border-[#333] shadow-xl z-50 max-h-64 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-background border border-ink-08 shadow-xl z-50 max-h-64 overflow-y-auto">
             {availableChains.map(chain => {
               const config = CHAIN_CONFIG[chain];
               const IconComp = config?.Icon;
@@ -238,19 +238,19 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
                     setSelectedChain(chain);
                     setIsDropdownOpen(false);
                   }}
-                  className={`w-full flex items-center gap-3 p-4 hover:bg-[#111] transition-colors border-b border-[#222] last:border-0 ${
-                    isSelected ? "bg-[#111]" : ""
+                  className={`w-full flex items-center gap-3 p-4 hover:bg-surface-2 transition-colors border-b border-ink-08 last:border-0 ${
+                    isSelected ? "bg-surface-2" : ""
                   }`}
                 >
                   {IconComp && (
-                    <div className="w-7 h-7 bg-white/5 border border-white/10 p-1 flex items-center justify-center">
+                    <div className="w-7 h-7 bg-surface-3 border border-ink-08 p-1 flex items-center justify-center">
                       <IconComp size={18} variant="branded" />
                     </div>
                   )}
-                  <span className={`flex-1 text-left uppercase text-sm font-medium ${isSelected ? "text-white" : "text-[#888]"}`}>
+                  <span className={`flex-1 text-left uppercase text-sm font-medium ${isSelected ? "text-ink" : "text-ink-40"}`}>
                     {config?.name || chain}
                   </span>
-                  {isSelected && <Check className="w-4 h-4 text-white" />}
+                  {isSelected && <Check className="w-4 h-4 text-ink" />}
                 </button>
               );
             })}
@@ -262,20 +262,20 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
       {selectedAddress && (
         <div className="space-y-4">
           {/* Address */}
-          <div className="p-4 bg-[#111] border border-[#333]">
-            <div className="text-xs text-[#666] uppercase tracking-wider mb-2">Address</div>
+          <div className="p-4 bg-surface-2 border border-ink-08">
+            <div className="text-xs text-ink-40 uppercase tracking-wider mb-2">Address</div>
             <div className="flex items-center justify-between gap-2">
-              <code className="text-sm text-white font-mono flex-1 break-all">
+              <code className="text-sm text-ink font-mono flex-1 break-all">
                 {selectedAddress}
               </code>
               <div className="flex items-center gap-1 flex-shrink-0">
                 <button
                   onClick={handleCopy}
-                  className="p-2 hover:bg-[#222] text-[#888] hover:text-white transition-colors"
+                  className="p-2 hover:bg-surface-3 text-ink-40 hover:text-ink transition-colors"
                   title="Copy Address"
                 >
                   {copied ? (
-                    <Check className="w-4 h-4 text-white" />
+                    <Check className="w-4 h-4 text-ink" />
                   ) : (
                     <Copy className="w-4 h-4" />
                   )}
@@ -285,7 +285,7 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
                     href={`${selectedConfig.explorer}${selectedAddress}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="p-2 hover:bg-[#222] text-[#888] hover:text-white transition-colors"
+                    className="p-2 hover:bg-surface-3 text-ink-40 hover:text-ink transition-colors"
                     title="View on Explorer"
                   >
                     <ExternalLink className="w-4 h-4" />
@@ -296,19 +296,19 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
           </div>
 
           {/* Balance */}
-          <div className="p-4 bg-[#111] border border-[#333]">
-            <div className="text-xs text-[#666] uppercase tracking-wider mb-2">Balance</div>
+          <div className="p-4 bg-surface-2 border border-ink-08">
+            <div className="text-xs text-ink-40 uppercase tracking-wider mb-2">Balance</div>
             <div className="flex items-center justify-between mb-2">
-              <div className="text-xl font-bold text-white font-mono">
+              <div className="text-xl font-bold text-ink font-mono">
                 {isLoadingBalance ? (
-                  <Loader2 className="w-5 h-5 animate-spin text-white" />
+                  <Loader2 className="w-5 h-5 animate-spin text-ink" />
                 ) : (
                   <>{balance ? `${parseFloat(balance).toFixed(6)}` : "—"} {selectedConfig?.name?.includes("Cronos") ? "TCRO" : "ETH"}</>
                 )}
               </div>
               <button
                 onClick={fetchBalance}
-                className="p-2 hover:bg-[#222] text-[#888] hover:text-white transition-colors"
+                className="p-2 hover:bg-surface-3 text-ink-40 hover:text-ink transition-colors"
                 title="Refresh Balance"
               >
                 <RefreshCw className={`w-4 h-4 ${isLoadingBalance ? "animate-spin" : ""}`} />
@@ -317,11 +317,11 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
 
             {/* Token Balances */}
             {!isLoadingBalance && tokens.length > 0 && (
-              <div className="space-y-2 mt-4 pt-4 border-t border-[#333]">
+              <div className="space-y-2 mt-4 pt-4 border-t border-ink-08">
                 {tokens.map((token) => (
                   <div key={token.symbol} className="flex items-center justify-between text-sm">
-                    <span className="text-[#888]">{token.symbol}</span>
-                    <span className="font-mono text-white">{parseFloat(token.balance).toFixed(4)}</span>
+                    <span className="text-ink-40">{token.symbol}</span>
+                    <span className="font-mono text-ink">{parseFloat(token.balance).toFixed(4)}</span>
                   </div>
                 ))}
               </div>
@@ -334,13 +334,13 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
               href={selectedConfig?.explorer ? `${selectedConfig.explorer}${selectedAddress}` : "#"}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-transparent border border-[#333] text-white text-sm font-bold uppercase tracking-wider hover:bg-white hover:text-black transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-transparent border border-ink-08 text-ink-40 text-sm font-bold uppercase tracking-wider hover:border-signal hover:text-ink transition-colors"
             >
               <ExternalLink className="w-4 h-4" />
               View
             </a>
             <button
-              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-white text-black text-sm font-bold uppercase tracking-wider hover:bg-[#ddd] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-sigil text-background text-sm font-bold uppercase tracking-wider hover:bg-sigil-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={isWithdrawing || !balance || parseFloat(balance) === 0}
               onClick={async () => {
                 if (!balance || parseFloat(balance) === 0) {
@@ -388,7 +388,7 @@ export default function AgentWallet({ tokenId, isOwner }: AgentWalletProps) {
       )}
 
       {/* Footer */}
-      <div className="text-xs text-[#444] mt-6 text-center uppercase tracking-widest">
+      <div className="text-xs text-ink-24 mt-6 text-center uppercase tracking-widest">
         Multi-chain wallet • {availableChains.length} networks supported
       </div>
     </div>
