@@ -38,7 +38,7 @@ export default function ChatRedirectPage() {
     return (
       <Layout>
         <div className="flex items-center justify-center min-h-[60vh]">
-          <Loader2 className="w-8 h-8 text-emerald-300 animate-spin" />
+          <Loader2 className="w-8 h-8 text-signal animate-spin" />
         </div>
       </Layout>
     );
@@ -60,7 +60,7 @@ export default function ChatRedirectPage() {
   return (
     <Layout>
       <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="w-8 h-8 text-emerald-300 animate-spin" />
+        <Loader2 className="w-8 h-8 text-signal animate-spin" />
       </div>
     </Layout>
   );

@@ -19,10 +19,10 @@ export default function ChatAgentRedirect({
   }, [agentId, router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="flex items-center justify-center min-h-screen bg-background">
       <div className="text-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-        <p className="text-gray-600">Starting new chat session...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-signal mx-auto mb-4"></div>
+        <p className="text-ink-40 font-mono text-sm uppercase tracking-wider">Starting new chat session...</p>
       </div>
     </div>
   );

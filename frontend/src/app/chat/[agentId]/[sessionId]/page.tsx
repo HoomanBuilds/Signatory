@@ -208,7 +208,7 @@ export default function ChatSessionPage() {
 
   return (
     <Layout>
-      <div className="flex h-[calc(100vh-80px)] bg-black">
+      <div className="flex h-[calc(100vh-80px)] bg-background">
         <AgentIconBar
           myAgents={myAgents}
           interactedAgents={interactedAgents}
@@ -238,15 +238,15 @@ export default function ChatSessionPage() {
               
               <button
                 onClick={() => setIsHistoryOpen(true)}
-                className="absolute top-6 left-6 z-20 p-2 bg-black border border-[#333] hover:border-white transition-colors"
+                className="absolute top-6 left-6 z-20 p-2 bg-background border border-ink-08 hover:border-signal transition-colors"
                 title="View History"
               >
-                <Menu className="w-5 h-5 text-white" />
+                <Menu className="w-5 h-5 text-ink" />
               </button>
 
               {isLoadingHistory ? (
                 <div className="flex-1 flex items-center justify-center">
-                  <Loader2 className="w-8 h-8 text-white animate-spin" />
+                  <Loader2 className="w-8 h-8 text-signal animate-spin" />
                 </div>
               ) : (
                 <ChatMessages
@@ -309,13 +309,13 @@ export default function ChatSessionPage() {
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center bg-black">
-             <div className="text-center p-8 border border-[#333] max-w-md">
-                 <div className="w-16 h-16 bg-[#111] border border-[#333] flex items-center justify-center mx-auto mb-4">
-                     <Bot className="w-8 h-8 text-white" />
+          <div className="flex-1 flex items-center justify-center bg-background">
+             <div className="empty-state max-w-md">
+                 <div className="empty-state-icon">
+                     <Bot className="w-8 h-8 text-ink-40" />
                  </div>
-                 <h2 className="text-xl font-bold text-white mb-2 uppercase tracking-wide">Select an Agent</h2>
-                 <p className="text-[#666]">Choose an agent from the sidebar to start exploring.</p>
+                 <h2 className="text-xl font-display font-bold text-ink mb-2 uppercase tracking-wide">Select an Agent</h2>
+                 <p className="text-ink-40 font-body-alt">Choose an agent from the sidebar to start exploring.</p>
              </div>
           </div>
         )}
